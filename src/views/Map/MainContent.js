@@ -4,7 +4,14 @@ import PropTypes from 'prop-types';
 
 import Map from '@geomatico/geocomponents/Map';
 
-import {ADD_POI_MODE, INITIAL_VIEWPORT, MAPSTYLES, REMOVE_POI_MODE} from '../../config';
+import {
+  ADD_ORIGIN_MODE,
+  ADD_POI_MODE,
+  INITIAL_VIEWPORT,
+  MAPSTYLES,
+  REMOVE_ORIGIN_MODE,
+  REMOVE_POI_MODE
+} from '../../config';
 import {useNavigate, useParams} from 'react-router-dom';
 import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
@@ -123,8 +130,6 @@ const MainContent = ({
 
   const handleClick = e => {
 
-    mode = ADD_ORIGIN;
-
     if (mode === ADD_POI_MODE) {
 
       setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
@@ -132,11 +137,11 @@ const MainContent = ({
       // TODO remove clicked element
       console.log('remove', e.features);
       setPoints(points.filter((p, i) => i !== e.features[0].id));
-    } else if (mode === ADD_ORIGIN) {
+    } else if (mode === ADD_ORIGIN_MODE) {
       console.log('aqui', originPoints)
       setOriginPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
 
-    } else if (mode === REMOVE_ORIGIN) {
+    } else if (mode === REMOVE_ORIGIN_MODE) {
       console.log('remove point red');
       setOriginPoints(originPoints.filter((p, i) => i !== e.features[0].id));
     }
