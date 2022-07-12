@@ -8,16 +8,19 @@ import Box from '@mui/material/Box';
 import styled from '@mui/styles/styled';
 
 import SectionTitle from '../../components/SectionTitle';
-import Logos from '../../components/Logos';
 
-import {ADD_MODE, MAPSTYLES, REMOVE_MODE} from '../../config';
+import {ADD_ORIGIN_MODE, ADD_POI_MODE, MAPSTYLES, REMOVE_ORIGIN_MODE, REMOVE_POI_MODE} from '../../config';
 import ButtonGroup from '@geomatico/geocomponents/ButtonGroup';
 
 import AddIcon from '@mui/icons-material/AddLocationAlt';
 import RemoveIcon from '@mui/icons-material/WrongLocation';
+import HomeIcon from '@mui/icons-material/Home';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import {useTranslation} from 'react-i18next';
+import {Tooltip} from '@mui/material';
+import Geomatico from '../../components/Geomatico';
 
 const ScrollableContent = styled(Box)({
   overflow: 'auto',
@@ -33,17 +36,16 @@ const SidePanelContent = ({mapStyle, onMapStyleChanged, mode, onModeChanged}) =>
   return <Stack sx={{height: '100%', overflow: 'hidden'}}>
     <ScrollableContent>
       <Typography paragraph variant='h5'>{t('p0')}</Typography>
-      <Typography paragraph>{t('p1')}</Typography>
-      <Typography paragraph>{t('p2')}</Typography>
-
       <SectionTitle titleKey='editor'/>
       <Grid mt={3} mb={3} justifyContent='center' container>
         <Grid item>
           <ButtonGroup
             variant="outlined"
             items={[
-              {id: ADD_MODE, content: <><AddIcon/><Typography sx={{ml: 0}}>{t('add')}</Typography></>, label: t('add')},
-              {id: REMOVE_MODE, content: <><RemoveIcon/><Typography sx={{ml: 0}}>{t('remove')}</Typography></>, label: t('remove')},
+              {id: ADD_POI_MODE, content:<Tooltip title={t('add_poi')}><AddIcon/></Tooltip>},
+              {id: REMOVE_POI_MODE, content: <Tooltip title={t('remove_poi')}><RemoveIcon/></Tooltip>},
+              {id: ADD_ORIGIN_MODE, content: <Tooltip title={t('add_origin')}><HomeIcon/></Tooltip>},
+              {id: REMOVE_ORIGIN_MODE, content: <Tooltip title={t('remove_origin')}><HomeOutlinedIcon/></Tooltip>},
             ]}
             onItemClick={handleItemCLick}
             selectedItemId={mode}
@@ -59,7 +61,7 @@ const SidePanelContent = ({mapStyle, onMapStyleChanged, mode, onModeChanged}) =>
         />
       </Grid>
     </ScrollableContent>
-    <Logos/>
+    <Geomatico/>
   </Stack>;
 };
 
