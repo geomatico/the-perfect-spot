@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 
 import BaseMapList from '@geomatico/geocomponents/BaseMapList';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import styled from '@mui/styles/styled';
 
 import SectionTitle from '../../components/SectionTitle';
@@ -49,7 +50,15 @@ const SidePanelContent = ({mapStyle, onMapStyleChanged, mode, onModeChanged}) =>
             ]}
             onItemClick={handleItemCLick}
             selectedItemId={mode}
+            /*sx={{
+              '&:last-child': {
+                border: 2
+              }
+            }}*/
           />
+        </Grid>
+        <Grid item>
+          <Button variant='contained' sx={{mt: 2}} onClick={() => {}}>CALCULAR</Button>
         </Grid>
       </Grid>
       <SectionTitle titleKey='baseMap'/>
