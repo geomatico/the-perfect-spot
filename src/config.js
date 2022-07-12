@@ -46,4 +46,4 @@ export const MAPSTYLES = [
 
 export const INITIAL_MAPSTYLE_URL = MAPSTYLES[1].id;
 
-export const ADD_MODE = 'ADD', REMOVE_MODE = 'REMOVE';
+export const ADD_MODE = 'ADD', REMOVE_MODE = 'REMOVE', ADD_ORIGIN = 'ADD_ORIGIN', REMOVE_ORIGIN = 'REMOVE_ORIGIN';
