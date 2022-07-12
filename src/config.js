@@ -4,10 +4,10 @@ export const MINI_SIDE_PANEL_WIDTH = 0;
 export const MINI_SIDE_PANEL_DENSE_WIDTH = 0;
 
 export const INITIAL_VIEWPORT = {
-  latitude: 41.9453,
-  longitude: 2.259,
-  zoom: 9.5,
-  bearing: 0,
+  latitude: 41.389044,
+  longitude: 2.162161,
+  zoom: 13,
+  bearing: -45,
   pitch: 0
 };
 

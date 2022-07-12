@@ -22,6 +22,7 @@ import Typography from '@mui/material/Typography';
 import {useTranslation} from 'react-i18next';
 import {Tooltip} from '@mui/material';
 import Geomatico from '../../components/Geomatico';
+import {getIsochrones} from '../../utils/ors';
 
 const ScrollableContent = styled(Box)({
   overflow: 'auto',
@@ -33,6 +34,10 @@ const SidePanelContent = ({mapStyle, onMapStyleChanged, mode, onModeChanged}) =>
   const {t} = useTranslation();
 
   const handleItemCLick = newMode => newMode && onModeChanged(newMode);
+
+  const calculate =()=> {
+    getIsochrones().then(data => console.log(data));
+  }
 
   return <Stack sx={{height: '100%', overflow: 'hidden'}}>
     <ScrollableContent>
@@ -58,7 +63,7 @@ const SidePanelContent = ({mapStyle, onMapStyleChanged, mode, onModeChanged}) =>
           />
         </Grid>
         <Grid item>
-          <Button variant='contained' sx={{mt: 2}} onClick={() => {}}>CALCULAR</Button>
+          <Button variant='contained' sx={{mt: 2}} onClick={calculate}>CALCULAR</Button>
         </Grid>
       </Grid>
       <SectionTitle titleKey='baseMap'/>
