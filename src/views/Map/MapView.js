@@ -4,11 +4,11 @@ import Layout from '../../components/Layout';
 import SidePanelContent from './SidePanelContent';
 import MainContent from './MainContent';
 
-import {ADD_MODE, INITIAL_MAPSTYLE_URL} from '../../config';
+import {ADD_POI_MODE, INITIAL_MAPSTYLE_URL} from '../../config';
 
 const Map = () => {
   const [mapStyle, setMapStyle] = useState(INITIAL_MAPSTYLE_URL);
-  const [mode, setMode] = useState(ADD_MODE);
+  const [mode, setMode] = useState(ADD_POI_MODE);
 
   const sidePanelContent = <SidePanelContent
     mapStyle={mapStyle}

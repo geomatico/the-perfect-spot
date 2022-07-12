@@ -1,11 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 
-import turfCircle from '@turf/circle';
-import turfDissolve from '@turf/dissolve';
+
 import Map from '@geomatico/geocomponents/Map';
 
-import {ADD_MODE, ADD_ORIGIN, INITIAL_VIEWPORT, MAPSTYLES, REMOVE_MODE, REMOVE_ORIGIN} from '../../config';
+import {ADD_POI_MODE, INITIAL_VIEWPORT, MAPSTYLES, REMOVE_POI_MODE} from '../../config';
 import {useNavigate, useParams} from 'react-router-dom';
 import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
@@ -124,13 +123,12 @@ const MainContent = ({
 
   const handleClick = e => {
 
-    console.log(111, e, mode);
-
     mode = ADD_ORIGIN;
 
-    if (mode === ADD_MODE) {
+    if (mode === ADD_POI_MODE) {
+
       setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
-    } else if (mode === REMOVE_MODE) {
+    } else if (mode === REMOVE_POI_MODE) {
       // TODO remove clicked element
       console.log('remove', e.features);
       setPoints(points.filter((p, i) => i !== e.features[0].id));
@@ -147,7 +145,7 @@ const MainContent = ({
   const [cursor, setCursor] = useState('pointer');
 
   useEffect(() => {
-    setCursor(mode === ADD_MODE ? 'pointer' : 'auto');
+    setCursor(mode === ADD_POI_MODE ? 'pointer' : 'auto');
   }, [mode]);
 
   const onMouseEnter = useCallback(() => setCursor('no-drop'), []);
@@ -161,7 +159,7 @@ const MainContent = ({
       sources={sources}
       layers={layers}
       onViewportChange={setViewport}
-      interactiveLayerIds={mode === REMOVE_MODE ? ['centers'] : undefined}
+      interactiveLayerIds={mode === REMOVE_POI_MODE ? ['centers'] : undefined}
       cursor={cursor}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}

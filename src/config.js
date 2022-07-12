@@ -1,16 +1,7 @@
-import React from 'react';
-import MapIcon from '@mui/icons-material/Map';
-import TableChartIcon from '@mui/icons-material/TableChart';
-
-export const DRAWER_WIDTH = 300;
+export const DRAWER_WIDTH = 250;
 export const SM_BREAKPOINT = 600;
 export const MINI_SIDE_PANEL_WIDTH = 0;
 export const MINI_SIDE_PANEL_DENSE_WIDTH = 0;
-
-export const MINISIDEPANEL_CONFIG = [
-  {id: 'mapView', route: '../map', label: 'map', content: <MapIcon/>},
-  {id: 'detail', route: '../detail', label: 'detail', content: <TableChartIcon/>}
-];
 
 export const INITIAL_VIEWPORT = {
   latitude: 41.9453,
@@ -46,4 +37,4 @@ export const MAPSTYLES = [
 
 export const INITIAL_MAPSTYLE_URL = MAPSTYLES[1].id;
 
-export const ADD_MODE = 'ADD', REMOVE_MODE = 'REMOVE', ADD_ORIGIN = 'ADD_ORIGIN', REMOVE_ORIGIN = 'REMOVE_ORIGIN';
+export const ADD_POI_MODE = 'ADD_POI', REMOVE_POI_MODE = 'REMOVE_POI', ADD_ORIGIN_MODE = 'ADD_ORIGIN', REMOVE_ORIGIN_MODE = 'REMOVE_ORIGIN';
