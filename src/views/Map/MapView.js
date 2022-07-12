@@ -4,18 +4,22 @@ import Layout from '../../components/Layout';
 import SidePanelContent from './SidePanelContent';
 import MainContent from './MainContent';
 
-import {INITIAL_MAPSTYLE_URL} from '../../config';
+import {ADD_MODE, INITIAL_MAPSTYLE_URL} from '../../config';
 
-const Index = () => {
+const Map = () => {
   const [mapStyle, setMapStyle] = useState(INITIAL_MAPSTYLE_URL);
+  const [mode, setMode] = useState(ADD_MODE);
 
   const sidePanelContent = <SidePanelContent
     mapStyle={mapStyle}
     onMapStyleChanged={setMapStyle}
+    mode={mode}
+    onModeChanged={setMode}
   />;
 
   const mainContent = <MainContent
     mapStyle={mapStyle}
+    mode={mode}
   />;
 
   return <Layout
@@ -24,4 +28,4 @@ const Index = () => {
   />;
 };
 
-export default Index;
+export default Map;

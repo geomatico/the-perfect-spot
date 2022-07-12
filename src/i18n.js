@@ -2,8 +2,9 @@ import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-import es from './i18n/es.json';
+import ca from './i18n/ca.json';
 import en from './i18n/en.json';
+import es from './i18n/es.json';
 
 i18n
   .use(LanguageDetector)
@@ -15,6 +16,9 @@ i18n
       checkWhitelist: true
     },
     resources: {
+      ca: {
+        translation: ca
+      },
       en: {
         translation: en
       },
@@ -23,8 +27,8 @@ i18n
       },
     },
     load: 'languageOnly',
-    whitelist: ['es', 'en'],
-    fallbackLng: 'es',
+    whitelist: ['ca', 'es', 'en'],
+    fallbackLng: 'ca',
     debug: false,
     keySeparator: false,
     interpolation: {

@@ -2,7 +2,7 @@ import React from 'react';
 import {HashRouter, Route, Routes, useParams} from 'react-router-dom';
 import i18n from 'i18next';
 import {Outlet, Navigate} from 'react-router-dom';
-import MapView from '../views/Map';
+import MapView from '../views/Map/MapView';
 
 const LangSetter = () => {
   const {lang} = useParams();
@@ -17,6 +17,7 @@ const AppRoutes = () =>
     <Routes>
       <Route path=":lang" element={<LangSetter/>}>
         <Route exact path="" element={<Navigate to="map"/>}/>
+        <Route exact path="map/:points" element={<MapView/>}/>
         <Route exact path="map" element={<MapView/>}/>
         {/*
          <Route exact path="detail" element={<Layout mainContent={<MapView/>} miniSidePanelSelectedActionId='detail'/>}/>

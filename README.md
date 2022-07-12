@@ -1,6 +1,6 @@
-# plantilla-visor-react
+# distancia-comunitats-energetiques
 
-Template for a simple viewer, to use it, go to https://github.com/geomatico/plantilla-visor-react and click on 'Use this template', a new repository will be created based on this template.
+Template for a simple viewer, to use it, go to https://github.com/geomatico/distancia-comunitats-energetiques and click on 'Use this template', a new repository will be created based on this template.
 If you want to add functionalities, you can see more components here: https://labs.geomatico.es/geocomponents/
 
 ## First steps

@@ -1,0 +1,13 @@
+{
+  "add": "Afegeix",
+  "baseMap": "Cartografia base",
+  "dark": "Fosc",
+  "editor": "Editor d'instal·lacions",
+  "image": "Imatge",
+  "map": "Mapa",
+  "p0": "Calculadora de distàncies per a l'autoconsum elèctric compartit",
+  "p1": "Segons el RD 244/2019, es pot realitzar autoconsum compartit quan els equips de mesura de generació i consum estan a una distància inferior a 500 m.",
+  "p2": "Es preveu que en el futur aquesta distància es pugui ampliar fins a 2 km.",
+  "remove": "Esborra",
+  "search": "Cerca..."
+}

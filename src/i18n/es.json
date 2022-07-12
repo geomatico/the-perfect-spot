@@ -1,4 +1,13 @@
 {
-  "baseMapStyle": "Estilo Mapa Base"
+  "add": "Añade",
+  "baseMap": "Cartografía base",
+  "dark": "Oscuro",
+  "editor": "Editor de instalaciones",
+  "image": "Imagen",
+  "map": "Mapa",
+  "p0": "Calculadora de distancias para el autoconsumo eléctrico compartido",
+  "p1": "Según el RD 244/2019, puede realizarse autoconsumo compartido cuando los equipos de medida de generación y consumo están a una distancia inferior a 500 m.",
+  "p2": "Se prevé que en el futuro esta distancia pueda ampliarse hasta 2 km.",
+  "remove": "Elimina",
+  "search": "Busca..."
 }
-

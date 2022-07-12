@@ -1,3 +1,13 @@
 {
-  "baseMapStyle": "Base Map Style"
+  "add": "Add",
+  "baseMap": "Base Map",
+  "dark": "Dark",
+  "editor": "Site editor",
+  "image": "Image",
+  "map":  "Map",
+  "p0": "Distance calculator for shared self-consumption",
+  "p1": "According to RD 244/2019, shared self-consumption can be carried out when the generation and consumption measuring equipment is at a distance of less than 500 m.",
+  "p2": "It is expected that in the future this distance may be extended to 2 km.",
+  "remove": "Remove",
+  "search": "Search..."
 }

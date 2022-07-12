@@ -1,19 +1,17 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {useNavigate} from 'react-router-dom';
 
 import styled from '@mui/styles/styled';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import ResponsiveHeader from '@geomatico/geocomponents/ResponsiveHeader';
 import SidePanel from '@geomatico/geocomponents/SidePanel';
-import MiniSidePanel from '@geomatico/geocomponents/MiniSidePanel';
-import Logo from './icons/Logo';
+
 import {
   DRAWER_WIDTH,
   MINI_SIDE_PANEL_DENSE_WIDTH,
   MINI_SIDE_PANEL_WIDTH,
-  MINISIDEPANEL_CONFIG, SM_BREAKPOINT,
+  SM_BREAKPOINT,
 } from '../config';
 
 const Main = styled(Box, {
@@ -34,56 +32,35 @@ const Main = styled(Box, {
   left: widescreen ? (isLeftDrawerOpen && DRAWER_WIDTH) + MINI_SIDE_PANEL_WIDTH : MINI_SIDE_PANEL_DENSE_WIDTH
 }));
 
-const Layout = ({mainContent, sidePanelContent, miniSidePanelSelectedActionId}) => {
-  const navigate = useNavigate();
-
+const Layout = ({mainContent, sidePanelContent}) => {
   const widescreen = useMediaQuery(`@media (min-width:${SM_BREAKPOINT}px)`, {noSsr: true});
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(true);
 
-  const handleActionClick = (id) => {
-    const config_element = MINISIDEPANEL_CONFIG.find(el => el.id === id);
-    if (miniSidePanelSelectedActionId === id && sidePanelContent) {
-      setIsSidePanelOpen(!isSidePanelOpen);
-    } else {
-      navigate(config_element.route);
-    }
-  };
-
   const handleClose = () => setIsSidePanelOpen(!isSidePanelOpen);
 
-  return (
-    <>
-      <ResponsiveHeader
-        title='Pasión por la información geográfica'
-        logo={<Logo/>}
-        onStartIconClick={widescreen ? undefined : handleClose}
-        isStartIconCloseable={isSidePanelOpen}
-        sx={{'&.MuiAppBar-root': {zIndex: 1500}}}
+  return <>
+    <ResponsiveHeader
+      onStartIconClick={widescreen ? undefined : handleClose}
+      isStartIconCloseable={isSidePanelOpen}
+      sx={{'&.MuiAppBar-root': {zIndex: 1500}}}
+    >
+    </ResponsiveHeader>
+    {
+      sidePanelContent && isSidePanelOpen && <SidePanel
+        drawerWidth={DRAWER_WIDTH + 'px'}
+        anchor="left"
+        isOpen={isSidePanelOpen}
+        onClose={handleClose}
+        widescreen={widescreen}
+        sx={{'& .MuiPaper-root': {left: widescreen ? MINI_SIDE_PANEL_WIDTH : MINI_SIDE_PANEL_DENSE_WIDTH}}}
       >
-      </ResponsiveHeader>
-      <MiniSidePanel
-        actions={MINISIDEPANEL_CONFIG}
-        selectedActionId={miniSidePanelSelectedActionId}
-        onActionClick={handleActionClick}
-        dense={!widescreen}
-      />
-      {
-        sidePanelContent && isSidePanelOpen && <SidePanel
-          drawerWidth={DRAWER_WIDTH + 'px'}
-          anchor="left"
-          isOpen={isSidePanelOpen}
-          onClose={handleClose}
-          widescreen={widescreen}
-          sx={{'& .MuiPaper-root': {left: widescreen ? MINI_SIDE_PANEL_WIDTH : MINI_SIDE_PANEL_DENSE_WIDTH}}}
-        >
-          {sidePanelContent}
-        </SidePanel>
-      }
-      <Main widescreen={widescreen} isLeftDrawerOpen={sidePanelContent && isSidePanelOpen}>
-        {mainContent}
-      </Main>
-    </>
-  );
+        {sidePanelContent}
+      </SidePanel>
+    }
+    <Main widescreen={widescreen} isLeftDrawerOpen={sidePanelContent && isSidePanelOpen}>
+      {mainContent}
+    </Main>
+  </>;
 };
 
 Layout.propTypes = {
