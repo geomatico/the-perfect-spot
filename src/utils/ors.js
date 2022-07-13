@@ -33,11 +33,10 @@ export const getInfo = (
   {url = ors_api, mode = ors_modes['driving-car']} = {}
 ) => http.post(url + mode, compute_ors_params(locations, destinations)).then(featureCollection => featureCollection);
 
-const coordinates = [[2.14119,41.38697],[2.14502,41.39649]];
-
 
 export const getDirections = (
-  url = ors_geometries,
+  locations,
+  destinations,
 ) => {
-  return http.post(url , {coordinates}).then(featureCollection => featureCollection);
+  return http.post(ors_geometries , {coordinates: [...locations, ...destinations] }).then(featureCollection => featureCollection);
 };
