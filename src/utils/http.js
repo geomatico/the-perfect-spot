@@ -22,10 +22,8 @@ export default {
     return fetch(url, {
       method: 'POST',
       headers: {
-        'authorization': '5b3ce3597851110001cf6248ab0ecc15618545b58c892918932e898a',
+        'authorization': process.env.API_KEY,
         'Content-Type': 'application/json',
-   /*     'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type'*/
       },
       body: JSON.stringify(body)
     }).then(response => {

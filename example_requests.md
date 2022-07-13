@@ -1,6 +1,7 @@
 - ORS (POST)
   https://api.openrouteservice.org/v2/matrix/[driving-car | cycling-regular | foot-walking ]
-  {"locations":[[9.70093,48.477473],[9.207916,49.153868],[37.573242,55.801281],[115.663757,38.106467]],"
+  {"locations":
+- [[9.70093,48.477473],[9.207916,49.153868],[37.573242,55.801281],[115.663757,38.106467]],"
   destinations":[0,1],
 - "metrics":["distance","duration"],
 - "resolve_locations":"true",
