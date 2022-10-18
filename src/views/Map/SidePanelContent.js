@@ -20,11 +20,12 @@ const ScrollableContent = styled(Box)({
 const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, onPhaseChanged, onRoutesChange, mode, onDirectionsChange}) => {
 
   const {
-    points: strPoints,
-    originPoints: strOriginPoints
+    points: strPoiPoints,
+    originPoints: strFlatPoints
   } = useParams();
-  const destinations = strPoints ? JSON.parse(strPoints) : [];
-  const locations = strOriginPoints ? JSON.parse(strOriginPoints) : [];
+
+  const destinations = strPoiPoints ? JSON.parse(strPoiPoints) : [];
+  const locations = strFlatPoints ? JSON.parse(strFlatPoints) : [];
 
   const calculateDirectionsTable = () => {
     getInfo(locations, destinations).then(data => {
