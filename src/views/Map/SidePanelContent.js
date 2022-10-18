@@ -27,7 +27,7 @@ const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, o
   const destinations = strPoints ? JSON.parse(strPoints) : [];
   const locations = strOriginPoints ? JSON.parse(strOriginPoints) : [];
 
-  const calculate = () => {
+  const calculateDirectionsTable = () => {
     getInfo(locations, destinations).then(data => {
       console.log('data from API', data);
       const finalRows = data.destinations.map((destination, destinationIndex) => {
@@ -78,7 +78,6 @@ const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, o
   console.log('mode', mode);
   return <Stack sx={{height: '100%', overflow: 'hidden'}}>
     <ScrollableContent>
-      <Button variant='contained' sx={{mt: 2}} onClick={calculate}>CALCULAR</Button>
       {
         isPOIsEditing ?
           <POISidePanel
@@ -89,6 +88,7 @@ const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, o
             mode={mode}
             onFlatModeChanged={onFlatModeChanged}
             onCalculateRoutes={calculateRoutes}
+            onCalculateDirections={calculateDirectionsTable}
             onPhaseChanged={onPhaseChanged}
           />
       }

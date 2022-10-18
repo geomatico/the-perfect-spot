@@ -16,9 +16,14 @@ import ButtonGroup from '@geomatico/geocomponents/ButtonGroup';
 import {useTranslation} from 'react-i18next';
 
 
-const FlatSidePanel = ({mode, onFlatModeChanged, onPhaseChanged, onCalculateRoutes}) => {
+const FlatSidePanel = ({mode, onFlatModeChanged, onPhaseChanged, onCalculateRoutes, onCalculateDirections}) => {
   const {t} = useTranslation();
   const handleFlatCLick = newMode => newMode && onFlatModeChanged(newMode);
+
+  const handleOnCalculate =()=> {
+    onCalculateRoutes();
+    onCalculateDirections();
+  };
 
   return <>
     <Typography paragraph variant='subtitle1' sx={{textTransform: 'uppercase'}}>{t('p1')}</Typography>
@@ -40,7 +45,7 @@ const FlatSidePanel = ({mode, onFlatModeChanged, onPhaseChanged, onCalculateRout
         selectedItemId={mode}
         sx={{display: 'inline-block', color: 'red'}}
       />
-      <Button variant='contained' color='secondary' sx={{mt: 2}} onClick={onCalculateRoutes}>CALCULAR RUTAS</Button>
+      <Button variant='contained' color='secondary' sx={{mt: 2}} onClick={handleOnCalculate}>CALCULAR RUTAS</Button>
       <Button variant='outlined' color='primary' sx={{mt: 2}} onClick={onPhaseChanged}>VOLVER ATRÁS</Button>
     </Stack>
   </>;
@@ -50,6 +55,7 @@ FlatSidePanel.propTypes = {
   onFlatModeChanged: PropTypes.func,
   onPhaseChanged: PropTypes.func,
   onCalculateRoutes: PropTypes.func,
+  onCalculateDirections: PropTypes.func,
   mode: PropTypes.string
 };
 
