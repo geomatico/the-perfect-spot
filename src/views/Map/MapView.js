@@ -4,7 +4,7 @@ import Layout from '../../components/Layout';
 import SidePanelContent from './SidePanelContent';
 import MainContent from './MainContent';
 
-import {ADD_ORIGIN_MODE, ADD_POI_MODE, INITIAL_MAPSTYLE_URL, REMOVE_POI_MODE} from '../../config';
+import {ADD_FLAT_MODE, ADD_POI_MODE, INITIAL_MAPSTYLE_URL, REMOVE_POI_MODE} from '../../config';
 
 const Map = () => {
   const [mapStyle, setMapStyle] = useState(INITIAL_MAPSTYLE_URL);
@@ -15,7 +15,7 @@ const Map = () => {
 
   const handlePhaseChanged = () => {
     setIsPOIsEditing(!isPOIsEditing);
-    setMode(mode === ADD_POI_MODE || REMOVE_POI_MODE ? ADD_ORIGIN_MODE : ADD_POI_MODE);
+    setMode(mode === ADD_POI_MODE || REMOVE_POI_MODE ? ADD_FLAT_MODE : ADD_POI_MODE);
   };
 
   const sidePanelContent = <SidePanelContent

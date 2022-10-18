@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import Map from '@geomatico/geocomponents/Map';
 
 import {
-  ADD_ORIGIN_MODE,
+  ADD_FLAT_MODE,
   ADD_POI_MODE,
   INITIAL_VIEWPORT,
   MAPSTYLES,
-  REMOVE_ORIGIN_MODE,
+  REMOVE_FLAT_MODE,
   REMOVE_POI_MODE
 } from '../../config';
 import {useNavigate, useParams} from 'react-router-dom';
@@ -154,16 +154,17 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   }, [mapStyle]);
 
   const handleClick = e => {
-    //setPoints
     if (mode === ADD_POI_MODE) {
       setOriginPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
     } else if (mode === REMOVE_POI_MODE) {
       setOriginPoints(originPoints.filter((p, i) => i !== e.features[0].id));
-    } else if (mode === ADD_ORIGIN_MODE) {
+    } else if (mode === ADD_FLAT_MODE) {
       setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
-    } else if (mode === REMOVE_ORIGIN_MODE) {
-      setPoints(originPoints.filter((p, i) => i !== e.features[0].id));
+    } else if (mode === REMOVE_FLAT_MODE) {
+      console.log('entra');
+      setPoints(points.filter((p, i) => i !== e.features[0].id));
     }
+
   };
 
   const [cursor, setCursor] = useState('pointer');
@@ -183,7 +184,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   const calculateInteractiveLayers = () => {
     if (mode === REMOVE_POI_MODE) {
       return ['centersOrigin'];
-    } else if (mode === REMOVE_ORIGIN_MODE) {
+    } else if (mode === REMOVE_FLAT_MODE) {
       return ['centers'];
     } else {
       return undefined;

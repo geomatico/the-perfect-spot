@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import {ADD_ORIGIN_MODE, REMOVE_ORIGIN_MODE} from '../config';
+import {ADD_FLAT_MODE, REMOVE_FLAT_MODE} from '../config';
 import Tooltip from '@mui/material/Tooltip';
 import HomeIcon from '@mui/icons-material/Home';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
@@ -33,11 +33,11 @@ const FlatSidePanel = ({mode, onFlatModeChanged, onPhaseChanged, onCalculateRout
         color='#d70f0f'
         items={[
           {
-            id: ADD_ORIGIN_MODE,
+            id: ADD_FLAT_MODE,
             content: <Tooltip title={t('add_origin')}><HomeIcon/></Tooltip>
           },
           {
-            id: REMOVE_ORIGIN_MODE,
+            id: REMOVE_FLAT_MODE,
             content: <Tooltip title={t('remove_origin')}><HomeOutlinedIcon/></Tooltip>
           }
         ]}
@@ -60,7 +60,7 @@ FlatSidePanel.propTypes = {
 };
 
 FlatSidePanel.defaultProps = {
-  mode: ADD_ORIGIN_MODE
+  mode: ADD_FLAT_MODE
 };
 
 export default FlatSidePanel;

@@ -11,7 +11,6 @@ import {getDirections, getInfo} from '../../utils/ors';
 import {useParams} from 'react-router-dom';
 import POISidePanel from '../../components/POISidePanel';
 import FlatSidePanel from '../../components/FlatSidePanel';
-import Button from '@mui/material/Button';
 
 const ScrollableContent = styled(Box)({
   overflow: 'auto',
