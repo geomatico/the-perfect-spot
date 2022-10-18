@@ -14,6 +14,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
 import DirectionsTable from '../../components/DirectionsTable';
+import Box from '@mui/material/Box';
 
 const MainContent = ({mapStyle, mode, routes, directions}) => {
 
@@ -24,7 +25,6 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   const handleSearchResult = ({bbox}) => flyTo(bbox);
 
   const {points: strPoints, originPoints: strOriginPoints} = useParams();
-
 
   const points = strPoints ? JSON.parse(strPoints) : [];
   const originPoints = strOriginPoints ? JSON.parse(strOriginPoints) : [];
@@ -116,7 +116,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         type: 'circle',
         paint: {
           'circle-color': COLOR,
-          'circle-radius': 15,
+          'circle-radius': 10,
           'circle-stroke-color': '#FFFFFF',
           'circle-stroke-width': 2
         }
@@ -127,7 +127,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         type: 'circle',
         paint: {
           'circle-color': 'red',
-          'circle-radius': 15,
+          'circle-radius': 10,
           'circle-stroke-color': '#FFFFFF',
           'circle-stroke-width': 2
         }
@@ -154,7 +154,6 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   }, [mapStyle]);
 
   const handleClick = e => {
-
     if (mode === ADD_POI_MODE) {
       setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
     } else if (mode === REMOVE_POI_MODE) {
@@ -172,7 +171,10 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     setCursor(mode === ADD_POI_MODE ? 'pointer' : 'auto');
   }, [mode]);
 
-  const onMouseEnter = useCallback(() => setCursor('no-drop'), []);
+  const onMouseEnter = useCallback(() => {
+    setCursor('no-drop');
+    console.log('entra');
+  }, []);
   const onMouseLeave = useCallback(() => setCursor('auto'), []);
 
 
@@ -201,7 +203,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       onMouseLeave={onMouseLeave}
       onClick={handleClick}
     />
-    <div style={{
+    <Box sx={{
       position: 'absolute',
       top: 18,
       left: 18,
@@ -212,8 +214,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         country='ES'
         lang={i18n.language}
         onResultClick={handleSearchResult}/>
-    </div>
-
+    </Box>
     <div style={{
       position: 'absolute',
       bottom: 18,
@@ -226,6 +227,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
 };
 
 MainContent.propTypes = {
+  onMapStyleChanged: PropTypes.func,
   mapStyle: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any,

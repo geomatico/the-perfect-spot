@@ -8,6 +8,7 @@ import TableBody from '@mui/material/TableBody';
 import {useParams} from 'react-router-dom';
 
 const DirectionsTable = ({directions}) => {
+  console.log(directions);
 
   const {originPoints: strOriginPoints} = useParams();
 
