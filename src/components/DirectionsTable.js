@@ -14,7 +14,7 @@ const DirectionsTable = ({directions}) => {
   const locations = strOriginPoints ? JSON.parse(strOriginPoints) : [];
 
   // no nos mateis
-  const nombres = ['Mi casa', 'Gimnasio', 'Centro médico'];
+  const nombres = ['Mi casa', 'Gimnasio', 'Centro médico', 'Supermercado'];
 
   return <>
     {
@@ -46,7 +46,6 @@ const DirectionsTable = ({directions}) => {
                   }</TableCell>
                 ))
               }
-
             </TableRow>
           ))}
         </TableBody>

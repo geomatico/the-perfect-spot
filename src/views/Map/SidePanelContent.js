@@ -41,21 +41,19 @@ const SidePanelContent = ({mapStyle, onMapStyleChanged, mode, onModeChanged, onR
 
   const calculate = () => {
     getInfo(locations, destinations).then(data => {
-      console.log('data', data);
-      const finalRows = [];
-      data.destinations.forEach((el, index) => {
-        const items = [];
-        locations.forEach((loc, locIndex) => {
-          const item = [
-            (data.distances[locIndex][index] / 1000).toFixed(1),
-            (data.durations[locIndex][index] / 60).toFixed(1)
-          ];
-          items.push(item);
-        });
-
-        finalRows.push({name: el.name, data: items});
+      console.log('data from API', data);
+      const finalRows = data.destinations.map((destination, destinationIndex) => {
+        return {
+          name: destination.name,
+          data: locations.map((loc, locationIndex) => {
+            return [
+              (data.distances[locationIndex][destinationIndex] / 1000).toFixed(1),
+              (data.durations[locationIndex][destinationIndex] / 60).toFixed(1)
+            ];
+          }),
+        };
       });
-      console.log('finalrows', finalRows);
+      console.log('final Object', finalRows);
       onDirectionsChange(finalRows);
     });
   };
