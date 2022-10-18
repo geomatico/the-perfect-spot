@@ -115,7 +115,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         source: 'centers',
         type: 'circle',
         paint: {
-          'circle-color': COLOR,
+          'circle-color': 'red',
           'circle-radius': 10,
           'circle-stroke-color': '#FFFFFF',
           'circle-stroke-width': 2
@@ -126,7 +126,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         source: 'centersOrigin',
         type: 'circle',
         paint: {
-          'circle-color': 'red',
+          'circle-color': COLOR,
           'circle-radius': 10,
           'circle-stroke-color': '#FFFFFF',
           'circle-stroke-width': 2
@@ -154,14 +154,15 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   }, [mapStyle]);
 
   const handleClick = e => {
+    //setPoints
     if (mode === ADD_POI_MODE) {
-      setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
-    } else if (mode === REMOVE_POI_MODE) {
-      setPoints(points.filter((p, i) => i !== e.features[0].id));
-    } else if (mode === ADD_ORIGIN_MODE) {
       setOriginPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
-    } else if (mode === REMOVE_ORIGIN_MODE) {
+    } else if (mode === REMOVE_POI_MODE) {
       setOriginPoints(originPoints.filter((p, i) => i !== e.features[0].id));
+    } else if (mode === ADD_ORIGIN_MODE) {
+      setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
+    } else if (mode === REMOVE_ORIGIN_MODE) {
+      setPoints(points.filter((p, i) => i !== e.features[0].id));
     }
   };
 
