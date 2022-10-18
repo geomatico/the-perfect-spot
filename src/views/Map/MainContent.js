@@ -13,26 +13,17 @@ import {
 import {useNavigate, useParams} from 'react-router-dom';
 import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
+import DirectionsTable from '../../components/DirectionsTable';
 
-const MainContent = ({
-                       mapStyle,
-                       mode,
-                       routes
-                     }) => {
+const MainContent = ({mapStyle, mode, routes, directions}) => {
 
-  const {
-          t,
-          i18n
-        } = useTranslation();
+  const {t, i18n} = useTranslation();
 
   const mapRef = useRef();
   const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
   const handleSearchResult = ({bbox}) => flyTo(bbox);
 
-  const {
-          points: strPoints,
-          originPoints: strOriginPoints
-        } = useParams();
+  const {points: strPoints, originPoints: strOriginPoints} = useParams();
 
 
   const points = strPoints ? JSON.parse(strPoints) : [];
@@ -222,13 +213,24 @@ const MainContent = ({
         lang={i18n.language}
         onResultClick={handleSearchResult}/>
     </div>
+
+    <div style={{
+      position: 'absolute',
+      bottom: 18,
+      right: 18,
+      background: 'white'
+    }}>
+      <DirectionsTable directions={directions}/>
+    </div>
   </>;
 };
 
 MainContent.propTypes = {
   mapStyle: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
-  routes: PropTypes.any
+  routes: PropTypes.any,
+  directions: PropTypes.array.isRequired,
+
 };
 
 export default MainContent;
