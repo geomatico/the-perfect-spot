@@ -1,45 +1,15 @@
-# distancia-comunitats-energetiques
+# the-perfect-spot
 
-Template for a simple viewer, to use it, go to https://github.com/geomatico/distancia-comunitats-energetiques and click on 'Use this template', a new repository will be created based on this template.
-If you want to add functionalities, you can see more components here: https://labs.geomatico.es/geocomponents/
+El objetivo de “The perfect spot” es calcular a qué distancia queda un piso de una serie de puntos de interés (trabajo, casa de padres, hobbys). Así la aplicación permite evaluar diferentes opciones donde vivir, comparar la ubicación de diferentes viviendas.  
 
-## First steps
+La aplicación permite:
 
-Rename project in the following files:
+- ubicar puntos de interés en el mapa
 
-- package.json:
-    - name
-    - repository.url
-    - bugs.url
-    - homepage
-- package-lock.json:
-    - name
-- template.html:
-    - Etiqueta `<title>`
+- ubicar viviendas en el mapa
 
-## i18n
+- calcular las diferentes distancias y mostrarlas en tabla y en mapa
 
-We use **i18next** framework to localize our components:
+- añadir y borrar puntos de interés y viviendas
 
-- Web: [https://www.i18next.com/](https://www.i18next.com/)
-- React integration: [https://react.i18next.com/](https://react.i18next.com/)
-
-Usage example on functional component:
-
-```js
-import { useTranslation } from 'react-i18next';
-
-const FunctionalComponent = () => {
-  const { t } = useTranslation();
-  return <h1>{t('welcome')}</h1>
-}
-```
-
-The applied language will be determined by:
-
-1. The `lang` query string. For instance, use [http://localhost:8080/?lang=es](http://localhost:8080/?lang=es).
-2. The browser language preferences.
-3. If detection fails, will default to `es`.
-
-There are other detection strategies available, see
-[https://github.com/i18next/i18next-browser-languageDetector](https://github.com/i18next/i18next-browser-languageDetector).
+Tecnológicamente, la plataforma utiliza Open Route Service (ORS)  https://openrouteservice.org/ como servicio externo de routing. Precisa de una API_KEY en el archivo .env.
