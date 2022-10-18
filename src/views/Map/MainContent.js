@@ -162,7 +162,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     } else if (mode === ADD_ORIGIN_MODE) {
       setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
     } else if (mode === REMOVE_ORIGIN_MODE) {
-      setPoints(points.filter((p, i) => i !== e.features[0].id));
+      setPoints(originPoints.filter((p, i) => i !== e.features[0].id));
     }
   };
 
@@ -182,9 +182,9 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   // habilita capas segun el modo seleccionado
   const calculateInteractiveLayers = () => {
     if (mode === REMOVE_POI_MODE) {
-      return ['centers'];
-    } else if (mode === REMOVE_ORIGIN_MODE) {
       return ['centersOrigin'];
+    } else if (mode === REMOVE_ORIGIN_MODE) {
+      return ['centers'];
     } else {
       return undefined;
     }
