@@ -13,6 +13,9 @@ const DirectionsTable = ({directions}) => {
 
   const locations = strOriginPoints ? JSON.parse(strOriginPoints) : [];
 
+  // no nos mateis
+  const nombres = ['Mi casa', 'Gimnasio', 'Centro médico'];
+
   return <>
     {
       directions && directions.length &&
@@ -21,7 +24,7 @@ const DirectionsTable = ({directions}) => {
           <TableRow>
             <TableCell key={'empty'} align="right"></TableCell>
             {
-              locations.map((location, i) => <TableCell key={location + i} align="right">Salida {i +1}</TableCell>)
+              locations.map((location, i) => <TableCell key={location + i} align="right">{nombres[i]}</TableCell>)
             }
           </TableRow>
         </TableHead>
