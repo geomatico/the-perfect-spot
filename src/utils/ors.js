@@ -1,6 +1,6 @@
 import http from './http';
 
-const selectedTransport = 'driving-car';
+const selectedTransport = 'foot-walking';
 const ors_api = 'https://api.openrouteservice.org/v2/matrix/';
 const ors_geometries = `https://api.openrouteservice.org/v2/directions/${selectedTransport}/geojson`;
 
@@ -30,7 +30,7 @@ const compute_ors_params = (locations, destinations) => {
 export const getInfo = (
   locations,
   destinations,
-  {url = ors_api, mode = ors_modes['driving-car']} = {}
+  {url = ors_api, mode = ors_modes[selectedTransport]} = {}
 ) => http.post(url + mode, compute_ors_params(locations, destinations)).then(featureCollection => featureCollection);
 
 

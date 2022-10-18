@@ -11,6 +11,7 @@ const Map = () => {
   const [mode, setMode] = useState(ADD_POI_MODE);
 
   const [routes, setRoutes] = useState(null);
+  const [directions, setDirections] = useState([]);
 
   const sidePanelContent = <SidePanelContent
     mapStyle={mapStyle}
@@ -18,12 +19,15 @@ const Map = () => {
     mode={mode}
     onModeChanged={setMode}
     onRoutesChange={setRoutes}
+    directions={directions}
+    onDirectionsChange={setDirections}
   />;
 
   const mainContent = <MainContent
     mapStyle={mapStyle}
     mode={mode}
     routes={routes}
+    directions={directions}
   />;
 
   return <Layout

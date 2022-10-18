@@ -29,27 +29,33 @@ const ScrollableContent = styled(Box)({
   overflow: 'auto',
   padding: '8px',
 });
-const SidePanelContent = ({
-                            mapStyle,
-                            onMapStyleChanged,
-                            mode,
-                            onModeChanged,
-                            onRoutesChange
-                          }) => {
+const SidePanelContent = ({mapStyle, onMapStyleChanged, mode, onModeChanged, onRoutesChange, onDirectionsChange}) => {
 
   const {t} = useTranslation();
 
   const handleItemCLick = newMode => newMode && onModeChanged(newMode);
 
-  const {
-          points: strPoints,
-          originPoints: strOriginPoints
-        } = useParams();
+  const {points: strPoints, originPoints: strOriginPoints} = useParams();
   const destinations = strPoints ? JSON.parse(strPoints) : [];
   const locations = strOriginPoints ? JSON.parse(strOriginPoints) : [];
 
   const calculate = () => {
-    getInfo(locations, destinations).then(data => console.log('data', data));
+    getInfo(locations, destinations).then(data => {
+      console.log('data from API', data);
+      const finalRows = data.destinations.map((destination, destinationIndex) => {
+        return {
+          name: destination.name,
+          data: locations.map((loc, locationIndex) => {
+            return [
+              (data.distances[locationIndex][destinationIndex] / 1000).toFixed(1),
+              (data.durations[locationIndex][destinationIndex] / 60).toFixed(1)
+            ];
+          }),
+        };
+      });
+      console.log('final Object', finalRows);
+      onDirectionsChange(finalRows);
+    });
   };
 
   const calculateRoutes = () => {
@@ -65,12 +71,8 @@ const SidePanelContent = ({
       });
     });
 
-    console.log(888, Object.values(promises).flat())
-
-
     Promise.all(Object.values(promises).flat())
       .then((data) => {
-
         const features = data.map(f => f.features).flat();
         const featureCollection = {
           type: 'FeatureCollection',
@@ -82,10 +84,8 @@ const SidePanelContent = ({
               }
             )),
         };
-
         onRoutesChange(featureCollection);
       });
-
   };
 
   return <Stack sx={{
@@ -116,15 +116,9 @@ const SidePanelContent = ({
                 id: REMOVE_POI_MODE,
                 content: <Tooltip title={t('remove_poi')}><RemoveIcon/></Tooltip>
               },
-
             ]}
             onItemClick={handleItemCLick}
             selectedItemId={mode}
-            /*sx={{
-              '&:last-child': {
-                border: 2
-              }
-            }}*/
           />
         </Grid>
         <Grid item>
@@ -134,6 +128,8 @@ const SidePanelContent = ({
 
         </Grid>
       </Grid>
+
+
       <SectionTitle titleKey='baseMap'/>
       <Grid mt={2} mb={2}>
         <BaseMapList
@@ -156,6 +152,7 @@ SidePanelContent.propTypes = {
   mode: PropTypes.string.isRequired,
   onModeChanged: PropTypes.func.isRequired,
   onRoutesChange: PropTypes.func.isRequired,
+  onDirectionsChange: PropTypes.func.isRequired
 };
 
 export default SidePanelContent;
