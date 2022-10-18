@@ -13,7 +13,7 @@ const DirectionsTable = ({directions}) => {
 
   const locations = strOriginPoints ? JSON.parse(strOriginPoints) : [];
 
-  // no nos mateis
+  // no nos mateis, estos son datos de prueba hasta que el usuario pueda meter sus propios nombres
   const nombres = ['Mi casa', 'Gimnasio', 'Centro médico', 'Supermercado'];
 
   return <>
