@@ -24,21 +24,21 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
   const handleSearchResult = ({bbox}) => flyTo(bbox);
 
-  const {points: strPoints, originPoints: strOriginPoints} = useParams();
+  const {points: strPoiPoints, originPoints: strFlatPoints} = useParams();
 
-  const points = strPoints ? JSON.parse(strPoints) : [];
-  const originPoints = strOriginPoints ? JSON.parse(strOriginPoints) : [];
+  const points = strPoiPoints ? JSON.parse(strPoiPoints) : [];
+  const originPoints = strFlatPoints ? JSON.parse(strFlatPoints) : [];
 
   const navigate = useNavigate();
 
   const setPoints = points => {
-    let strPoints = JSON.stringify(points);
-    navigate(`../map/${strPoints}/${strOriginPoints || '[]'}`);
+    let strPoiPoints = JSON.stringify(points);
+    navigate(`../map/${strPoiPoints}/${strFlatPoints || '[]'}`);
   };
 
   const setOriginPoints = originPoints => {
-    let strOriginPoints = JSON.stringify(originPoints);
-    navigate(`../map/${strPoints || '[]'}/${strOriginPoints}`);
+    let strFlatPoints = JSON.stringify(originPoints);
+    navigate(`../map/${strPoiPoints || '[]'}/${strFlatPoints}`);
   };
 
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
