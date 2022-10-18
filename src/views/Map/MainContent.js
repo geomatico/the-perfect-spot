@@ -225,13 +225,6 @@ const MainContent = ({
         lang={i18n.language}
         onResultClick={handleSearchResult}/>
     </Box>
-    {/*<Box sx={{position: 'relative', bottom: 12, display: 'flex'}}>
-      <BaseMapPicker
-        styles={MAPSTYLES}
-        selectedStyleId={mapStyle}
-        onStyleChange={onMapStyleChanged}
-      />
-    </Box>*/}
   </>;
 };
 

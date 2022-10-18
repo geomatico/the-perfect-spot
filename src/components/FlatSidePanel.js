@@ -18,10 +18,8 @@ import {useTranslation} from 'react-i18next';
 
 const FlatSidePanel = ({mode, onFlatModeChanged, onPhaseChanged, onCalculateRoutes}) => {
   const {t} = useTranslation();
-  const handleFlatCLick = newMode => {
-    console.log('newMode', newMode);
-    newMode && onFlatModeChanged(newMode);
-  };
+  const handleFlatCLick = newMode => newMode && onFlatModeChanged(newMode);
+
   return <>
     <Typography paragraph variant='subtitle1' sx={{textTransform: 'uppercase'}}>{t('p1')}</Typography>
     <Stack>

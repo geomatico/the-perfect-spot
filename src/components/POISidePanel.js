@@ -40,18 +40,6 @@ const POISidePanel = ({mode, onPOIModeChanged, onPhaseChanged}) => {
       />
       <Button variant='contained' sx={{mt: 2}} onClick={onPhaseChanged}>FINALIZAR</Button>
     </Stack>
-
-    {/*<SectionTitle titleKey='baseMap'/>
-    <Grid mt={2} mb={2}>
-      <BaseMapList
-        styles={MAPSTYLES.map(s => ({
-          ...s,
-          label: t(s.label)
-        }))}
-        selectedStyleId={mapStyle}
-        onStyleChange={onMapStyleChanged}
-      />
-    </Grid>*/}
   </>;
 };
 
