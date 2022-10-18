@@ -1,3 +1,4 @@
+/*
 import {expect} from 'chai';
 import fetchMock from 'fetch-mock';
 import foot from '../test/fixtures/foot-walking.json';
@@ -18,4 +19,4 @@ describe('OpenRouteService helper', () => {
         done();
       });
   });
-});
+});*/

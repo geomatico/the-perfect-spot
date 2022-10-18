@@ -1,7 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-
-
 import Map from '@geomatico/geocomponents/Map';
 
 import {
@@ -18,8 +16,10 @@ import {useTranslation} from 'react-i18next';
 
 const MainContent = ({
                        mapStyle,
-                       mode
+                       mode,
+                       routes
                      }) => {
+
   const {
           t,
           i18n
@@ -34,20 +34,20 @@ const MainContent = ({
           originPoints: strOriginPoints
         } = useParams();
 
+
   const points = strPoints ? JSON.parse(strPoints) : [];
   const originPoints = strOriginPoints ? JSON.parse(strOriginPoints) : [];
-
 
   const navigate = useNavigate();
 
   const setPoints = points => {
     let strPoints = JSON.stringify(points);
-    navigate(`../map/${strPoints}/${strOriginPoints}`);
+    navigate(`../map/${strPoints}/${strOriginPoints || '[]'}`);
   };
 
   const setOriginPoints = originPoints => {
     let strOriginPoints = JSON.stringify(originPoints);
-    navigate(`../map/${strPoints}/${strOriginPoints}`);
+    navigate(`../map/${strPoints || '[]'}/${strOriginPoints}`);
   };
 
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
@@ -97,12 +97,28 @@ const MainContent = ({
         type: 'geojson',
         data: centersOrigin
       },
+      directions: {
+        type: 'geojson',
+        data: routes || empty
+      },
     };
   }, [points, originPoints]);
 
   const layers = useMemo(() => {
     return [
-
+      {
+        'id': 'directions',
+        'type': 'line',
+        'source': 'directions',
+        'layout': {
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        'paint': {
+          'line-color': '#888',
+          'line-width': 3
+        }
+      },
       {
         id: 'centers',
         source: 'centers',
@@ -124,25 +140,37 @@ const MainContent = ({
           'circle-stroke-color': '#FFFFFF',
           'circle-stroke-width': 2
         }
+      },
+
+      {
+        'id': 'symbols',
+        'type': 'symbol',
+        'source': 'directions',
+        'layout': {
+          'symbol-placement': 'line',
+          'text-anchor': 'bottom',
+
+          'text-font': ['Open Sans Regular'],
+          'text-field': '{duration}',
+          'text-size': 16
+        },
+        'paint': {
+          'text-color': 'red',
+        }
       }
+
     ];
   }, [mapStyle]);
 
   const handleClick = e => {
 
     if (mode === ADD_POI_MODE) {
-
       setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
     } else if (mode === REMOVE_POI_MODE) {
-      // TODO remove clicked element
-      console.log('remove', e.features);
       setPoints(points.filter((p, i) => i !== e.features[0].id));
     } else if (mode === ADD_ORIGIN_MODE) {
-      console.log('aqui', originPoints)
       setOriginPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
-
     } else if (mode === REMOVE_ORIGIN_MODE) {
-      console.log('remove point red');
       setOriginPoints(originPoints.filter((p, i) => i !== e.features[0].id));
     }
   };
@@ -156,6 +184,18 @@ const MainContent = ({
   const onMouseEnter = useCallback(() => setCursor('no-drop'), []);
   const onMouseLeave = useCallback(() => setCursor('auto'), []);
 
+
+  // habilita capas segun el modo seleccionado
+  const calculateInteractiveLayers = () => {
+    if (mode === REMOVE_POI_MODE) {
+      return ['centers'];
+    } else if (mode === REMOVE_ORIGIN_MODE) {
+      return ['centersOrigin'];
+    } else {
+      return undefined;
+    }
+  };
+
   return <>
     <Map
       ref={mapRef}
@@ -164,7 +204,7 @@ const MainContent = ({
       sources={sources}
       layers={layers}
       onViewportChange={setViewport}
-      interactiveLayerIds={mode === REMOVE_POI_MODE ? ['centers'] : undefined}
+      interactiveLayerIds={calculateInteractiveLayers()}
       cursor={cursor}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -176,15 +216,19 @@ const MainContent = ({
       left: 18,
       width: 250
     }}>
-      <NominatimSearchBox placeholder={t('search')} country='ES' lang={i18n.language}
-                          onResultClick={handleSearchResult}/>
+      <NominatimSearchBox
+        placeholder={t('search')}
+        country='ES'
+        lang={i18n.language}
+        onResultClick={handleSearchResult}/>
     </div>
   </>;
 };
 
 MainContent.propTypes = {
   mapStyle: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired
+  mode: PropTypes.string.isRequired,
+  routes: PropTypes.any
 };
 
 export default MainContent;

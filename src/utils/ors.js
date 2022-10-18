@@ -1,35 +1,42 @@
 import http from './http';
 
+const selectedTransport = 'driving-car';
 const ors_api = 'https://api.openrouteservice.org/v2/matrix/';
+const ors_geometries = `https://api.openrouteservice.org/v2/directions/${selectedTransport}/geojson`;
+
 export const ors_modes = {
   'foot-walking': 'foot-walking',
   'cycling-regular': 'cycling-regular',
   'driving-car': 'driving-car'
 };
 
-const compute_ors_params = () => (
-  {
-    "locations": [[9.70093, 48.477473], [9.207916, 49.153868], [37.573242, 55.801281], [115.663757, 38.106467]],
-    "destinations": [0, 1],
-    "metrics": ["distance", "duration"],
-    "resolve_locations": "true",
-    "sources": [2, 3],
-    "units": "km"
-  }
-);
+const getRange =(start, end)=> {
+  return Array(end - start + 1).fill().map((_, idx) => start + idx);
+};
 
-//fixme cambiar nombre
-export const getIsochrones = (
- /* lat,
-  lon,
-  {
-    range = 900,
-    interval = 300,
-    url = ors_api,
-    mode = ors_modes['foot-walking']
-  } = {}*/
-) =>
-  http.post(ors_api + ors_modes['driving-car'], compute_ors_params())
-    .then(featureCollection => featureCollection);
+const compute_ors_params = (locations, destinations) => {
+  const allLocations = locations.concat(destinations);
+
+  return {
+    'locations': allLocations,
+    'destinations': getRange(locations.length, allLocations.length -1),
+    'metrics': ['distance', 'duration'],
+    'resolve_locations': 'true',
+    'sources': getRange(0, locations.length - 1),
+    'units': 'm'
+  };
+};
+
+export const getInfo = (
+  locations,
+  destinations,
+  {url = ors_api, mode = ors_modes['driving-car']} = {}
+) => http.post(url + mode, compute_ors_params(locations, destinations)).then(featureCollection => featureCollection);
 
 
+export const getDirections = (
+  locations,
+  destinations,
+) => {
+  return http.post(ors_geometries , {coordinates: [...locations, ...destinations] }).then(featureCollection => featureCollection);
+};
