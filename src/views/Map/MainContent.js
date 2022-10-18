@@ -13,26 +13,27 @@ import {
 import {useNavigate, useParams} from 'react-router-dom';
 import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
+import Box from '@mui/material/Box';
 
 const MainContent = ({
-                       mapStyle,
-                       mode,
-                       routes
-                     }) => {
+  mapStyle,
+  mode,
+  routes
+}) => {
 
   const {
-          t,
-          i18n
-        } = useTranslation();
+    t,
+    i18n
+  } = useTranslation();
 
   const mapRef = useRef();
   const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
   const handleSearchResult = ({bbox}) => flyTo(bbox);
 
   const {
-          points: strPoints,
-          originPoints: strOriginPoints
-        } = useParams();
+    points: strPoints,
+    originPoints: strOriginPoints
+  } = useParams();
 
 
   const points = strPoints ? JSON.parse(strPoints) : [];
@@ -125,7 +126,7 @@ const MainContent = ({
         type: 'circle',
         paint: {
           'circle-color': COLOR,
-          'circle-radius': 15,
+          'circle-radius': 10,
           'circle-stroke-color': '#FFFFFF',
           'circle-stroke-width': 2
         }
@@ -136,7 +137,7 @@ const MainContent = ({
         type: 'circle',
         paint: {
           'circle-color': 'red',
-          'circle-radius': 15,
+          'circle-radius': 10,
           'circle-stroke-color': '#FFFFFF',
           'circle-stroke-width': 2
         }
@@ -163,7 +164,6 @@ const MainContent = ({
   }, [mapStyle]);
 
   const handleClick = e => {
-
     if (mode === ADD_POI_MODE) {
       setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
     } else if (mode === REMOVE_POI_MODE) {
@@ -181,7 +181,10 @@ const MainContent = ({
     setCursor(mode === ADD_POI_MODE ? 'pointer' : 'auto');
   }, [mode]);
 
-  const onMouseEnter = useCallback(() => setCursor('no-drop'), []);
+  const onMouseEnter = useCallback(() => {
+    setCursor('no-drop');
+    console.log('entra');
+  }, []);
   const onMouseLeave = useCallback(() => setCursor('auto'), []);
 
 
@@ -210,7 +213,7 @@ const MainContent = ({
       onMouseLeave={onMouseLeave}
       onClick={handleClick}
     />
-    <div style={{
+    <Box sx={{
       position: 'absolute',
       top: 18,
       left: 18,
@@ -221,11 +224,19 @@ const MainContent = ({
         country='ES'
         lang={i18n.language}
         onResultClick={handleSearchResult}/>
-    </div>
+    </Box>
+    {/*<Box sx={{position: 'relative', bottom: 12, display: 'flex'}}>
+      <BaseMapPicker
+        styles={MAPSTYLES}
+        selectedStyleId={mapStyle}
+        onStyleChange={onMapStyleChanged}
+      />
+    </Box>*/}
   </>;
 };
 
 MainContent.propTypes = {
+  onMapStyleChanged: PropTypes.func,
   mapStyle: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any

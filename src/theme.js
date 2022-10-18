@@ -2,7 +2,7 @@ import createTheme from '@mui/material/styles/createTheme';
 import {lighten} from '@mui/material';
 
 export const primaryColor = '#26549e';
-export const secondaryColor = '#ffef44';
+export const secondaryColor = '#d70f0f';
 
 const theme = mode => createTheme({
   palette: {
