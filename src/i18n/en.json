@@ -3,8 +3,12 @@
   "add_origin": "--Añade un Origen",
   "add_poi": "--Añade un POI",
   "baseMap": "Base Map",
+  "cycling-regular": "Bike",
   "dark": "Dark",
+  "driving-car": "Driving car",
+  "driving-hgv": "Public transport",
   "editor": "Site editor",
+  "foot-walking": "Foot walking",
   "image": "Image",
   "map": "Map",
   "p0": "Define points of interest",
@@ -13,9 +17,5 @@
   "remove_origin": "--Elimina un Origen",
   "remove_poi": "--Elimina un POI",
   "search": "Search...",
-  "driving-car": "Driving car",
-  "foot-walking": "Foot walking",
-  "driving-hgv": "Public transport",
-  "cycling-regular": "Bike",
   "transportType": "Define transport type"
 }
