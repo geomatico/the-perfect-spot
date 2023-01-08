@@ -26,7 +26,7 @@ const FlatSidePanel = ({mode, onFlatModeChanged, onPhaseChanged, onCalculateRout
   };
 
   return <>
-    <Typography paragraph variant='subtitle1' sx={{textTransform: 'uppercase'}}>{t('p1')}</Typography>
+    <Typography paragraph variant='subtitle1' sx={{textTransform: 'uppercase',  mt: 4}}>{t('p1')}</Typography>
     <Stack>
       <ButtonGroup
         variant="outlined"

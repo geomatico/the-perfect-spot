@@ -19,7 +19,7 @@ const POISidePanel = ({mode, onPOIModeChanged, onPhaseChanged}) => {
   const handlePOICLick = newMode => newMode && onPOIModeChanged(newMode);
 
   return <>
-    <Typography paragraph variant='subtitle1' sx={{textTransform: 'uppercase'}}>{t('p0')}</Typography>
+    <Typography paragraph variant='subtitle1' sx={{textTransform: 'uppercase', mt: 4}}>{t('p0')}</Typography>
     <Stack>
       <ButtonGroup
         variant="outlined"

@@ -1,34 +1,55 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
 import Stack from '@mui/material/Stack';
 
 import Box from '@mui/material/Box';
 import styled from '@mui/styles/styled';
-
+import SelectInput from '@geomatico/geocomponents/SelectInput';
 import Geomatico from '../../components/Geomatico';
 import {getDirections, getInfo} from '../../utils/ors';
 import {useParams} from 'react-router-dom';
 import POISidePanel from '../../components/POISidePanel';
 import FlatSidePanel from '../../components/FlatSidePanel';
+import {useTranslation} from 'react-i18next';
+import Typography from '@mui/material/Typography';
 
 const ScrollableContent = styled(Box)({
   overflow: 'auto',
   padding: '8px',
 });
 
+
 const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, onPhaseChanged, onRoutesChange, mode, onDirectionsChange}) => {
 
-  const {
-    points: strPoiPoints,
-    originPoints: strFlatPoints
-  } = useParams();
+  const {points: strPoiPoints, originPoints: strFlatPoints} = useParams();
+  const {t} = useTranslation();
+  const transportOptions = [
+    {
+      id: 'driving-car',
+      label: t('driving-car')
+    },
+    {
+      id: 'foot-walking',
+      label: t('foot-walking')
+    },
+    {
+      id: 'driving-hgv',
+      label: t('driving-hgv')
+    },
+    {
+      id: 'cycling-regular',
+      label: t('cycling-regular')
+    },
+  ];
+
+  const [transportation, setTransportation] = useState(transportOptions[0].id);
 
   const destinations = strPoiPoints ? JSON.parse(strPoiPoints) : [];
   const locations = strFlatPoints ? JSON.parse(strFlatPoints) : [];
 
-  const calculateDirectionsTable = () => {
-    getInfo(locations, destinations).then(data => {
+  const calculateDirectionsTable = (transportationType) => {
+    getInfo(locations, destinations, transportationType || transportation).then(data => {
       console.log('data from API', data);
       const finalRows = data.destinations.map((destination, destinationIndex) => {
         return {
@@ -46,15 +67,14 @@ const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, o
     });
   };
 
-
-  const calculateRoutes = () => {
+  const calculateRoutes = (transportationType) => {
     const promises = {};
     locations.forEach((location, idx) => {
       destinations.forEach(destination => {
         if (promises[idx]?.length) {
-          promises[idx].push(getDirections([location], [destination]));
+          promises[idx].push(getDirections([location], [destination], transportationType || transportation));
         } else {
-          promises[idx] = [getDirections([location], [destination])];
+          promises[idx] = [getDirections([location], [destination], transportationType || transportation)];
         }
       });
     });
@@ -75,9 +95,27 @@ const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, o
         onRoutesChange(featureCollection);
       });
   };
-  console.log('mode', mode);
-  return <Stack sx={{height: '100%', overflow: 'hidden'}}>
+
+  const handleTransportationType = (transportationType) => {
+    setTransportation(transportationType);
+    if (strFlatPoints?.length && strPoiPoints?.length) {
+      calculateDirectionsTable(transportationType);
+      calculateRoutes(transportationType);
+    }
+
+  };
+
+  return <Stack sx={{
+    height: '100%',
+    overflow: 'hidden'
+  }}>
+
     <ScrollableContent>
+      <Typography paragraph variant='subtitle1' sx={{textTransform: 'uppercase'}}>{t('transportType')}</Typography>
+      <SelectInput
+        options={transportOptions}
+        selectedOptionId={transportation}
+        onOptionChange={handleTransportationType} minWidth='100%'/>
       {
         isPOIsEditing ?
           <POISidePanel

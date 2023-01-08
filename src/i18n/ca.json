@@ -12,5 +12,10 @@
   "remove": "Esborra",
   "remove_origin": "--Elimina un Origen",
   "remove_poi": "--Elimina un POI",
-  "search": "Cerca..."
+  "search": "Cerca...",
+  "driving-car": "En cotxe",
+  "foot-walking": "Caminant",
+  "driving-hgv": "Transport públic",
+  "cycling-regular": "Bicicleta",
+  "transportType": "Definiu mitjà de transport"
 }

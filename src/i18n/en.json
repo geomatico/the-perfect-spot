@@ -12,5 +12,10 @@
   "remove": "Remove",
   "remove_origin": "--Elimina un Origen",
   "remove_poi": "--Elimina un POI",
-  "search": "Search..."
+  "search": "Search...",
+  "driving-car": "Driving car",
+  "foot-walking": "Foot walking",
+  "driving-hgv": "Public transport",
+  "cycling-regular": "Bike",
+  "transportType": "Define transport type"
 }
