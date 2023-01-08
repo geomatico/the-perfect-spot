@@ -6,6 +6,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import ResponsiveHeader from '@geomatico/geocomponents/ResponsiveHeader';
 import SidePanel from '@geomatico/geocomponents/SidePanel';
+import RouteIcon from '@mui/icons-material/Route';
 
 import {
   DRAWER_WIDTH,
@@ -40,6 +41,8 @@ const Layout = ({mainContent, sidePanelContent}) => {
 
   return <>
     <ResponsiveHeader
+      logo={<RouteIcon fontSize='large' sx={{mt: 1}}/>}
+      title='The perfect Spot'
       onStartIconClick={widescreen ? undefined : handleClose}
       isStartIconCloseable={isSidePanelOpen}
       sx={{'&.MuiAppBar-root': {zIndex: 1500}}}

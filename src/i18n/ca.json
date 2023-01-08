@@ -3,13 +3,19 @@
   "add_origin": "--Añade un Origen",
   "add_poi": "--Añade un POI",
   "baseMap": "Cartografia base",
+  "cycling-regular": "Bicicleta",
   "dark": "Fosc",
+  "driving-car": "En cotxe",
+  "driving-hgv": "Transport públic",
   "editor": "Editor d'instal·lacions",
+  "foot-walking": "Caminant",
   "image": "Imatge",
   "map": "Mapa",
-  "p0": "Calculadora de distàncies per a l'autoconsum elèctric compartit",
+  "p0": "Definiu els punts d'interès",
+  "p1": "Definiu els habitatges",
   "remove": "Esborra",
   "remove_origin": "--Elimina un Origen",
   "remove_poi": "--Elimina un POI",
-  "search": "Cerca..."
+  "search": "Cerca...",
+  "transportType": "Definiu mitjà de transport"
 }

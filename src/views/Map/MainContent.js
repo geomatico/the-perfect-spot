@@ -3,17 +3,18 @@ import PropTypes from 'prop-types';
 import Map from '@geomatico/geocomponents/Map';
 
 import {
-  ADD_ORIGIN_MODE,
+  ADD_FLAT_MODE,
   ADD_POI_MODE,
   INITIAL_VIEWPORT,
   MAPSTYLES,
-  REMOVE_ORIGIN_MODE,
+  REMOVE_FLAT_MODE,
   REMOVE_POI_MODE
 } from '../../config';
 import {useNavigate, useParams} from 'react-router-dom';
 import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
 import DirectionsTable from '../../components/DirectionsTable';
+import Box from '@mui/material/Box';
 
 const MainContent = ({mapStyle, mode, routes, directions}) => {
 
@@ -23,22 +24,21 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
   const handleSearchResult = ({bbox}) => flyTo(bbox);
 
-  const {points: strPoints, originPoints: strOriginPoints} = useParams();
+  const {points: strPoiPoints, originPoints: strFlatPoints} = useParams();
 
-
-  const points = strPoints ? JSON.parse(strPoints) : [];
-  const originPoints = strOriginPoints ? JSON.parse(strOriginPoints) : [];
+  const points = strPoiPoints ? JSON.parse(strPoiPoints) : [];
+  const originPoints = strFlatPoints ? JSON.parse(strFlatPoints) : [];
 
   const navigate = useNavigate();
 
   const setPoints = points => {
-    let strPoints = JSON.stringify(points);
-    navigate(`../map/${strPoints}/${strOriginPoints || '[]'}`);
+    let strPoiPoints = JSON.stringify(points);
+    navigate(`../map/${strPoiPoints}/${strFlatPoints || '[]'}`);
   };
 
   const setOriginPoints = originPoints => {
-    let strOriginPoints = JSON.stringify(originPoints);
-    navigate(`../map/${strPoints || '[]'}/${strOriginPoints}`);
+    let strFlatPoints = JSON.stringify(originPoints);
+    navigate(`../map/${strPoiPoints || '[]'}/${strFlatPoints}`);
   };
 
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
@@ -115,8 +115,8 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         source: 'centers',
         type: 'circle',
         paint: {
-          'circle-color': COLOR,
-          'circle-radius': 15,
+          'circle-color': 'red',
+          'circle-radius': 10,
           'circle-stroke-color': '#FFFFFF',
           'circle-stroke-width': 2
         }
@@ -126,8 +126,8 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         source: 'centersOrigin',
         type: 'circle',
         paint: {
-          'circle-color': 'red',
-          'circle-radius': 15,
+          'circle-color': COLOR,
+          'circle-radius': 10,
           'circle-stroke-color': '#FFFFFF',
           'circle-stroke-width': 2
         }
@@ -154,16 +154,17 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   }, [mapStyle]);
 
   const handleClick = e => {
-
     if (mode === ADD_POI_MODE) {
-      setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
-    } else if (mode === REMOVE_POI_MODE) {
-      setPoints(points.filter((p, i) => i !== e.features[0].id));
-    } else if (mode === ADD_ORIGIN_MODE) {
       setOriginPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
-    } else if (mode === REMOVE_ORIGIN_MODE) {
+    } else if (mode === REMOVE_POI_MODE) {
       setOriginPoints(originPoints.filter((p, i) => i !== e.features[0].id));
+    } else if (mode === ADD_FLAT_MODE) {
+      setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
+    } else if (mode === REMOVE_FLAT_MODE) {
+      console.log('entra');
+      setPoints(points.filter((p, i) => i !== e.features[0].id));
     }
+
   };
 
   const [cursor, setCursor] = useState('pointer');
@@ -172,16 +173,19 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     setCursor(mode === ADD_POI_MODE ? 'pointer' : 'auto');
   }, [mode]);
 
-  const onMouseEnter = useCallback(() => setCursor('no-drop'), []);
+  const onMouseEnter = useCallback(() => {
+    setCursor('no-drop');
+    console.log('entra');
+  }, []);
   const onMouseLeave = useCallback(() => setCursor('auto'), []);
 
 
   // habilita capas segun el modo seleccionado
   const calculateInteractiveLayers = () => {
     if (mode === REMOVE_POI_MODE) {
-      return ['centers'];
-    } else if (mode === REMOVE_ORIGIN_MODE) {
       return ['centersOrigin'];
+    } else if (mode === REMOVE_FLAT_MODE) {
+      return ['centers'];
     } else {
       return undefined;
     }
@@ -201,7 +205,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       onMouseLeave={onMouseLeave}
       onClick={handleClick}
     />
-    <div style={{
+    <Box sx={{
       position: 'absolute',
       top: 18,
       left: 18,
@@ -212,8 +216,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         country='ES'
         lang={i18n.language}
         onResultClick={handleSearchResult}/>
-    </div>
-
+    </Box>
     <div style={{
       position: 'absolute',
       bottom: 18,
@@ -226,6 +229,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
 };
 
 MainContent.propTypes = {
+  onMapStyleChanged: PropTypes.func,
   mapStyle: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any,
