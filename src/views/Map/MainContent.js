@@ -15,8 +15,27 @@ import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
 import DirectionsTable from '../../components/DirectionsTable';
 import Box from '@mui/material/Box';
+import {Modal, TextField} from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 const MainContent = ({mapStyle, mode, routes, directions}) => {
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const {t, i18n} = useTranslation();
 
@@ -34,11 +53,14 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   const setPoints = points => {
     let strPoiPoints = JSON.stringify(points);
     navigate(`../map/${strPoiPoints}/${strFlatPoints || '[]'}`);
+    handleOpen();
+
   };
 
   const setOriginPoints = originPoints => {
     let strFlatPoints = JSON.stringify(originPoints);
     navigate(`../map/${strPoiPoints || '[]'}/${strFlatPoints}`);
+    handleOpen();
   };
 
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
@@ -132,7 +154,6 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
           'circle-stroke-width': 2
         }
       },
-
       {
         'id': 'symbols',
         'type': 'symbol',
@@ -149,7 +170,6 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
           'text-color': 'red',
         }
       }
-
     ];
   }, [mapStyle]);
 
@@ -192,6 +212,22 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   };
 
   return <>
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Text in a modal
+        </Typography>
+        <TextField value={'aaaaaa'} id="outlined-basic" label="Outlined" variant="outlined"/>
+
+        <Button onClick={handleClose}>Insertar nombre</Button>
+
+      </Box>
+    </Modal>
     <Map
       ref={mapRef}
       mapStyle={mapStyle}
@@ -234,7 +270,6 @@ MainContent.propTypes = {
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any,
   directions: PropTypes.array.isRequired,
-
 };
 
 export default MainContent;
