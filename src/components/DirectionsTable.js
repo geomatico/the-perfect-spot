@@ -26,7 +26,7 @@ const DirectionsTable = ({directions}) => {
   });
 
   // no nos mateis
-  const nombres = ['Mis padres', 'Mi trabajo', 'Amigo', 'Médico', 'Gimnasio'];
+  const nombres = ['Ref 1', 'Ref 2', 'Ref 3', 'Ref 4', 'Ref 5'];
 
 
   return <>
@@ -39,7 +39,7 @@ const DirectionsTable = ({directions}) => {
             {
               locations.map((location, i) => <TableCell key={location + i} align="right">{nombres[i]}</TableCell>)
             }
-            <TableCell key={'average'} align="right">Tiempo medio</TableCell>
+            <TableCell key={'average'} align="right">Temps mitjà</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

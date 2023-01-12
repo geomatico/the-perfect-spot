@@ -1,7 +1,7 @@
 {
   "add": "Afegeix",
-  "add_origin": "--Añade un Origen",
-  "add_poi": "--Añade un POI",
+  "add_origin": "Afegeix un spot",
+  "add_poi": "Afegeix un punt",
   "baseMap": "Cartografia base",
   "cycling-regular": "Bicicleta",
   "dark": "Fosc",
@@ -11,11 +11,11 @@
   "foot-walking": "Caminant",
   "image": "Imatge",
   "map": "Mapa",
-  "p0": "Definiu els punts d'interès",
-  "p1": "Definiu els habitatges",
+  "p0": "Clica al mapa per a definir els punts de referència",
+  "p1": "Clica al mapa per a definir els spots a avaluar",
   "remove": "Esborra",
-  "remove_origin": "--Elimina un Origen",
-  "remove_poi": "--Elimina un POI",
+  "remove_origin": "Elimina un spot",
+  "remove_poi": "Elimina un punt",
   "search": "Cerca...",
-  "transportType": "Definiu mitjà de transport"
+  "transportType": "Defineix mitjà de transport"
 }
