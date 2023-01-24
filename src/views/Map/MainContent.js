@@ -31,39 +31,67 @@ const style = {
   p: 4,
 };
 
-const MainContent = ({mapStyle, mode, routes, directions}) => {
+const MainContent = ({
+                       mapStyle,
+                       mode,
+                       routes,
+                       directions
+                     }) => {
+  const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const {t, i18n} = useTranslation();
+  const {
+          t,
+          i18n
+        } = useTranslation();
 
   const mapRef = useRef();
   const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
   const handleSearchResult = ({bbox}) => flyTo(bbox);
 
-  const {points: strPoiPoints, originPoints: strFlatPoints} = useParams();
+  const {
+          points: strPoiPoints,
+          originPoints: strFlatPoints,
+          pointsNames,
+          originPointsNames
+        } = useParams();
+
+
+  const stateApp = {
+    start: [],
+    end: [],
+    startNames: [],
+    endNames: [],
+  };
 
   const points = strPoiPoints ? JSON.parse(strPoiPoints) : [];
   const originPoints = strFlatPoints ? JSON.parse(strFlatPoints) : [];
+  const originNames1 = pointsNames ? JSON.parse(pointsNames) : [];
+  const originPointsNames1 = originPointsNames ? JSON.parse(originPointsNames) : [];
 
   const navigate = useNavigate();
 
+  const [text, setText] = useState('');
+
+
   const setPoints = points => {
     let strPoiPoints = JSON.stringify(points);
-    navigate(`../map/${strPoiPoints}/${strFlatPoints || '[]'}`);
-    handleOpen();
 
+    navigate(`../map/${strPoiPoints}/${strFlatPoints || '[]'}/${originNames1}/${originPointsNames1}`);
+    handleOpen();
   };
 
   const setOriginPoints = originPoints => {
     let strFlatPoints = JSON.stringify(originPoints);
-    navigate(`../map/${strPoiPoints || '[]'}/${strFlatPoints}`);
+
+    console.log(111, originPointsNames1)
+    navigate(`../map/${strPoiPoints || '[]'}/${strFlatPoints}/${originNames1 || '[]'}/${originPointsNames1 || '[]'}`);
+    console.log('estoy en ORIGIN points')
     handleOpen();
   };
-
-  const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
 
   const COLOR = MAPSTYLES.find(ms => ms.id === mapStyle)?.overlayColor;
 
@@ -211,6 +239,16 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     }
   };
 
+  const handleChangeText = (x) => {
+    setText(x.target.value);
+  };
+
+  const handleSaveName = () => {
+    const newNamesArray = originPointsNames1 ? [...originPointsNames1, text] : [text];
+    navigate(`../map/${strPoiPoints}/${strFlatPoints || '[]'}/${JSON.stringify(originNames1 || '[]')}/${JSON.stringify(newNamesArray)}`);
+    handleClose();
+  };
+
   return <>
     <Modal
       open={open}
@@ -220,12 +258,14 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Text in a modal
+          Añade un nombre para este punto
         </Typography>
-        <TextField value={'aaaaaa'} id="outlined-basic" label="Outlined" variant="outlined"/>
-
-        <Button onClick={handleClose}>Insertar nombre</Button>
-
+        <TextField
+          value={text}
+          onChange={(element) => handleChangeText(element)}
+          variant="outlined"
+        />
+        <Button onClick={handleSaveName}>Insertar nombre</Button>
       </Box>
     </Modal>
     <Map

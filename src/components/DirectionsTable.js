@@ -8,8 +8,6 @@ import TableBody from '@mui/material/TableBody';
 import {useParams} from 'react-router-dom';
 
 const DirectionsTable = ({directions}) => {
-  console.log(directions);
-
   const {originPoints: strOriginPoints} = useParams();
 
   const locations = strOriginPoints ? JSON.parse(strOriginPoints) : [];
@@ -27,7 +25,6 @@ const DirectionsTable = ({directions}) => {
 
   // no nos mateis
   const nombres = ['Mis padres', 'Mi trabajo', 'Amigo', 'Médico', 'Gimnasio'];
-
 
   return <>
     {
