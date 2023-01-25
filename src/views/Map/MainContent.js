@@ -19,7 +19,7 @@ import {Modal, TextField} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-const style = {
+const inputContainerStyles = {
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -29,68 +29,65 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  m: 4
 };
 
-const MainContent = ({
-                       mapStyle,
-                       mode,
-                       routes,
-                       directions
-                     }) => {
+const toStr = (a) => JSON.stringify(a);
+
+const MainContent = ({mapStyle, mode, routes, directions}) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpen = () => setOpenModal(true);
 
-  const {
-          t,
-          i18n
-        } = useTranslation();
+  const handleClose = (event, reason) => {
+    // para que no se cierre con click fuera de la modal si esc
+    if (reason && reason === 'backdropClick' && reason === 'escapeKeyDown')
+      return;
+    setOpenModal(false);
+  };
+
+  const {t, i18n} = useTranslation();
 
   const mapRef = useRef();
   const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
   const handleSearchResult = ({bbox}) => flyTo(bbox);
+  const navigate = useNavigate();
 
-  const {
-          points: strPoiPoints,
-          originPoints: strFlatPoints,
-          pointsNames,
-          originPointsNames
-        } = useParams();
-
-
-  const stateApp = {
-    start: [],
-    end: [],
-    startNames: [],
-    endNames: [],
-  };
+  const {points: strPoiPoints, originPoints: strFlatPoints, pointsNames, originPointsNames} = useParams();
 
   const points = strPoiPoints ? JSON.parse(strPoiPoints) : [];
   const originPoints = strFlatPoints ? JSON.parse(strFlatPoints) : [];
-  const originNames1 = pointsNames ? JSON.parse(pointsNames) : [];
-  const originPointsNames1 = originPointsNames ? JSON.parse(originPointsNames) : [];
-
-  const navigate = useNavigate();
 
   const [text, setText] = useState('');
 
+  const initialState = {
+    strPoiPoints: strPoiPoints ? JSON.parse(strPoiPoints) : [],
+    strFlatPoints: strFlatPoints ? JSON.parse(strFlatPoints) : [],
+    pointsNames: pointsNames ? JSON.parse(pointsNames) : [],
+    originPointsNames: originPointsNames ? JSON.parse(originPointsNames) : [],
+  };
+  const [stateUrl, setStateUrl] = useState(initialState);
+
+  useEffect(() => {
+    const url = `../map/${toStr(stateUrl.strPoiPoints)}/${toStr(stateUrl.strFlatPoints)}/${toStr(stateUrl.pointsNames)}/${toStr(stateUrl.originPointsNames)}`;
+    navigate(url);
+  }, [stateUrl]);
 
   const setPoints = points => {
-    let strPoiPoints = JSON.stringify(points);
-
-    navigate(`../map/${strPoiPoints}/${strFlatPoints || '[]'}/${originNames1}/${originPointsNames1}`);
-    handleOpen();
-  };
-
-  const setOriginPoints = originPoints => {
-    let strFlatPoints = JSON.stringify(originPoints);
-
-    console.log(111, originPointsNames1)
-    navigate(`../map/${strPoiPoints || '[]'}/${strFlatPoints}/${originNames1 || '[]'}/${originPointsNames1 || '[]'}`);
-    console.log('estoy en ORIGIN points')
-    handleOpen();
+    if (mode === 'ADD_FLAT' || mode === 'REMOVE_FLAT') {
+      setStateUrl({
+        ...stateUrl,
+        strPoiPoints: points
+      });
+    }
+    if (mode === 'ADD_POI' || mode === 'REMOVE_POI') {
+      setStateUrl({
+        ...stateUrl,
+        strFlatPoints: points
+      });
+    }
+    if (mode === 'ADD_FLAT' || mode === 'ADD_POI') handleOpen();
   };
 
   const COLOR = MAPSTYLES.find(ms => ms.id === mapStyle)?.overlayColor;
@@ -203,16 +200,14 @@ const MainContent = ({
 
   const handleClick = e => {
     if (mode === ADD_POI_MODE) {
-      setOriginPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
+      setPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
     } else if (mode === REMOVE_POI_MODE) {
-      setOriginPoints(originPoints.filter((p, i) => i !== e.features[0].id));
+      setPoints(originPoints.filter((p, i) => i !== e.features[0].id));
     } else if (mode === ADD_FLAT_MODE) {
       setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
     } else if (mode === REMOVE_FLAT_MODE) {
-      console.log('entra');
       setPoints(points.filter((p, i) => i !== e.features[0].id));
     }
-
   };
 
   const [cursor, setCursor] = useState('pointer');
@@ -223,12 +218,11 @@ const MainContent = ({
 
   const onMouseEnter = useCallback(() => {
     setCursor('no-drop');
-    console.log('entra');
   }, []);
   const onMouseLeave = useCallback(() => setCursor('auto'), []);
 
 
-  // habilita capas segun el modo seleccionado
+  // habilita/deshabilita capas segun el modo seleccionado
   const calculateInteractiveLayers = () => {
     if (mode === REMOVE_POI_MODE) {
       return ['centersOrigin'];
@@ -244,28 +238,44 @@ const MainContent = ({
   };
 
   const handleSaveName = () => {
-    const newNamesArray = originPointsNames1 ? [...originPointsNames1, text] : [text];
-    navigate(`../map/${strPoiPoints}/${strFlatPoints || '[]'}/${JSON.stringify(originNames1 || '[]')}/${JSON.stringify(newNamesArray)}`);
+    if (mode === 'ADD_POI') {
+      setStateUrl({
+        ...stateUrl,
+        originPointsNames: [...stateUrl.originPointsNames, text]
+      });
+    } else if (mode === 'ADD_FLAT') {
+      setStateUrl({
+        ...stateUrl,
+        pointsNames: [...stateUrl.pointsNames, text]
+      });
+    }
     handleClose();
+    setText('');
   };
 
   return <>
     <Modal
-      open={open}
+      open={openModal}
       onClose={handleClose}
+      disableBackdropClick
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={inputContainerStyles}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Añade un nombre para este punto
         </Typography>
         <TextField
+          error={text === ''}
+          helperText={text === '' ? 'El punto necesita un nombre' : ''}
+          sx={{mt: 2}}
           value={text}
           onChange={(element) => handleChangeText(element)}
           variant="outlined"
         />
-        <Button onClick={handleSaveName}>Insertar nombre</Button>
+        <Box mt={2}>
+          <Button variant="outlined" onClick={handleSaveName}>Inserta nombre</Button>
+        </Box>
       </Box>
     </Modal>
     <Map

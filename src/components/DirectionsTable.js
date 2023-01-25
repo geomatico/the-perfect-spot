@@ -9,22 +9,21 @@ import {useParams} from 'react-router-dom';
 
 const DirectionsTable = ({directions}) => {
   const {originPoints: strOriginPoints} = useParams();
+  const params = useParams();
 
   const locations = strOriginPoints ? JSON.parse(strOriginPoints) : [];
 
   directions.forEach(function (element) {
-
     let sum = 0;
     for( var i = 0; i < element.data.length; i++ ){
       sum += parseInt( element.data[i][1], 10 );
-
     }
     let avg = sum/element.data.length;
     element.data.avg = Math.round( avg * 10)/10;
   });
 
-  // no nos mateis
-  const nombres = ['Mis padres', 'Mi trabajo', 'Amigo', 'Médico', 'Gimnasio'];
+  const columnNames = params?.originPointsNames ? JSON.parse(params.originPointsNames) : [];
+  const rowNames = params?.pointsNames ? JSON.parse(params.pointsNames) : [];
 
   return <>
     {
@@ -34,19 +33,21 @@ const DirectionsTable = ({directions}) => {
           <TableRow>
             <TableCell key={'empty'} align="right"></TableCell>
             {
-              locations.map((location, i) => <TableCell key={location + i} align="right">{nombres[i]}</TableCell>)
+              locations.map((location, i) => <TableCell key={location + i} align="right">
+                <span style={{fontWeight: 'bold'}}>{columnNames[i]?.toUpperCase()}</span>
+              </TableCell>)
             }
             <TableCell key={'average'} align="right">Tiempo medio</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {directions.map((row) => (
+          {directions.map((row, i) => (
             <TableRow
               key={row.name + Math.random()}
               sx={{'&:last-child td, &:last-child th': {border: 0}}}
             >
               <TableCell component="th" scope="row">
-                {row.name}
+                <span style={{fontWeight: 'bold'}}>{rowNames[i]?.toUpperCase()}</span>: {row.name}
               </TableCell>
               {
                 row.data.map(d => (
