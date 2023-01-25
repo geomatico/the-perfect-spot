@@ -44,7 +44,7 @@ const DirectionsTable = ({directions}) => {
           {directions.map((row, i) => (
             <TableRow
               key={row.name + Math.random()}
-              sx={{'&:last-child td, &:last-child th': {border: 0}, background: i === 0 ? '#ffdc008c' : 'white' }}
+              sx={{'&:last-child td, &:last-child th': {border: 0}}}
             >
               <TableCell component="th" scope="row">
                 <span style={{fontWeight: 'bold'}}>{rowNames[i]?.toUpperCase()}</span>: {row.name}
