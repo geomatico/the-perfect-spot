@@ -261,7 +261,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     >
       <Box sx={inputContainerStyles}>
         <Typography id="modal-modal-title" variant="body1">
-          {t('insertName')}
+          {mode === 'ADD_POI' ? t('insertPOIName') : t('insertFLATName')}
         </Typography>
         <TextField
           error={!text}
