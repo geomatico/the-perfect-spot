@@ -38,7 +38,7 @@ const POISidePanel = ({mode, onPOIModeChanged, onPhaseChanged}) => {
         selectedItemId={mode}
         sx={{display: 'inline-block'}}
       />
-      <Button variant='contained' sx={{mt: 2}} onClick={onPhaseChanged}>FINALIZAR</Button>
+      <Button variant='contained' sx={{mt: 2}} onClick={onPhaseChanged}>FET!</Button>
     </Stack>
   </>;
 };
