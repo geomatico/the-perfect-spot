@@ -17,5 +17,9 @@
   "remove_origin": "--Elimina un Origen",
   "remove_poi": "--Elimina un POI",
   "search": "Search...",
-  "transportType": "Define transport type"
+  "transportType": "Define transport type",
+  "insertName": "Name of the point (Ex: my parents' house)",
+  "done": "Done",
+  "mandatoryField": "Mandatory field",
+  "point": "Point"
 }

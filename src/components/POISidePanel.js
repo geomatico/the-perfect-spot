@@ -32,13 +32,12 @@ const POISidePanel = ({mode, onPOIModeChanged, onPhaseChanged}) => {
             id: REMOVE_POI_MODE,
             content: <Tooltip title={t('remove_poi')}><RemoveIcon/></Tooltip>
           },
-
         ]}
         onItemClick={handlePOICLick}
         selectedItemId={mode}
         sx={{display: 'inline-block'}}
       />
-      <Button variant='contained' sx={{mt: 2}} onClick={onPhaseChanged}>FET!</Button>
+      <Button variant='contained' sx={{mt: 2}} onClick={onPhaseChanged}>{(t('done')).toUpperCase()}</Button>
     </Stack>
   </>;
 };

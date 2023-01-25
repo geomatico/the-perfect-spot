@@ -17,5 +17,9 @@
   "remove_origin": "Elimina un Origen",
   "remove_poi": "Elimina un POI",
   "search": "Busca...",
-  "transportType": "Define medio de transporte"
+  "transportType": "Define medio de transporte",
+  "insertName": "Nombre del punto (Ex: casa de mis padres)",
+  "done": "Hecho",
+  "mandatoryField": "Campo obligatorio",
+  "point": "Punto"
 }

@@ -42,8 +42,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
 
   const handleClose = (event, reason) => {
     // para que no se cierre con click fuera de la modal si esc
-    if (reason && reason === 'backdropClick' && reason === 'escapeKeyDown')
-      return;
+    if (reason && (reason === 'backdropClick' || reason === 'escapeKeyDown')) return;
     setOpenModal(false);
   };
 
@@ -59,7 +58,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   const points = strPoiPoints ? JSON.parse(strPoiPoints) : [];
   const originPoints = strFlatPoints ? JSON.parse(strFlatPoints) : [];
 
-  const [text, setText] = useState('');
+  const [text, setText] = useState(t('point'));
 
   const initialState = {
     strPoiPoints: strPoiPoints ? JSON.parse(strPoiPoints) : [],
@@ -238,6 +237,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   };
 
   const handleSaveName = () => {
+    if(text === '')  return;
     if (mode === 'ADD_POI') {
       setStateUrl({
         ...stateUrl,
@@ -250,7 +250,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       });
     }
     handleClose();
-    setText('');
+    setText(t('point'));
   };
 
   return <>
@@ -258,23 +258,21 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       open={openModal}
       onClose={handleClose}
       disableBackdropClick
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
     >
       <Box sx={inputContainerStyles}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Añade un nombre para este punto
+        <Typography id="modal-modal-title" variant="body1">
+          {t('insertName')}
         </Typography>
         <TextField
-          error={text === ''}
-          helperText={text === '' ? 'El punto necesita un nombre' : ''}
+          error={!text}
+          helperText={!text ? t('mandatoryField') : ''}
           sx={{mt: 2}}
           value={text}
           onChange={(element) => handleChangeText(element)}
           variant="outlined"
         />
         <Box mt={2}>
-          <Button variant="outlined" onClick={handleSaveName}>Inserta nombre</Button>
+          <Button variant="outlined" onClick={handleSaveName}>{t('done')}</Button>
         </Box>
       </Box>
     </Modal>
