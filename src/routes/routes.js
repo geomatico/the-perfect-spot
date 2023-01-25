@@ -18,6 +18,8 @@ const AppRoutes = () =>
       <Route path=":lang" element={<LangSetter/>}>
         <Route exact path="" element={<Navigate to="map"/>}/>
         <Route exact path="map/:points/:originPoints" element={<MapView/>}/>
+        <Route exact path="map/:points/:originPoints/:pointsNames/:originPointsNames" element={<MapView/>}/>
+
         <Route exact path="map" element={<MapView/>}/>
         {/*
          <Route exact path="detail" element={<Layout mainContent={<MapView/>} miniSidePanelSelectedActionId='detail'/>}/>

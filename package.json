@@ -1,5 +1,5 @@
 {
-  "name": "distancia-comunitats-energetiques",
+  "name": "the-perfect-spot",
   "version": "0.0.1",
   "description": "",
   "main": "./dist/main.js",
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geomatico/distancia-comunitats-energetiques.git"
+    "url": "git+https://github.com/geomatico/the-perfect-spot.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/geomatico/distancia-comunitats-energetiques/issues"
+    "url": "https://github.com/geomatico/the-perfect-spot/issues"
   },
-  "homepage": "https://labs.geomatico.es/distancia-comunitats-energetiques",
+  "homepage": "https://labs.geomatico.es/the-perfect-spot",
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@babel/plugin-transform-runtime": "^7.17.0",

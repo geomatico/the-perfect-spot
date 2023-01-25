@@ -50,7 +50,6 @@ const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, o
 
   const calculateDirectionsTable = (transportationType) => {
     getInfo(locations, destinations, transportationType || transportation).then(data => {
-      console.log('data from API', data);
       const finalRows = data.destinations.map((destination, destinationIndex) => {
         return {
           name: destination.name,
@@ -62,7 +61,6 @@ const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, o
           }),
         };
       });
-      console.log('final Object', finalRows);
       onDirectionsChange(finalRows);
     });
   };

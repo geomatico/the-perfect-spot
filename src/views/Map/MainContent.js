@@ -15,33 +15,79 @@ import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
 import DirectionsTable from '../../components/DirectionsTable';
 import Box from '@mui/material/Box';
+import {Modal, TextField} from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+
+const inputContainerStyles = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+  m: 4
+};
+
+const toStr = (a) => JSON.stringify(a);
 
 const MainContent = ({mapStyle, mode, routes, directions}) => {
+  const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
+
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpen = () => setOpenModal(true);
+
+  const handleClose = (event, reason) => {
+    // para que no se cierre con click fuera de la modal si esc
+    if (reason && (reason === 'backdropClick' || reason === 'escapeKeyDown')) return;
+    setOpenModal(false);
+  };
 
   const {t, i18n} = useTranslation();
 
   const mapRef = useRef();
   const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
   const handleSearchResult = ({bbox}) => flyTo(bbox);
+  const navigate = useNavigate();
 
-  const {points: strPoiPoints, originPoints: strFlatPoints} = useParams();
+  const {points: strPoiPoints, originPoints: strFlatPoints, pointsNames, originPointsNames} = useParams();
 
   const points = strPoiPoints ? JSON.parse(strPoiPoints) : [];
   const originPoints = strFlatPoints ? JSON.parse(strFlatPoints) : [];
 
-  const navigate = useNavigate();
+  const [text, setText] = useState(t('point'));
+
+  const initialState = {
+    strPoiPoints: strPoiPoints ? JSON.parse(strPoiPoints) : [],
+    strFlatPoints: strFlatPoints ? JSON.parse(strFlatPoints) : [],
+    pointsNames: pointsNames ? JSON.parse(pointsNames) : [],
+    originPointsNames: originPointsNames ? JSON.parse(originPointsNames) : [],
+  };
+  const [stateUrl, setStateUrl] = useState(initialState);
+
+  useEffect(() => {
+    const url = `../map/${toStr(stateUrl.strPoiPoints)}/${toStr(stateUrl.strFlatPoints)}/${toStr(stateUrl.pointsNames)}/${toStr(stateUrl.originPointsNames)}`;
+    navigate(url);
+  }, [stateUrl]);
 
   const setPoints = points => {
-    let strPoiPoints = JSON.stringify(points);
-    navigate(`../map/${strPoiPoints}/${strFlatPoints || '[]'}`);
+    if (mode === 'ADD_FLAT' || mode === 'REMOVE_FLAT') {
+      setStateUrl({
+        ...stateUrl,
+        strPoiPoints: points
+      });
+    }
+    if (mode === 'ADD_POI' || mode === 'REMOVE_POI') {
+      setStateUrl({
+        ...stateUrl,
+        strFlatPoints: points
+      });
+    }
+    if (mode === 'ADD_FLAT' || mode === 'ADD_POI') handleOpen();
   };
-
-  const setOriginPoints = originPoints => {
-    let strFlatPoints = JSON.stringify(originPoints);
-    navigate(`../map/${strPoiPoints || '[]'}/${strFlatPoints}`);
-  };
-
-  const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
 
   const COLOR = MAPSTYLES.find(ms => ms.id === mapStyle)?.overlayColor;
 
@@ -132,7 +178,6 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
           'circle-stroke-width': 2
         }
       },
-
       {
         'id': 'symbols',
         'type': 'symbol',
@@ -149,22 +194,19 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
           'text-color': 'red',
         }
       }
-
     ];
   }, [mapStyle]);
 
   const handleClick = e => {
     if (mode === ADD_POI_MODE) {
-      setOriginPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
+      setPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
     } else if (mode === REMOVE_POI_MODE) {
-      setOriginPoints(originPoints.filter((p, i) => i !== e.features[0].id));
+      setPoints(originPoints.filter((p, i) => i !== e.features[0].id));
     } else if (mode === ADD_FLAT_MODE) {
       setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
     } else if (mode === REMOVE_FLAT_MODE) {
-      console.log('entra');
       setPoints(points.filter((p, i) => i !== e.features[0].id));
     }
-
   };
 
   const [cursor, setCursor] = useState('pointer');
@@ -175,12 +217,11 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
 
   const onMouseEnter = useCallback(() => {
     setCursor('no-drop');
-    console.log('entra');
   }, []);
   const onMouseLeave = useCallback(() => setCursor('auto'), []);
 
 
-  // habilita capas segun el modo seleccionado
+  // habilita/deshabilita capas segun el modo seleccionado
   const calculateInteractiveLayers = () => {
     if (mode === REMOVE_POI_MODE) {
       return ['centersOrigin'];
@@ -191,7 +232,50 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     }
   };
 
+  const handleChangeText = (x) => {
+    setText(x.target.value);
+  };
+
+  const handleSaveName = () => {
+    if(text === '')  return;
+    if (mode === 'ADD_POI') {
+      setStateUrl({
+        ...stateUrl,
+        originPointsNames: [...stateUrl.originPointsNames, text]
+      });
+    } else if (mode === 'ADD_FLAT') {
+      setStateUrl({
+        ...stateUrl,
+        pointsNames: [...stateUrl.pointsNames, text]
+      });
+    }
+    handleClose();
+    setText(t('point'));
+  };
+
   return <>
+    <Modal
+      open={openModal}
+      onClose={handleClose}
+      disableBackdropClick
+    >
+      <Box sx={inputContainerStyles}>
+        <Typography id="modal-modal-title" variant="body1">
+          {mode === 'ADD_POI' ? t('insertPOIName') : t('insertFLATName')}
+        </Typography>
+        <TextField
+          error={!text}
+          helperText={!text ? t('mandatoryField') : ''}
+          sx={{mt: 2}}
+          value={text}
+          onChange={(element) => handleChangeText(element)}
+          variant="outlined"
+        />
+        <Box mt={2}>
+          <Button variant="outlined" onClick={handleSaveName}>{t('done')}</Button>
+        </Box>
+      </Box>
+    </Modal>
     <Map
       ref={mapRef}
       mapStyle={mapStyle}
@@ -234,7 +318,6 @@ MainContent.propTypes = {
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any,
   directions: PropTypes.array.isRequired,
-
 };
 
 export default MainContent;
