@@ -21,5 +21,6 @@
   "remove_origin": "--Elimina un Origen",
   "remove_poi": "--Elimina un POI",
   "search": "Search...",
-  "transportType": "Define transport type"
+  "transportType": "Define transport type",
+  "goBack": "Go back"
 }

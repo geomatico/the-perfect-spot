@@ -21,5 +21,6 @@
   "remove_origin": "Elimina un spot",
   "remove_poi": "Elimina un punt",
   "search": "Cerca...",
-  "transportType": "Defineix mitjà de transport"
+  "transportType": "Defineix mitjà de transport",
+  "goBack": "Tornar enrere"
 }

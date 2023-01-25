@@ -21,5 +21,6 @@
   "remove_origin": "Elimina un Origen",
   "remove_poi": "Elimina un POI",
   "search": "Busca...",
-  "transportType": "Define medio de transporte"
+  "transportType": "Define medio de transporte",
+  "goBack": "Ir atrás"
 }

@@ -46,7 +46,7 @@ const FlatSidePanel = ({mode, onFlatModeChanged, onPhaseChanged, onCalculateRout
         sx={{display: 'inline-block', color: 'red'}}
       />
       <Button variant='contained' color='secondary' sx={{mt: 2}} onClick={handleOnCalculate}>PERFECT SPOT!</Button>
-      <Button variant='outlined' color='primary' sx={{mt: 1}} onClick={onPhaseChanged}>TORNAR ENRERE</Button>
+      <Button variant='outlined' color='primary' sx={{mt: 1}} onClick={onPhaseChanged}>{t('goBack')}</Button>
     </Stack>
   </>;
 };
