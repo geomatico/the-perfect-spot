@@ -10,6 +10,7 @@
   "driving-hgv": "Transport públic",
   "editor": "Editor d'instal·lacions",
   "foot-walking": "Caminant",
+  "goBack": "Tornar enrere",
   "image": "Imatge",
   "insertName": "Nom del punt (Ex: casa dels pares)",
   "mandatoryField": "Camp obligatori",
@@ -21,6 +22,5 @@
   "remove_origin": "Elimina un spot",
   "remove_poi": "Elimina un punt",
   "search": "Cerca...",
-  "transportType": "Defineix mitjà de transport",
-  "goBack": "Tornar enrere"
+  "transportType": "Defineix mitjà de transport"
 }

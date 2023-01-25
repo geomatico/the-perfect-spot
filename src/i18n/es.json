@@ -10,6 +10,7 @@
   "driving-hgv": "Transporte público",
   "editor": "Puntos de interés",
   "foot-walking": "Caminando",
+  "goBack": "Ir atrás",
   "image": "Imagen",
   "insertName": "Nombre del punto (Ex: casa de mis padres)",
   "mandatoryField": "Campo obligatorio",
@@ -21,6 +22,5 @@
   "remove_origin": "Elimina un Origen",
   "remove_poi": "Elimina un POI",
   "search": "Busca...",
-  "transportType": "Define medio de transporte",
-  "goBack": "Ir atrás"
+  "transportType": "Define medio de transporte"
 }

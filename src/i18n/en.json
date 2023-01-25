@@ -10,6 +10,7 @@
   "driving-hgv": "Public transport",
   "editor": "Site editor",
   "foot-walking": "Foot walking",
+  "goBack": "Go back",
   "image": "Image",
   "insertName": "Name of the point (Ex: my parents' house)",
   "mandatoryField": "Mandatory field",
@@ -21,6 +22,5 @@
   "remove_origin": "--Elimina un Origen",
   "remove_poi": "--Elimina un POI",
   "search": "Search...",
-  "transportType": "Define transport type",
-  "goBack": "Go back"
+  "transportType": "Define transport type"
 }
