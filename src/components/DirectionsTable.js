@@ -37,7 +37,7 @@ const DirectionsTable = ({directions}) => {
                 <span style={{fontWeight: 'bold'}}>{columnNames[i]?.toUpperCase()}</span>
               </TableCell>)
             }
-            <TableCell key={'average'} align="right">Tiempo medio</TableCell>
+            <TableCell key={'average'} align="right">Temps mitjà</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

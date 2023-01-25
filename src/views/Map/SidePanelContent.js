@@ -26,20 +26,20 @@ const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, o
   const {t} = useTranslation();
   const transportOptions = [
     {
-      id: 'driving-car',
-      label: t('driving-car')
-    },
-    {
       id: 'foot-walking',
       label: t('foot-walking')
     },
     {
-      id: 'driving-hgv',
-      label: t('driving-hgv')
-    },
-    {
       id: 'cycling-regular',
       label: t('cycling-regular')
+    },
+    {
+      id: 'driving-car',
+      label: t('driving-car')
+    },
+    {
+      id: 'driving-hgv',
+      label: t('driving-hgv')
     },
   ];
 
