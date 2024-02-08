@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 
 //GEOCOMPONENTS
 import ButtonGroup from '@geomatico/geocomponents/ButtonGroup';
-//BIKENTA
 
 //UTILS
 import {useTranslation} from 'react-i18next';
