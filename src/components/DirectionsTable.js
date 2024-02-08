@@ -7,8 +7,11 @@ import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import {useParams} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import {grey} from '@mui/material/colors';
 
-const DirectionsTable = ({directions}) => {
+const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHightlight}) => {
   const {originPoints: strOriginPoints} = useParams();
   const params = useParams();
   
@@ -31,7 +34,7 @@ const DirectionsTable = ({directions}) => {
 
   const columnNames = params?.originPointsNames ? JSON.parse(params.originPointsNames) : [];
   const rowNames = params?.pointsNames ? JSON.parse(params.pointsNames) : [];
-
+  
   return <>
     {
       directions && directions.length &&
@@ -41,7 +44,7 @@ const DirectionsTable = ({directions}) => {
             <TableCell key={'empty'} align="right"></TableCell>
             {
               locations.map((location, i) => <TableCell key={location + i} align="right">
-                <span style={{fontWeight: 'bold'}}>{columnNames[i]?.toUpperCase()}</span>
+                <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>{columnNames[i]?.toUpperCase()}</Typography>
               </TableCell>)
             }
             <TableCell key={'average'} align="right">{t('averageTime')}</TableCell>
@@ -50,12 +53,16 @@ const DirectionsTable = ({directions}) => {
         <TableBody>
           {directions.map((row, i) => (
             <TableRow
+              onMouseEnter={() => onDirectionHighlight(i)}
+              onMouseOut={onDeleteDirectionHightlight}
               key={row.name + Math.random()}
-              sx={{'&:last-child td, &:last-child th': {border: 0}, bgcolor: i==isSmallest ? 'secondary.main': undefined}}
+              sx={{'&:last-child td, &:last-child th': {border: 0}, '&:hover': {bgcolor: 'grey.200'}, bgcolor: i==isSmallest ? 'secondary.main': undefined}}
             >
-              <TableCell component="th" scope="row" >
-                <span style={{fontWeight: 'bold'}}>{rowNames[i]?.toUpperCase()}</span>: {row.name}
-
+              <TableCell component="th" scope="row">
+                <Stack>
+                  <Typography sx={{fontWeight: 'bold', color: 'secondary.main'}}>{rowNames[i]?.toUpperCase()}</Typography>
+                  <Typography variant='body2' sx={{color: grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
+                </Stack>
               </TableCell>
               {
                 row.data.map((d) => (
@@ -79,6 +86,8 @@ const DirectionsTable = ({directions}) => {
 
 DirectionsTable.propTypes = {
   directions: PropTypes.array.isRequired,
+  onDirectionHighlight: PropTypes.func.isRequired,
+  onDeleteDirectionHightlight: PropTypes.func.isRequired
 };
 
 export default DirectionsTable;

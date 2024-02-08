@@ -28,8 +28,8 @@ const POISidePanel = ({mode, onPOIModeChanged}) => {
     },
   ];
   
-  return <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center'>
-    <Typography paragraph variant='subtitle1' sx={{mt: 4}}>{t('originPoints')}</Typography>
+  return <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' my={2}>
+    <Typography variant='overline'>{t('originPoints')}</Typography>
     <ButtonGroup
       variant="outlined"
       items={items}

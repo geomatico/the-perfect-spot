@@ -37,7 +37,8 @@ const toStr = (a) => JSON.stringify(a);
 
 const MainContent = ({mapStyle, mode, routes, directions}) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
-
+  const [highlightDirection, setHighlightDirection] = useState(undefined);
+  console.log('routes', routes);
   const [openModal, setOpenModal] = useState(false);
   const handleOpen = () => setOpenModal(true);
 
@@ -254,6 +255,8 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     setText(t('point'));
   };
 
+  const handleDirectionHighlight = (i) => setHighlightDirection(i);
+  console.log('highlightDirection', highlightDirection);
   return <>
     <ModalInfo/>
     <Modal
@@ -309,7 +312,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable directions={directions}/>
+      <DirectionsTable directions={directions} onDirectionHighlight={handleDirectionHighlight}/>
     </div>
   </>;
 };
@@ -319,7 +322,7 @@ MainContent.propTypes = {
   mapStyle: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any,
-  directions: PropTypes.array.isRequired,
+  directions: PropTypes.array.isRequired
 };
 
 export default MainContent;

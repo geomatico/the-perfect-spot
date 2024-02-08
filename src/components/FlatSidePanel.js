@@ -36,8 +36,8 @@ const FlatSidePanel = ({mode, onFlatModeChanged, onCalculateRoutes, onCalculateD
   ];
   
   return <>
-    <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center'>
-      <Typography paragraph variant='subtitle1' sx={{mt: 4}}>{t('finalPoints')}</Typography>
+    <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' my={2}>
+      <Typography variant='overline'>{t('finalPoints')}</Typography>
       <ButtonGroup
         variant="outlined"
         color='#d70f0f'
