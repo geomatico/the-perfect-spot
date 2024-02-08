@@ -56,7 +56,7 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
               onMouseEnter={() => onDirectionHighlight(i)}
               onMouseOut={onDeleteDirectionHightlight}
               key={row.name + Math.random()}
-              sx={{'&:last-child td, &:last-child th': {border: 0}, '&:hover': {bgcolor: 'grey.200'}, bgcolor: i==isSmallest ? 'secondary.main': undefined}}
+              sx={{'&:last-child td, &:last-child th': {border: 0}, '&:hover': {bgcolor: 'grey.200'}, border: i==isSmallest ? '2px solid red': undefined}}
             >
               <TableCell component="th" scope="row">
                 <Stack>
