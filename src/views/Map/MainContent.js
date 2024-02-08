@@ -18,6 +18,7 @@ import Box from '@mui/material/Box';
 import {Modal, TextField} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import ModalInfo from '../../components/ModalInfo';
 
 const inputContainerStyles = {
   position: 'absolute',
@@ -254,6 +255,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   };
 
   return <>
+    <ModalInfo/>
     <Modal
       open={openModal}
       onClose={handleClose}

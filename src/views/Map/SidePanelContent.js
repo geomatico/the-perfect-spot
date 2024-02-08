@@ -20,7 +20,7 @@ const ScrollableContent = styled(Box)({
 });
 
 
-const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, onPhaseChanged, onRoutesChange, mode, onDirectionsChange}) => {
+const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, mode, onDirectionsChange}) => {
 
   const {points: strPoiPoints, originPoints: strFlatPoints} = useParams();
   const {t} = useTranslation();
@@ -114,20 +114,16 @@ const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, o
         options={transportOptions}
         selectedOptionId={transportation}
         onOptionChange={handleTransportationType} minWidth='100%'/>
-      {
-        isPOIsEditing ?
-          <POISidePanel
-            mode={mode}
-            onPOIModeChanged={onPOIModeChanged}
-            onPhaseChanged={onPhaseChanged}
-          /> : <FlatSidePanel
-            mode={mode}
-            onFlatModeChanged={onFlatModeChanged}
-            onCalculateRoutes={calculateRoutes}
-            onCalculateDirections={calculateDirectionsTable}
-            onPhaseChanged={onPhaseChanged}
-          />
-      }
+      <POISidePanel
+        mode={mode}
+        onPOIModeChanged={onPOIModeChanged}
+      />
+      <FlatSidePanel
+        mode={mode}
+        onFlatModeChanged={onFlatModeChanged}
+        onCalculateRoutes={calculateRoutes}
+        onCalculateDirections={calculateDirectionsTable}
+      />
     </ScrollableContent>
     <Geomatico/>
   </Stack>;
@@ -135,7 +131,6 @@ const SidePanelContent = ({isPOIsEditing, onPOIModeChanged, onFlatModeChanged, o
 
 SidePanelContent.propTypes = {
   mapStyle: PropTypes.string.isRequired,
-  isPOIsEditing: PropTypes.bool,
   mode: PropTypes.string.isRequired,
   onPOIModeChanged: PropTypes.func,
   onFlatModeChanged: PropTypes.func,
