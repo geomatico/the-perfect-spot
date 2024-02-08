@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import {ADD_FLAT_MODE, REMOVE_FLAT_MODE} from '../config';
 import Tooltip from '@mui/material/Tooltip';
-import HomeIcon from '@mui/icons-material/Home';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 
 //GEOCOMPONENTS
 import ButtonGroup from '@geomatico/geocomponents/ButtonGroup';
@@ -14,9 +11,12 @@ import ButtonGroup from '@geomatico/geocomponents/ButtonGroup';
 
 //UTILS
 import {useTranslation} from 'react-i18next';
+import Box from '@mui/material/Box';
+import AddIcon from '@mui/icons-material/AddLocationAlt';
+import RemoveIcon from '@mui/icons-material/WrongLocation';
 
 
-const FlatSidePanel = ({mode, onFlatModeChanged, onPhaseChanged, onCalculateRoutes, onCalculateDirections}) => {
+const FlatSidePanel = ({mode, onFlatModeChanged, onCalculateRoutes, onCalculateDirections}) => {
   const {t} = useTranslation();
   const handleFlatCLick = newMode => newMode && onFlatModeChanged(newMode);
 
@@ -25,35 +25,35 @@ const FlatSidePanel = ({mode, onFlatModeChanged, onPhaseChanged, onCalculateRout
     onCalculateDirections();
   };
 
+  const items = [
+    {
+      id: ADD_FLAT_MODE,
+      content: <Tooltip title={t('add_origin')}><AddIcon/></Tooltip>
+    },
+    {
+      id: REMOVE_FLAT_MODE,
+      content: <Tooltip title={t('remove_origin')}><RemoveIcon/></Tooltip>
+    }
+  ];
+  
   return <>
-    <Typography paragraph variant='subtitle1' sx={{textTransform: 'uppercase',  mt: 4}}>{t('p1')}</Typography>
-    <Stack>
+    <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center'>
+      <Typography paragraph variant='subtitle1' sx={{mt: 4}}>{t('finalPoints')}</Typography>
       <ButtonGroup
         variant="outlined"
         color='#d70f0f'
-        items={[
-          {
-            id: ADD_FLAT_MODE,
-            content: <Tooltip title={t('add_origin')}><HomeIcon/></Tooltip>
-          },
-          {
-            id: REMOVE_FLAT_MODE,
-            content: <Tooltip title={t('remove_origin')}><HomeOutlinedIcon/></Tooltip>
-          }
-        ]}
+        items={items}
         onItemClick={handleFlatCLick}
         selectedItemId={mode}
         sx={{display: 'inline-block', color: 'red'}}
       />
-      <Button variant='contained' color='secondary' sx={{mt: 2}} onClick={handleOnCalculate}>PERFECT SPOT!</Button>
-      <Button variant='outlined' color='primary' sx={{mt: 1}} onClick={onPhaseChanged}>{t('goBack')}</Button>
-    </Stack>
+    </Box>
+    <Button variant='contained' color='secondary' sx={{mt: 2}} onClick={handleOnCalculate}>GET THE PERFECT SPOT!</Button>
   </>;
 };
 
 FlatSidePanel.propTypes = {
   onFlatModeChanged: PropTypes.func,
-  onPhaseChanged: PropTypes.func,
   onCalculateRoutes: PropTypes.func,
   onCalculateDirections: PropTypes.func,
   mode: PropTypes.string
