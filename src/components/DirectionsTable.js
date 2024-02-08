@@ -6,6 +6,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import {useParams} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import {grey} from '@mui/material/colors';
@@ -13,6 +14,8 @@ import {grey} from '@mui/material/colors';
 const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHightlight}) => {
   const {originPoints: strOriginPoints} = useParams();
   const params = useParams();
+  
+  const{t} = useTranslation();
 
   const locations = strOriginPoints ? JSON.parse(strOriginPoints) : [];
 
@@ -24,6 +27,10 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
     let avg = sum/element.data.length;
     element.data.avg = Math.round( avg * 10)/10;
   });
+
+  let dir = directions.map(d => (d.data.avg));
+  let isSmallest = dir.indexOf(Math.min(...dir));
+  console.log('isSmallest'+isSmallest);
 
   const columnNames = params?.originPointsNames ? JSON.parse(params.originPointsNames) : [];
   const rowNames = params?.pointsNames ? JSON.parse(params.pointsNames) : [];
@@ -40,7 +47,7 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
                 <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>{columnNames[i]?.toUpperCase()}</Typography>
               </TableCell>)
             }
-            <TableCell key={'average'} align="right">Temps mitjà</TableCell>
+            <TableCell key={'average'} align="right">{t('averageTime')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -49,7 +56,7 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
               onMouseEnter={() => onDirectionHighlight(i)}
               onMouseOut={onDeleteDirectionHightlight}
               key={row.name + Math.random()}
-              sx={{'&:hover': {bgcolor: 'grey.200'}}}
+              sx={{'&:last-child td, &:last-child th': {border: 0}, '&:hover': {bgcolor: 'grey.200'}, border: i==isSmallest ? '2px solid red': undefined}}
             >
               <TableCell component="th" scope="row">
                 <Stack>
@@ -58,7 +65,7 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
                 </Stack>
               </TableCell>
               {
-                row.data.map(d => (
+                row.data.map((d) => (
                   <TableCell key={d} align="right">{
                     d.map((x, i ) => (
                       <span key={x}>{x + (i === 0 ? 'km' : 'min')}<br/></span>
