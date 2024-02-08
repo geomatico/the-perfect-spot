@@ -48,7 +48,7 @@ const FlatSidePanel = ({mode, onFlatModeChanged, onCalculateRoutes, onCalculateD
         sx={{display: 'inline-block', color: 'red'}}
       />
     </Box>
-    <Button variant='contained' color='secondary' sx={{mt: 2}} onClick={handleOnCalculate}>GET THE PERFECT SPOT!</Button>
+    <Button variant='contained' color='secondary' sx={{mt: 2}} onClick={handleOnCalculate}>{t('find_the')} PERFECT SPOT!</Button>
   </>;
 };
 
