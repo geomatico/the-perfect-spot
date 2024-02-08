@@ -109,21 +109,25 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
   }}>
 
     <ScrollableContent>
-      <Typography paragraph variant='subtitle1' sx={{textTransform: 'uppercase'}}>{t('transportType')}</Typography>
-      <SelectInput
-        options={transportOptions}
-        selectedOptionId={transportation}
-        onOptionChange={handleTransportationType} minWidth='100%'/>
-      <POISidePanel
-        mode={mode}
-        onPOIModeChanged={onPOIModeChanged}
-      />
-      <FlatSidePanel
-        mode={mode}
-        onFlatModeChanged={onFlatModeChanged}
-        onCalculateRoutes={calculateRoutes}
-        onCalculateDirections={calculateDirectionsTable}
-      />
+      <Box my={2} flexDirection='row'>
+        <Typography variant='overline'>{t('transportType')}</Typography>
+        <SelectInput
+          options={transportOptions}
+          selectedOptionId={transportation}
+          onOptionChange={handleTransportationType} minWidth='100%'/>
+      </Box>
+      <Box my={2}>
+        <POISidePanel
+          mode={mode}
+          onPOIModeChanged={onPOIModeChanged}
+        />
+        <FlatSidePanel
+          mode={mode}
+          onFlatModeChanged={onFlatModeChanged}
+          onCalculateRoutes={calculateRoutes}
+          onCalculateDirections={calculateDirectionsTable}
+        />
+      </Box>
     </ScrollableContent>
     <Geomatico/>
   </Stack>;
