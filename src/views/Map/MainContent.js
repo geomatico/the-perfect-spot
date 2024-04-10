@@ -20,7 +20,6 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ModalInfo from '../../components/ModalInfo';
 
-
 const inputContainerStyles = {
   position: 'absolute',
   top: '50%',
@@ -283,7 +282,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
           variant="outlined"
         />
         <Box mt={2}>
-          <Button variant="outlined" style={buttonColors} onClick={handleSaveName}>{t('done')}</Button>
+          <Button variant="outlined" sx={buttonColors} onClick={handleSaveName}>{t('done')}</Button>
         </Box>
       </Box>
     </Modal>
