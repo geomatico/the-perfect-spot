@@ -6,30 +6,29 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 
-const ModalReload = ({ open, onClose }) => {
+const ModalReload = ({ open, onClose, variant }) => {
   // this function is used to delete the URL
-  const handleAccept = () => {
+  const onDeletePoints = () => {
     window.history.replaceState({},document.title,document.location.pathname);
     window.location.reload();
          
   };
 
   // function is used to close the modal
-  const handleClose = () => {
-    onClose();
-  };
+  const handleClose = () => onClose();
+  
   const dialogContentSx = {mt: 2, textAlign: 'center'};
-  const dialogActionsMr ={m:'auto'};
+  const dialogActionsSx ={m:'auto'};
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle sx={dialogContentSx}>Borrar Puntos</DialogTitle>
       <DialogContent>
-        <p>¿Quieres borrar los puntos y la URL? </p>
+        <p>¿Quieres borrar los puntos?</p>
       </DialogContent>
-      <DialogActions >
-        <Button onClick={handleAccept} sx={dialogActionsMr}>Aceptar</Button>
-        <Button onClick={handleClose} sx={dialogActionsMr} >Cancelar</Button>
+      <DialogActions>
+        <Button variant={variant} onClick={onDeletePoints} sx={dialogActionsSx}>Aceptar</Button>
+        <Button variant={variant} onClick={handleClose} sx={dialogActionsSx} >Cancelar</Button>
       </DialogActions>
     </Dialog>
   );
@@ -38,6 +37,7 @@ const ModalReload = ({ open, onClose }) => {
 ModalReload.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  variant: PropTypes.string.isRequired
 };
 
 

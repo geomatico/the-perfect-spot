@@ -7,7 +7,6 @@ import Box from '@mui/material/Box';
 import ResponsiveHeader from '@geomatico/geocomponents/ResponsiveHeader';
 import SidePanel from '@geomatico/geocomponents/SidePanel';
 import RouteIcon from '@mui/icons-material/Route';
-import ModalReload from './ModalReload';
 import {
   DRAWER_WIDTH,
   MINI_SIDE_PANEL_DENSE_WIDTH,
@@ -39,22 +38,6 @@ const Layout = ({mainContent, sidePanelContent}) => {
 
   const handleClose = () => setIsSidePanelOpen(!isSidePanelOpen);
 
-  //This state is created to turn the modal on or off
-  const [showReloadModal,setReloadModal] = useState(false);
-  //the effect is used to assign an event to icon , selecting it for the class.
-
-
-  useEffect(()=>{
-    const handleIcon = document.querySelector('.ResponsiveHeader-logo');
-    const openModal = ()=>{
-      setReloadModal(true);
-    };
-  
-    handleIcon.addEventListener('click',openModal);
-  },[]);
-  const closeModal = ()=>{
-    setReloadModal(false);
-  };
   return <>
     <ResponsiveHeader
       logo={<RouteIcon fontSize='large' sx={{mt: 1}}/>}
@@ -63,7 +46,6 @@ const Layout = ({mainContent, sidePanelContent}) => {
       isStartIconCloseable={isSidePanelOpen}
       sx={{'&.MuiAppBar-root': {zIndex: 1500}}}
     >
-      <ModalReload open={showReloadModal} onClose={closeModal}/>
     </ResponsiveHeader>
     {
       sidePanelContent && isSidePanelOpen && <SidePanel

@@ -19,6 +19,7 @@ import {Modal, TextField} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ModalInfo from '../../components/ModalInfo';
+import ModalReload from '../../components/ModalReload';
 
 const inputContainerStyles = {
   position: 'absolute',
@@ -255,6 +256,15 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     setText(t('point'));
   };
 
+  //This state is created to turn the modal on or off
+  const [showReloadModal,setReloadModal] = useState(false);
+  //the effect is used to assign an event to icon , selecting it for the class.
+
+
+  const onCloseModal = ()=>{
+    setReloadModal(false);
+  };
+
   const handleDirectionHighlight = (i) => setHighlightDirection(i);
   console.log('highlightDirection', highlightDirection);
   return <>
@@ -281,6 +291,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         </Box>
       </Box>
     </Modal>
+    <ModalReload variant="outlined" open={showReloadModal} onClose={onCloseModal} onStartIconClick ={() => setReloadModal(true)}/>
     <Map
       ref={mapRef}
       mapStyle={mapStyle}
