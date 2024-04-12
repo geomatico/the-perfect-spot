@@ -37,7 +37,7 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
   
   return <>
     {
-      directions && directions.length &&
+      directions && directions.length > 0 &&
       <Table sx={{minWidth: 300}} aria-label="simple table">
         <TableHead>
           <TableRow>
