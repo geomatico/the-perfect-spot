@@ -255,6 +255,11 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     setText(t('point'));
   };
 
+  const buttonColors= {
+    color : mode==='ADD_POI' ? 'blue':'red',
+    borderColor: mode==='ADD_POI'? 'blue':'red'
+  };
+
   const handleDirectionHighlight = (i) => setHighlightDirection(i);
   console.log('highlightDirection', highlightDirection);
   return <>
@@ -277,7 +282,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
           variant="outlined"
         />
         <Box mt={2}>
-          <Button variant="outlined" onClick={handleSaveName}>{t('done')}</Button>
+          <Button variant="outlined" sx={buttonColors} onClick={handleSaveName}>{t('done')}</Button>
         </Box>
       </Box>
     </Modal>
