@@ -10,7 +10,9 @@ import {useTranslation} from 'react-i18next';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import {grey} from '@mui/material/colors';
-
+import StraightenIcon from '@mui/icons-material/Straighten';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { Margin } from '@mui/icons-material';
 const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHightlight}) => {
   const {originPoints: strOriginPoints} = useParams();
   const params = useParams();
@@ -68,13 +70,13 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
                 row.data.map((d) => (
                   <TableCell key={d} align="right">{
                     d.map((x, i ) => (
-                      <span key={x}>{x + (i === 0 ? 'km' : 'min')}<br/></span>
+                      <span key={x}>{x + (i === 0 ? 'km' : 'min')}<br/>  </span>
                     ))
                   }</TableCell>
                 ))
               }
               <TableCell component="th" scope="row" align="center">
-                {row.data.avg} min
+                {row.data.avg} min <AccessTimeIcon sx={{fontSize:20 , margin:4}} />
               </TableCell>
             </TableRow>
           ))}
