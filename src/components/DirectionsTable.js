@@ -10,9 +10,7 @@ import {useTranslation} from 'react-i18next';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import {grey} from '@mui/material/colors';
-import StraightenIcon from '@mui/icons-material/Straighten';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { Margin } from '@mui/icons-material';
 const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHightlight}) => {
   const {originPoints: strOriginPoints} = useParams();
   const params = useParams();
@@ -45,8 +43,8 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
           <TableRow>
             <TableCell key={'empty'} align="right"></TableCell>
             {
-              locations.map((location, i) => <TableCell key={location + i} align="right">
-                <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>{columnNames[i]?.toUpperCase()}</Typography>
+              locations.map((location, i) => <TableCell key={location + i} align="right" sx={{maxWidth:100}}>
+                <Typography sx={{fontWeight: 'bold', color: 'primary.main',overflow:'auto'}}>{columnNames[i]?.toUpperCase()}</Typography>
               </TableCell>)
             }
             <TableCell key={'average'} align="right">{t('averageTime')}</TableCell>
@@ -76,7 +74,7 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
                 ))
               }
               <TableCell component="th" scope="row" align="center">
-                {row.data.avg} min <AccessTimeIcon sx={{fontSize:20 , margin:4}} />
+                {row.data.avg} min <AccessTimeIcon sx={{fontSize:20}} />
               </TableCell>
             </TableRow>
           ))}
