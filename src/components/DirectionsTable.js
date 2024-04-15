@@ -12,7 +12,7 @@ import Stack from '@mui/material/Stack';
 import {grey} from '@mui/material/colors';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import StraightenIcon from '@mui/icons-material/Straighten';
-import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
@@ -52,12 +52,15 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
                 <Typography sx={{fontWeight: 'bold', color: 'primary.main', wordWrap:'break-word'}}>{columnNames[i]?.toUpperCase()}</Typography>
               </TableCell>)
             }
-            <TableCell key={'average'} align="right" >
+            <TableCell key={'average'} align="right"  >
+              <span>
+                {typeTransport === 'foot-walking' && <DirectionsRunIcon /> }
+                {typeTransport === 'cycling-regular' && <DirectionsBikeIcon /> }
+                {typeTransport === 'driving-car' && <DirectionsCarIcon /> }
+                {typeTransport === 'driving-hgv' && <DirectionsBusIcon /> }
+              </span>
               {t('averageTime')}
-              {typeTransport === 'foot-walking' && <DirectionsWalkIcon /> }
-              {typeTransport === 'cycling-regular' && <DirectionsBikeIcon /> }
-              {typeTransport === 'driving-car' && <DirectionsCarIcon /> }
-              {typeTransport === 'driving-hgv' && <DirectionsBusIcon /> }
+
             </TableCell>
           </TableRow>
         </TableHead>
@@ -71,25 +74,28 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
             >
               <TableCell component="th" scope="row">
                 <Stack sx={{maxWidth:200, wordWrap:'break-word'}}>
-                  <Typography sx={{fontWeight: 'bold', color: 'secondary.main'}}>{rowNames[i]?.toUpperCase()}</Typography>
-                  <Typography variant='body2' sx={{color: grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
+                  <Typography sx={{fontWeight: 'bold', color: 'secondary.main',textAlign:'center'}}>{rowNames[i]?.toUpperCase()}</Typography>
+                  <Typography variant='body2' sx={{color: grey[500], fontStyle: 'italic',textAlign:'center'}}>{row.name}</Typography>
                 </Stack>
               </TableCell>
               {
                 row.data.map((d) => (
                   <TableCell key={d} align="right">{
                     d.map((x, i ) => (
-                      <span key={x} style={{display:'flex',alignItems:'center' , textAlign:'center', justifyContent:'center'}}>
+                      <span key={x} style={{display:'flex',alignItems:'center', justifyContent:'space-between'}}>
+                        <span style={{marginRight:10}}>
+                          {i === 0 && <StraightenIcon />}
+                          {i === 1 && <AccessTimeIcon />}
+                        </span>
                         {x + (i === 0 ? 'km' : 'min')}
-                        {i === 0 && <StraightenIcon />}
-                        {i === 1 && <AccessTimeIcon />}
+
                         <br/>  </span>
                     ))
                   }</TableCell>
                 ))
               }
               <TableCell component="th" scope="row" align="center">
-                <span style={{display:'flex', alignContent:'center', justifyContent:'center'}}>  {row.data.avg} min <AccessTimeIcon sx={{fontSize:20}} /> </span>
+                <span style={{display:'flex', alignItems:'center', justifyContent:'center'}}> <AccessTimeIcon sx={{marginRight:1}}/>  {row.data.avg} min </span>
               </TableCell>
             </TableRow>
           ))}
