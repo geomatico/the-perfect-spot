@@ -11,7 +11,12 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import {grey} from '@mui/material/colors';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHightlight}) => {
+import StraightenIcon from '@mui/icons-material/Straighten';
+import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
+import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
+const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHightlight,typeTransport}) => {
   const {originPoints: strOriginPoints} = useParams();
   const params = useParams();
   
@@ -43,11 +48,17 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
           <TableRow>
             <TableCell key={'empty'} align="right"></TableCell>
             {
-              locations.map((location, i) => <TableCell key={location + i} align="right" sx={{maxWidth:100}}>
-                <Typography sx={{fontWeight: 'bold', color: 'primary.main',overflow:'auto'}}>{columnNames[i]?.toUpperCase()}</Typography>
+              locations.map((location, i) => <TableCell key={location + i} align="right" sx={{maxWidth:150}}>
+                <Typography sx={{fontWeight: 'bold', color: 'primary.main', wordWrap:'break-word'}}>{columnNames[i]?.toUpperCase()}</Typography>
               </TableCell>)
             }
-            <TableCell key={'average'} align="right">{t('averageTime')}</TableCell>
+            <TableCell key={'average'} align="right" >
+              {t('averageTime')}
+              {typeTransport === 'foot-walking' && <DirectionsWalkIcon /> }
+              {typeTransport === 'cycling-regular' && <DirectionsBikeIcon /> }
+              {typeTransport === 'driving-car' && <DirectionsCarIcon /> }
+              {typeTransport === 'driving-hgv' && <DirectionsBusIcon /> }
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -59,7 +70,7 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
               sx={{'&:last-child td, &:last-child th': {border: 0}, '&:hover': {bgcolor: 'grey.200'}, border: i==isSmallest ? '2px solid red': undefined}}
             >
               <TableCell component="th" scope="row">
-                <Stack>
+                <Stack sx={{maxWidth:200, wordWrap:'break-word'}}>
                   <Typography sx={{fontWeight: 'bold', color: 'secondary.main'}}>{rowNames[i]?.toUpperCase()}</Typography>
                   <Typography variant='body2' sx={{color: grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
                 </Stack>
@@ -68,13 +79,17 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
                 row.data.map((d) => (
                   <TableCell key={d} align="right">{
                     d.map((x, i ) => (
-                      <span key={x}>{x + (i === 0 ? 'km' : 'min')}<br/>  </span>
+                      <span key={x} style={{display:'flex',alignItems:'center' , textAlign:'center', justifyContent:'center'}}>
+                        {x + (i === 0 ? 'km' : 'min')}
+                        {i === 0 && <StraightenIcon />}
+                        {i === 1 && <AccessTimeIcon />}
+                        <br/>  </span>
                     ))
                   }</TableCell>
                 ))
               }
               <TableCell component="th" scope="row" align="center">
-                {row.data.avg} min <AccessTimeIcon sx={{fontSize:20}} />
+                <span style={{display:'flex', alignContent:'center', justifyContent:'center'}}>  {row.data.avg} min <AccessTimeIcon sx={{fontSize:20}} /> </span>
               </TableCell>
             </TableRow>
           ))}
@@ -87,7 +102,8 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
 DirectionsTable.propTypes = {
   directions: PropTypes.array.isRequired,
   onDirectionHighlight: PropTypes.func.isRequired,
-  onDeleteDirectionHightlight: PropTypes.func.isRequired
+  onDeleteDirectionHightlight: PropTypes.func.isRequired,
+  typeTransport: PropTypes.string.isRequired
 };
 
 export default DirectionsTable;

@@ -11,9 +11,15 @@ const Map = () => {
   const [mode, setMode] = useState(ADD_POI_MODE);
   const [routes, setRoutes] = useState(null);
   const [directions, setDirections] = useState([]);
+  const [typeTransport,setTypeTransport] = useState('foot-walking');
+
+  const handleTypeTransport = newTransport =>{
+    setTypeTransport(newTransport);
+  };
 
   const handlePhaseChanged = () => {
     setMode(mode === ADD_POI_MODE || REMOVE_POI_MODE ? ADD_FLAT_MODE : ADD_POI_MODE);
+    
   };
 
   const sidePanelContent = <SidePanelContent
@@ -25,6 +31,7 @@ const Map = () => {
     onRoutesChange={setRoutes}
     directions={directions}
     onDirectionsChange={setDirections}
+    onHandleTransport={handleTypeTransport}
   />;
 
   const mainContent = <MainContent
@@ -33,6 +40,7 @@ const Map = () => {
     mode={mode}
     routes={routes}
     directions={directions}
+    typeTransport={typeTransport}
   />;
 
   return <Layout

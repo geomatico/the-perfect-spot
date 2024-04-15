@@ -35,7 +35,7 @@ const inputContainerStyles = {
 
 const toStr = (a) => JSON.stringify(a);
 
-const MainContent = ({mapStyle, mode, routes, directions}) => {
+const MainContent = ({mapStyle, mode, routes, directions,typeTransport}) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [highlightDirection, setHighlightDirection] = useState(undefined);
   console.log('routes', routes);
@@ -317,7 +317,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable directions={directions} onDirectionHighlight={handleDirectionHighlight}/>
+      <DirectionsTable directions={directions} onDirectionHighlight={handleDirectionHighlight} typeTransport={typeTransport}/>
     </div>
   </>;
 };
@@ -327,7 +327,8 @@ MainContent.propTypes = {
   mapStyle: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any,
-  directions: PropTypes.array.isRequired
+  directions: PropTypes.array.isRequired,
+  typeTransport: PropTypes.string
 };
 
 export default MainContent;

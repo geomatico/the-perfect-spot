@@ -20,7 +20,7 @@ const ScrollableContent = styled(Box)({
 });
 
 
-const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, mode, onDirectionsChange}) => {
+const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, mode, onDirectionsChange,onHandleTransport}) => {
 
   const {points: strPoiPoints, originPoints: strFlatPoints} = useParams();
   const {t} = useTranslation();
@@ -93,9 +93,10 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
         onRoutesChange(featureCollection);
       });
   };
-
+  const handle = (transport) =>  onHandleTransport(transport);
   const handleTransportationType = (transportationType) => {
     setTransportation(transportationType);
+    handle(transportationType); 
     if (strFlatPoints?.length && strPoiPoints?.length) {
       calculateDirectionsTable(transportationType);
       calculateRoutes(transportationType);
@@ -140,7 +141,8 @@ SidePanelContent.propTypes = {
   onFlatModeChanged: PropTypes.func,
   onPhaseChanged: PropTypes.func,
   onRoutesChange: PropTypes.func.isRequired,
-  onDirectionsChange: PropTypes.func.isRequired
+  onDirectionsChange: PropTypes.func.isRequired,
+  onHandleTransport: PropTypes.func
 };
 
 export default SidePanelContent;
