@@ -246,14 +246,14 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   console.log('highlightDirection', highlightDirection);
   return <>
     <ModalInfo/>
-    <ModalAddPoint 
-      mode={mode}
-      text={text}
-      openModal={openModal}
-      onHandleChangeName={handleChangeText}
-      onHandleSaveName={handleSaveName}
-      onHandleClose={handleClose}
+    {openModal && <ModalAddPoint 
+      poiType={mode}
+      poiName={text}
+      onChangePoiName={handleChangeText}
+      onSavePoiName={handleSaveName}
+      onClose={handleClose}
     />
+    }
     <Map
       ref={mapRef}
       mapStyle={mapStyle}

@@ -1,10 +1,13 @@
-import { Box, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import  PropTypes  from 'prop-types';
 import React from 'react';
-import {Modal, TextField} from '@mui/material';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
 import {useTranslation} from 'react-i18next';
 import Button from '@mui/material/Button';
-
+import red from '@mui/material/colors/red';
+import blue from '@mui/material/colors/blue';
  
 const inputContainerStyles = {
   position: 'absolute',
@@ -18,33 +21,29 @@ const inputContainerStyles = {
   p: 4,
   m: 4
 };
-const  ModalAddPoint = ({mode,text,openModal,onHandleChangeText,onHandleSaveName,onHandleClose}) => {
+const  ModalAddPoint = ({poiType,poiName,onChangePoiName,onSavePoiName,onClose}) => {
   const {t} = useTranslation();
-  console.log('openMODal',openModal);
-  console.log('mode',mode);
-  const handleClose = () => onHandleClose();
-  
-  const handleChangeText = text => onHandleChangeText(text);
-  
-  const handleSaveName = () => onHandleSaveName();
+  const handleClose = () => onClose();
+  const handleChangePoiName = poiName => onChangePoiName(poiName);
+  const handleSaveName = () => onSavePoiName();
 
   const buttonColors= {
-    color : mode === 'ADD_POI' ? 'blue': 'red',
-    borderColor: mode === 'ADD_POI'? 'blue': 'red'
+    color : poiType === 'ADD_POI' ? blue[800]: red[500],
+    borderColor: poiType === 'ADD_POI'? blue[800]: red[500]
   };
  
   return (
-    <Modal open={openModal} onClose={handleClose}>
+    <Modal open={true} onClose={handleClose}>
       <Box sx={inputContainerStyles}>
         <Typography id="modal-modal-title" variant="body1"> 
-          {mode == 'ADD_POI' ? t('insertPOIName') : t('insertFLATName')}
+          {poiType == 'ADD_POI' ? t('insertPOIName') : t('insertFLATName')}
         </Typography>
         <TextField
-          error={!text}
-          helperText={!text ? t('mandatoryField') : ''}
+          error={!poiName}
+          helperText={!poiName ? t('mandatoryField') : ''}
           sx={{mt: 2}}
-          value={text}
-          onChange={(element) => handleChangeText(element)}
+          value={poiName}
+          onChange={(e) => handleChangePoiName(e)}
           variant="outlined"
         />
         <Box mt={2}>
@@ -55,11 +54,10 @@ const  ModalAddPoint = ({mode,text,openModal,onHandleChangeText,onHandleSaveName
   );
 };
 ModalAddPoint.propTypes = {
-  mode: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  openModal: PropTypes.bool.isRequired,
-  onHandleChangeText: PropTypes.func.isRequired,
-  onHandleSaveName: PropTypes.func.isRequired,
-  onHandleClose: PropTypes.func.isRequired
+  poiType: PropTypes.string.isRequired,
+  poiName: PropTypes.string.isRequired,
+  onChangePoiName: PropTypes.func.isRequired,
+  onSavePoiName: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 export default ModalAddPoint;
