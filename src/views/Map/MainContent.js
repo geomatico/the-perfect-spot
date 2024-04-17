@@ -185,33 +185,50 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     ];
   }, [mapStyle]);
 
-  const pointBLue = Array();
-  const pointRed = Array();
+  const [pointBLue,setPointBlue] = useState([]);
+  const [pointRed,setPointRed] = useState([]);
+  const [nameBlue,setNameBlue] = useState([]);
+  const [nameRed,setNameRed] = useState([]);
+
+  console.log('mode',mode);
   const handleClick = e => {
+    console.log('eeeee', e);
     if (mode === ADD_POI_MODE) {
-      setPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
-      pointBLue.push([{
+      setPointBlue(prevState => [...prevState, {
         'lat': e.lngLat.lat.toFixed(5),
         'lng': e.lngLat.lng.toFixed(5)
       }]);
-      localStorage.setItem('blue',JSON.stringify(pointBLue));
 
     } else if (mode === REMOVE_POI_MODE) {
       setPoints(originPoints.filter((p, i) => i !== e.features[0].id));
     } else if (mode === ADD_FLAT_MODE) {
-      setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
-      pointRed.push([{
+      setPointRed(prevState =>[...prevState,{
         'lat': e.lngLat.lat.toFixed(5),
         'lng': e.lngLat.lng.toFixed(5)
       }]);
-      localStorage.setItem('red',JSON.stringify(pointRed));
     } else if (mode === REMOVE_FLAT_MODE) {
       setPoints(points.filter((p, i) => i !== e.features[0].id));
     }
+    handleOpen();
 
-    console.log('localstorage',localStorage);
   };
 
+  useEffect(()=>{
+    localStorage.setItem('blue',JSON.stringify(pointBLue));
+  },[pointBLue]);
+
+  useEffect(()=>{
+    localStorage.setItem('red',JSON.stringify(pointRed));
+  },[pointRed]);
+
+  useEffect(()=>{
+    localStorage.setItem('nameRed',JSON.stringify(nameRed));
+  },[nameRed]);
+
+  useEffect(()=>{
+    localStorage.setItem('nameBlue',JSON.stringify(nameBlue));
+  },[nameBlue]);
+  
   const [cursor, setCursor] = useState('pointer');
 
   useEffect(() => {
@@ -236,7 +253,12 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   };
 
   const handleChangeText = (x) => {
+<<<<<<< HEAD
     setText(x);
+=======
+    setText(x.target.value);
+   
+>>>>>>> b255a56 (localstorage has been updated)
   };
 
   const handleSaveName = () => {
@@ -246,11 +268,25 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         ...stateUrl,
         originPointsNames: [...stateUrl.originPointsNames, text]
       });
+      
+      
+      setNameBlue(prevState => [
+        ...prevState,{
+          'name': text
+        }]);
+       
+        
     } else if (mode === 'ADD_FLAT') {
       setStateUrl({
         ...stateUrl,
         pointsNames: [...stateUrl.pointsNames, text]
       });
+
+      setNameRed(prevState => [
+        ...prevState,{
+          'name': text
+        }]);
+     
     }
     handleClose();
     setText(t('point'));
