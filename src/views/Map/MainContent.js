@@ -199,16 +199,31 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     ];
   }, [mapStyle]);
 
+  const pointBLue = Array();
+  const pointRed = Array();
   const handleClick = e => {
     if (mode === ADD_POI_MODE) {
       setPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
+      pointBLue.push([{
+        'lat': e.lngLat.lat.toFixed(5),
+        'lng': e.lngLat.lng.toFixed(5)
+      }]);
+      localStorage.setItem('blue',JSON.stringify(pointBLue));
+
     } else if (mode === REMOVE_POI_MODE) {
       setPoints(originPoints.filter((p, i) => i !== e.features[0].id));
     } else if (mode === ADD_FLAT_MODE) {
       setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
+      pointRed.push([{
+        'lat': e.lngLat.lat.toFixed(5),
+        'lng': e.lngLat.lng.toFixed(5)
+      }]);
+      localStorage.setItem('red',JSON.stringify(pointRed));
     } else if (mode === REMOVE_FLAT_MODE) {
       setPoints(points.filter((p, i) => i !== e.features[0].id));
     }
+
+    console.log('localstorage',localStorage);
   };
 
   const [cursor, setCursor] = useState('pointer');
