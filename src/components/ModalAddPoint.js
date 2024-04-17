@@ -6,8 +6,6 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import {useTranslation} from 'react-i18next';
 import Button from '@mui/material/Button';
-import red from '@mui/material/colors/red';
-import blue from '@mui/material/colors/blue';
  
 const inputContainerStyles = {
   position: 'absolute',
@@ -23,27 +21,26 @@ const inputContainerStyles = {
 };
 const  ModalAddPoint = ({poiType,poiName,onChangePoiName,onSavePoiName,onClose}) => {
   const {t} = useTranslation();
-  const handleClose = () => onClose();
   const handleChangePoiName = poiName => onChangePoiName(poiName);
   const handleSaveName = () => onSavePoiName();
 
   const buttonColors= {
-    color : poiType === 'ADD_POI' ? blue[800]: red[500],
-    borderColor: poiType === 'ADD_POI'? blue[800]: red[500]
+    color : poiType === 'ADD_POI' ? 'primary.main' : 'secondary.main',
+    borderColor: poiType === 'ADD_POI'? 'primary.main' : 'secondary.main'
   };
  
   return (
-    <Modal open={true} onClose={handleClose}>
+    <Modal open={true} onClose={onClose}>
       <Box sx={inputContainerStyles}>
         <Typography id="modal-modal-title" variant="body1"> 
-          {poiType == 'ADD_POI' ? t('insertPOIName') : t('insertFLATName')}
+          {poiType === 'ADD_POI' ? t('insertPOIName') : t('insertFLATName')}
         </Typography>
         <TextField
           error={!poiName}
           helperText={!poiName ? t('mandatoryField') : ''}
           sx={{mt: 2}}
           value={poiName}
-          onChange={(e) => handleChangePoiName(e)}
+          onChange={(e) => handleChangePoiName(e.target.value)}
           variant="outlined"
         />
         <Box mt={2}>
@@ -54,7 +51,7 @@ const  ModalAddPoint = ({poiType,poiName,onChangePoiName,onSavePoiName,onClose})
   );
 };
 ModalAddPoint.propTypes = {
-  poiType: PropTypes.string.isRequired,
+  poiType: PropTypes.oneOf(['ADD_POI','AddPOIFlat']).isRequired,
   poiName: PropTypes.string.isRequired,
   onChangePoiName: PropTypes.func.isRequired,
   onSavePoiName: PropTypes.func.isRequired,

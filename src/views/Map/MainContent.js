@@ -221,7 +221,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   };
 
   const handleChangeText = (x) => {
-    setText(x.target.value);
+    setText(x);
   };
 
   const handleSaveName = () => {
