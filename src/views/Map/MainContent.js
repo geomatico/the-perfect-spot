@@ -44,7 +44,18 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
 
   const handleClose = (event, reason) => {
     // para que no se cierre con click fuera de la modal si esc
-    if (reason && (reason === 'backdropClick' || reason === 'escapeKeyDown')) return;
+    if (reason && (reason === 'backdropClick' || reason === 'escapeKeyDown')){
+      if (mode === ADD_POI_MODE) {
+        const updateallPointers = [...allPointers];
+        updateallPointers.pop();
+        setAllpointers(updateallPointers);
+
+      }else if(mode === ADD_FLAT_MODE){
+        const updatePointRed = [...pointRed];
+        updatePointRed.pop();
+        setPointRed(updatePointRed);
+      }
+    }
     setOpenModal(false);
   };
 
@@ -199,10 +210,8 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     ];
   }, [mapStyle]);
 
-  const [pointBLue,setPointBlue] = useState([]);
-  const [pointRed,setPointRed] = useState([]);
-  const [nameBlue,setNameBlue] = useState([]);
-  const [nameRed,setNameRed] = useState([]);
+  const [allPointers,setAllpointers] = useState(undefined);
+  const [pointRed,setPointRed] = useState(undefined);
 
   console.log('mode',mode);
   const handleClick = e => {
@@ -210,44 +219,36 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     if (mode === ADD_POI_MODE) {
       setPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
 
-      setPointBlue(prevState => [...prevState, {
-        'lat': e.lngLat.lat.toFixed(5),
-        'lng': e.lngLat.lng.toFixed(5)
-      }]);
-
+      setAllpointers(prevState => ({
+        ...prevState,
+        blue: [{
+          lng : e.lngLat.lng.toFixed(5),
+          lat : e.lngLat.lat.toFixed(5)
+        }]
+      }));
+      handleOpen();
     } else if (mode === REMOVE_POI_MODE) {
-      console.log('point BLue',setPointBlue);
-      setPointBlue(pointBLue.filter((p, i) => i !== e.features[0].id));
-      setNameBlue(nameBlue.filter((p, i) => i !== e.features[0].id));
+      console.log('point BLue',setAllpointers);
+      setAllpointers(allPointers.filter((p, i) => i !== e.features[0].id));
       console.log('feature',e.features[0].id);
       setPoints(originPoints.filter((p, i) => i !== e.features[0].id));
     } else if (mode === ADD_FLAT_MODE) {
-      setPointRed(prevState =>[...prevState,{
-        'lat': e.lngLat.lat.toFixed(5),
-        'lng': e.lngLat.lng.toFixed(5)
-      }]);
+      setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
+      setPointRed(prevState => [
+        ...(prevState || []),{
+          lat: e.lngLat.lat.toFixed(5),
+          lng: e.lngLat.lng.toFixed(5)
+        }
+      ]);
+      handleOpen();
     } else if (mode === REMOVE_FLAT_MODE) {
+      setPointRed(pointRed.filter((p, i) => i !== e.features[0].id));
       setPoints(points.filter((p, i) => i !== e.features[0].id));
     }
-    handleOpen();
-
   };
-
-  useEffect(()=>{
-    localStorage.setItem('blue',JSON.stringify(pointBLue));
-  },[pointBLue]);
-
-  useEffect(()=>{
-    localStorage.setItem('red',JSON.stringify(pointRed));
-  },[pointRed]);
-
-  useEffect(()=>{
-    localStorage.setItem('nameRed',JSON.stringify(nameRed));
-  },[nameRed]);
-
-  useEffect(()=>{
-    localStorage.setItem('nameBlue',JSON.stringify(nameBlue));
-  },[nameBlue]);
+ 
+  const handleSave = () => localStorage.setItem('pointers',JSON.stringify(allPointers));
+  
   
   const [cursor, setCursor] = useState('pointer');
 
@@ -284,29 +285,46 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         ...stateUrl,
         originPointsNames: [...stateUrl.originPointsNames, text]
       });
-      
-      
-      setNameBlue(prevState => [
-        ...prevState,{
-          'name': text
-        }]);
-       
-        
+      console.log('allpointer',allPointers);
+      const lastallPointers = allPointers.blue.length > 0 ? allPointers.blue[allPointers.blue.length - 1] : null;
+
+      const updateBLue = allPointers.blue.map(point =>{
+        if (point === lastallPointers) {
+          return {
+            ...point,
+            name: text
+          };
+        }
+      } );
+      console.log('ultimo',lastallPointers);
+  
+      setAllpointers(prevState => ({
+        ...prevState,
+        blue: updateBLue
+      }));
+   
     } else if (mode === 'ADD_FLAT') {
       setStateUrl({
         ...stateUrl,
         pointsNames: [...stateUrl.pointsNames, text]
       });
-
-      setNameRed(prevState => [
-        ...prevState,{
-          'name': text
-        }]);
+      const lastPointRed = pointRed[pointRed.length-1];
+      const newPoint = {
+        lng : lastPointRed.lng,
+        lat : lastPointRed.lat,
+        name : text
+      };
+      setPointRed(prevState =>[
+        ...prevState.slice(0,-1),newPoint
+      ]);
      
     }
     handleClose();
     setText(t('point'));
   };
+  handleSave();
+
+  console.log('allPointers',allPointers);
 
   const buttonColors= {
     color : mode==='ADD_POI' ? 'blue':'red',
