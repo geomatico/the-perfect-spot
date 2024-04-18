@@ -194,12 +194,18 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   const handleClick = e => {
     console.log('eeeee', e);
     if (mode === ADD_POI_MODE) {
+      setPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
+
       setPointBlue(prevState => [...prevState, {
         'lat': e.lngLat.lat.toFixed(5),
         'lng': e.lngLat.lng.toFixed(5)
       }]);
 
     } else if (mode === REMOVE_POI_MODE) {
+      console.log('point BLue',setPointBlue);
+      setPointBlue(pointBLue.filter((p, i) => i !== e.features[0].id));
+      setNameBlue(nameBlue.filter((p, i) => i !== e.features[0].id));
+      console.log('feature',e.features[0].id);
       setPoints(originPoints.filter((p, i) => i !== e.features[0].id));
     } else if (mode === ADD_FLAT_MODE) {
       setPointRed(prevState =>[...prevState,{
