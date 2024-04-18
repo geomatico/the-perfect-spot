@@ -253,12 +253,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   };
 
   const handleChangeText = (x) => {
-<<<<<<< HEAD
     setText(x);
-=======
-    setText(x.target.value);
-   
->>>>>>> b255a56 (localstorage has been updated)
   };
 
   const handleSaveName = () => {
