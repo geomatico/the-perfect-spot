@@ -46,8 +46,8 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
   const [transportation, setTransportation] = useState(transportOptions[0].id);
   const allPointers = JSON.parse(localStorage.getItem('ThePerfectSpot'));
   console.log('localStorage',allPointers);
-  const destinations = allPointers.blue ? allPointers.blue.map(point =>[point.lng,point.lat]) : [];
-  const locations = allPointers.red ? allPointers.red.map(point =>[point.lng,point.lat]) : [];
+  const destinations = allPointers?.red ? allPointers.red.map(point =>[point.lng,point.lat]) : [];
+  const locations = allPointers?.blue ? allPointers.blue.map(point =>[point.lng,point.lat]) : [];
 
   const calculateDirectionsTable = (transportationType) => {
     getInfo(locations, destinations, transportationType || transportation).then(data => {
