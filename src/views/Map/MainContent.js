@@ -23,6 +23,7 @@ const toStr = (a) => JSON.stringify(a);
 
 const MainContent = ({mapStyle, mode, routes, directions}) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
+  const [allPointers,setAllPointers] = useState({red: undefined, blue: undefined});
   const [highlightDirection, setHighlightDirection] = useState(undefined);
   console.log('routes', routes);
   const [openModal, setOpenModal] = useState(false);
@@ -34,14 +35,14 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       if (mode === ADD_POI_MODE) {
         const bluePoints = [...allPointers.blue];
         bluePoints.pop();
-        setAllpointers(prevState =>({
+        setAllPointers(prevState =>({
           ...prevState ,blue: bluePoints
         }));
 
       }else if(mode === ADD_FLAT_MODE){
         const redPoints = [...allPointers.red];
         redPoints.pop();
-        setAllpointers(prevState =>({
+        setAllPointers(prevState =>({
           ...prevState ,red: redPoints
         }));
       }
@@ -100,10 +101,10 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       type: 'FeatureCollection',
       features: []
     };
-
+    console.log('allPointers',allPointers);
     const centers = {
       type: 'FeatureCollection',
-      features: points.map((p, i) => ({
+      features: allPointers.blue?.map((p, i) => ({
         type: 'Feature',
         id: i,
         properties: {},
@@ -116,7 +117,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
 
     const centersOrigin = {
       type: 'FeatureCollection',
-      features: originPoints.map((p, i) => ({
+      features: allPointers.red?.map((p, i) => ({
         type: 'Feature',
         id: i,
         properties: {},
@@ -142,7 +143,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         data: routes || empty
       },
     };
-  }, [points, originPoints]);
+  }, [allPointers, originPoints]);
 
   const layers = useMemo(() => {
     return [
@@ -200,56 +201,55 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     ];
   }, [mapStyle]);
 
-  const [allPointers,setAllpointers] = useState({red: undefined,blue:undefined});
-
-  console.log('mode',mode);
   const handleClick = e => {
-    console.log('eeeee', e);
     if (mode === ADD_POI_MODE) {
       setPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
      
-      setAllpointers(prevState => ({
+      setAllPointers(prevState => ({
         ...prevState,
         blue: prevState.blue === undefined
-          ? [{ lng: e.lngLat.lng.toFixed(5), lat: e.lngLat.lat.toFixed(5) }]
+          ? [{ lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }]
           : [ ...prevState.blue,
-            { lng: e.lngLat.lng.toFixed(5), lat: e.lngLat.lat.toFixed(5) }
+            { lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }
           ]
       }));
       
       handleOpen();
     } else if (mode === REMOVE_POI_MODE) {
-      console.log('point BLue',setAllpointers);
-      setAllpointers(prevState => ({
+      
+      setAllPointers(prevState => ({
         ...prevState, blue : prevState.blue.filter((p, i) => i !== e.features[0].id)
       }));
-      console.log('feature',e.features[0].id);
       setPoints(originPoints.filter((p, i) => i !== e.features[0].id));
 
     } else if (mode === ADD_FLAT_MODE) {
       setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
-      setAllpointers(prevState => ({
+      setAllPointers(prevState => ({
         ...prevState,
         red: prevState.red === undefined
-          ? [{ lng: e.lngLat.lng.toFixed(5), lat: e.lngLat.lat.toFixed(5) }]
+          ? [{ lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }]
           : [
             ...prevState.red,
-            { lng: e.lngLat.lng.toFixed(5), lat: e.lngLat.lat.toFixed(5) }
+            { lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }
           ]
       }));
       handleOpen();
 
     } else if (mode === REMOVE_FLAT_MODE) {
-      setAllpointers(prevState => ({
+      setAllPointers(prevState => ({
         ...prevState, red: prevState.red.filter((p, i) => i !== e.features[0].id)
       }));
       setPoints(points.filter((p, i) => i !== e.features[0].id));
     }
   };
  
-  const handleSave = () => localStorage.setItem('pointers',JSON.stringify(allPointers));
+  const handleSave = () => localStorage.setItem('ThePerfectSpot',JSON.stringify(allPointers));
   
-  
+  useEffect(()=>{
+    handleSave();
+    console.log('localstorage',localStorage.getItem('ThePerfectSpot').blue);
+  },[allPointers]);
+
   const [cursor, setCursor] = useState('pointer');
 
   useEffect(() => {
@@ -284,9 +284,9 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         ...stateUrl,
         originPointsNames: [...stateUrl.originPointsNames, text]
       });
-      console.log('allpointer',allPointers);
+    
       const lastBluePoint = allPointers.blue[allPointers.blue.length - 1];
-      console.log('pointer Ultimo',lastBluePoint);
+     
       const updatebluePoints = allPointers.blue.map(point =>{
         if (point === lastBluePoint) {
           return {
@@ -297,7 +297,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         return point;
       });
 
-      setAllpointers(prevState =>({
+      setAllPointers(prevState =>({
         ...prevState,blue:updatebluePoints
       }));
    
@@ -316,16 +316,13 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         }
         return point;
       });
-      setAllpointers(prevState =>({
+      setAllPointers(prevState =>({
         ...prevState,red:updateRedPoint
       }));
     }
     handleClose();
     setText(t('point'));
   };
-  handleSave();
-
-  console.log('allPointers',allPointers);
 
 
   const handleDirectionHighlight = (i) => setHighlightDirection(i);
@@ -371,7 +368,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable directions={directions} onDirectionHighlight={handleDirectionHighlight}/>
+      <DirectionsTable directions={directions} onDirectionHighlight={handleDirectionHighlight} pointers={allPointers}/>
     </div>
   </>;
 };

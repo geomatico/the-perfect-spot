@@ -5,19 +5,18 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import {useParams} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import {grey} from '@mui/material/colors';
 
-const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHightlight}) => {
-  const {originPoints: strOriginPoints} = useParams();
-  const params = useParams();
+const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHightlight, pointers}) => {
+  //const {originPoints: strOriginPoints} = useParams();
+  //const params = useParams();
   
   const{t} = useTranslation();
 
-  const locations = strOriginPoints ? JSON.parse(strOriginPoints) : [];
+  const locations = pointers.blue ? pointers.blue.map(point=>[point.lng,point.lat]) : [] ;
 
   directions.forEach(function (element) {
     let sum = 0;
@@ -32,8 +31,8 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
   let isSmallest = dir.indexOf(Math.min(...dir));
   console.log('isSmallest'+isSmallest);
 
-  const columnNames = params?.originPointsNames ? JSON.parse(params.originPointsNames) : [];
-  const rowNames = params?.pointsNames ? JSON.parse(params.pointsNames) : [];
+  const columnNames = pointers.blue ? pointers.blue.map(point => point.name) : [];
+  const rowNames = pointers.red ? pointers.red.map(point => point.name) : [];
   
   return <>
     {
@@ -87,7 +86,8 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
 DirectionsTable.propTypes = {
   directions: PropTypes.array.isRequired,
   onDirectionHighlight: PropTypes.func.isRequired,
-  onDeleteDirectionHightlight: PropTypes.func.isRequired
+  onDeleteDirectionHightlight: PropTypes.func.isRequired,
+  pointers: PropTypes.object
 };
 
 export default DirectionsTable;
