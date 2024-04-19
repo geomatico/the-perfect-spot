@@ -10,13 +10,14 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import {grey} from '@mui/material/colors';
 
-const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHightlight, pointers}) => {
+const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHightlight}) => {
   //const {originPoints: strOriginPoints} = useParams();
   //const params = useParams();
   
   const{t} = useTranslation();
+  const allPointers = JSON.parse(localStorage.getItem('ThePerfectSpot'));
 
-  const locations = pointers.blue ? pointers.blue.map(point=>[point.lng,point.lat]) : [] ;
+  const locations = allPointers.red ? allPointers.red.map(point=>[point.lng,point.lat]) : [] ;
 
   directions.forEach(function (element) {
     let sum = 0;
@@ -31,9 +32,12 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
   let isSmallest = dir.indexOf(Math.min(...dir));
   console.log('isSmallest'+isSmallest);
 
-  const columnNames = pointers.blue ? pointers.blue.map(point => point.name) : [];
-  const rowNames = pointers.red ? pointers.red.map(point => point.name) : [];
-  
+  const columnNames = allPointers?.blue ? allPointers.blue.map(point => point.name) : [];
+  const rowNames = allPointers?.red ? allPointers.red.map(point => point.name) : [];
+  //const columnNames = params?.originPointsNames ? JSON.parse(params.originPointsNames) : [];
+  //const rowNames = params?.pointsNames ? JSON.parse(params.pointsNames) : [];
+  console.log('ROWNAMES',rowNames);
+  console.log('DIRECITONS',directions);
   return <>
     {
       directions && directions.length > 0 &&
@@ -87,7 +91,6 @@ DirectionsTable.propTypes = {
   directions: PropTypes.array.isRequired,
   onDirectionHighlight: PropTypes.func.isRequired,
   onDeleteDirectionHightlight: PropTypes.func.isRequired,
-  pointers: PropTypes.object
 };
 
 export default DirectionsTable;
