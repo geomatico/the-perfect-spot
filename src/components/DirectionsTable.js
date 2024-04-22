@@ -8,14 +8,13 @@ import TableBody from '@mui/material/TableBody';
 import {useTranslation} from 'react-i18next';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import {grey} from '@mui/material/colors';
+import { grey} from '@mui/material/colors';
 
-const DirectionsTable = ({directions,  onDeleteDirectionHightlight}) => {
+const DirectionsTable = ({directions, allPoints}) => {
   
   const{t} = useTranslation();
-  const allPointers = JSON.parse(localStorage.getItem('ThePerfectSpot'));
 
-  const locations = allPointers.blue ? allPointers.blue.map(point=>[point.lng,point.lat]) : [] ;
+  const locations = allPoints.blue ? allPoints.blue.map(point=>[point.lng,point.lat]) : [] ;
 
   directions.forEach(function (element) {
     let sum = 0;
@@ -29,8 +28,8 @@ const DirectionsTable = ({directions,  onDeleteDirectionHightlight}) => {
   let dir = directions.map(d => (d.data.avg));
   let isSmallest = dir.indexOf(Math.min(...dir));
 
-  const columnNames = allPointers.blue ? allPointers.blue.map(point => point.name) : [];
-  const rowNames = allPointers.red ? allPointers.red.map(point => point.name) : [];
+  const columnNames = allPoints.blue ? allPoints.blue.map(point => point.name) : [];
+  const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
 
   return <>
     {
@@ -50,7 +49,6 @@ const DirectionsTable = ({directions,  onDeleteDirectionHightlight}) => {
         <TableBody>
           {directions.map((row, i) => (
             <TableRow
-              onMouseOut={onDeleteDirectionHightlight}
               key={row.name + Math.random()}
               sx={{'&:last-child td, &:last-child th': {border: 0}, '&:hover': {bgcolor: 'grey.200'}, border: i==isSmallest ? '2px solid red': undefined}}
             >
@@ -82,7 +80,10 @@ const DirectionsTable = ({directions,  onDeleteDirectionHightlight}) => {
 
 DirectionsTable.propTypes = {
   directions: PropTypes.array.isRequired,
-  onDeleteDirectionHightlight: PropTypes.func.isRequired
+  allPoints: PropTypes.shape({
+    red: PropTypes.array.isRequired,
+    blue: PropTypes.array.isRequired
+  })
 };
 
 export default DirectionsTable;

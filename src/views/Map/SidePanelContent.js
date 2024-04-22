@@ -19,7 +19,7 @@ const ScrollableContent = styled(Box)({
 });
 
 
-const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, mode, onDirectionsChange,allPointers}) => {
+const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, mode, onDirectionsChange,allPoints}) => {
 
   const {t} = useTranslation();
   const transportOptions = [
@@ -42,9 +42,9 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
   ];
 
   const [transportation, setTransportation] = useState(transportOptions[0].id);
-  console.log('localStorage',allPointers);
-  const destinations = allPointers?.red ? allPointers.red.map(point =>[point.lng,point.lat]) : [];
-  const locations = allPointers?.blue ? allPointers.blue.map(point =>[point.lng,point.lat]) : [];
+  console.log('localStorage',allPoints);
+  const destinations = allPoints?.red ? allPoints.red.map(point =>[point.lng,point.lat]) : [];
+  const locations = allPoints?.blue ? allPoints.blue.map(point =>[point.lng,point.lat]) : [];
 
   const calculateDirectionsTable = (transportationType) => {
     getInfo(locations, destinations, transportationType || transportation).then(data => {
@@ -94,7 +94,7 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
 
   const handleTransportationType = (transportationType) => {
     setTransportation(transportationType);
-    if (allPointers.red?.length && allPointers.blue?.length) {
+    if (allPoints.red?.length && allPoints.blue?.length) {
       calculateDirectionsTable(transportationType);
       calculateRoutes(transportationType);
     }
@@ -139,7 +139,7 @@ SidePanelContent.propTypes = {
   onPhaseChanged: PropTypes.func,
   onRoutesChange: PropTypes.func.isRequired,
   onDirectionsChange: PropTypes.func.isRequired,
-  allPointers: PropTypes.object
+  allPoints: PropTypes.object
 };
 
 export default SidePanelContent;

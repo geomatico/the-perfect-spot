@@ -33,23 +33,22 @@ const inputContainerStyles = {
 };
 
 
-const MainContent = ({mapStyle, mode, routes, directions,onPointersChange,allPointers}) => {
+const MainContent = ({mapStyle, mode, routes, directions, onPointersChange,allPoints}) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
   const handleOpen = () => setOpenModal(true);
-
   const handleClose = (event, reason) => {
     // para que no se cierre con click fuera de la modal si esc
     if (reason && (reason === 'backdropClick' || reason === 'escapeKeyDown')){
       if (mode === ADD_POI_MODE) {
-        const bluePoints = [...allPointers.blue];
+        const bluePoints = [...allPoints.blue];
         bluePoints.pop();
         onPointersChange(prevState =>({
           ...prevState ,blue: bluePoints
         }));
 
       }else if(mode === ADD_FLAT_MODE){
-        const redPoints = [...allPointers.red];
+        const redPoints = [...allPoints.red];
         redPoints.pop();
         onPointersChange(prevState =>({
           ...prevState ,red: redPoints
@@ -77,26 +76,26 @@ const MainContent = ({mapStyle, mode, routes, directions,onPointersChange,allPoi
     };
     const centers = {
       type: 'FeatureCollection',
-      features: allPointers.red?.map((p, i) => ({
+      features: allPoints.red?.map(({lng,lat}, index) => ({
         type: 'Feature',
-        id: i,
+        id: index,
         properties: {},
         geometry: {
           type: 'Point',
-          coordinates: [p.lng,p.lat]
+          coordinates: [lng,lat]
         }
       }))
     };
 
     const centersOrigin = {
       type: 'FeatureCollection',
-      features: allPointers.blue?.map((p, i) => ({
+      features: allPoints.blue?.map(({lng,lat}, index) => ({
         type: 'Feature',
-        id: i,
+        id: index,
         properties: {},
         geometry: {
           type: 'Point',
-          coordinates: [p.lng,p.lat]
+          coordinates: [lng,lat]
         }
       }))
     };
@@ -116,7 +115,7 @@ const MainContent = ({mapStyle, mode, routes, directions,onPointersChange,allPoi
         data: routes || empty
       },
     };
-  }, [allPointers,routes,directions]);
+  }, [allPoints,routes,directions]);
   const layers = useMemo(() => {
     return [
       {
@@ -211,11 +210,11 @@ const MainContent = ({mapStyle, mode, routes, directions,onPointersChange,allPoi
     }
   };
  
-  const handleSave = () => localStorage.setItem('ThePerfectSpot',JSON.stringify(allPointers));
+  const handleSave = () => localStorage.setItem('ThePerfectSpot',JSON.stringify(allPoints));
   
   useEffect(()=>{
     handleSave();
-  },[allPointers]);
+  },[allPoints]);
 
   const [cursor, setCursor] = useState('pointer');
 
@@ -249,9 +248,9 @@ const MainContent = ({mapStyle, mode, routes, directions,onPointersChange,allPoi
     if (mode === 'ADD_POI') {
     
     
-      const lastBluePoint = allPointers.blue[allPointers.blue.length - 1];
+      const lastBluePoint = allPoints.blue[allPoints.blue.length - 1];
      
-      const updatebluePoints = allPointers.blue.map(point =>{
+      const updatebluePoints = allPoints.blue.map(point =>{
         if (point === lastBluePoint) {
           return {
             ...point,
@@ -260,15 +259,14 @@ const MainContent = ({mapStyle, mode, routes, directions,onPointersChange,allPoi
         }
         return point;
       });
-
       onPointersChange(prevState =>({
         ...prevState,blue:updatebluePoints
       }));
-   
+      
     } else if (mode === 'ADD_FLAT') {
-    
-      const lastRedPoint = allPointers.red[allPointers.red.length -1];
-      const updateRedPoint = allPointers.red.map(point=>{
+      
+      const lastRedPoint = allPoints.red[allPoints.red.length -1];
+      const updateRedPoint = allPoints.red.map(point=>{
         if (point === lastRedPoint) {
           return {
             ...point,
@@ -284,18 +282,18 @@ const MainContent = ({mapStyle, mode, routes, directions,onPointersChange,allPoi
     handleClose();
     setText(t('point'));
   };
-
+  
   const buttonColors= {
     color : mode==='ADD_POI' ? 'blue':'red',
     borderColor: mode==='ADD_POI'? 'blue':'red'
   };
-
+  
   return <>
     <ModalInfo/>
     <Modal
       open={openModal}
       onClose={handleClose}
-      disableBackdropClick
+      
     >
       <Box sx={inputContainerStyles}>
         <Typography id="modal-modal-title" variant="body1">
@@ -345,7 +343,7 @@ const MainContent = ({mapStyle, mode, routes, directions,onPointersChange,allPoi
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable directions={directions}  pointers={allPointers}/>
+      <DirectionsTable directions={directions} allPoints={allPoints}/>
     </div>
   </>;
 };
@@ -356,7 +354,7 @@ MainContent.propTypes = {
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any,
   directions: PropTypes.array.isRequired,
-  allPointers: PropTypes.object,
+  allPoints: PropTypes.object,
   onPointersChange: PropTypes.func
 };
 
