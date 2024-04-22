@@ -8,7 +8,6 @@ import styled from '@mui/styles/styled';
 import SelectInput from '@geomatico/geocomponents/SelectInput';
 import Geomatico from '../../components/Geomatico';
 import {getDirections, getInfo} from '../../utils/ors';
-import {useParams} from 'react-router-dom';
 import POISidePanel from '../../components/POISidePanel';
 import FlatSidePanel from '../../components/FlatSidePanel';
 import {useTranslation} from 'react-i18next';
@@ -20,9 +19,8 @@ const ScrollableContent = styled(Box)({
 });
 
 
-const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, mode, onDirectionsChange}) => {
+const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, mode, onDirectionsChange,allPointers}) => {
 
-  const {points: strPoiPoints, originPoints: strFlatPoints} = useParams();
   const {t} = useTranslation();
   const transportOptions = [
     {
@@ -44,7 +42,6 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
   ];
 
   const [transportation, setTransportation] = useState(transportOptions[0].id);
-  const allPointers = JSON.parse(localStorage.getItem('ThePerfectSpot'));
   console.log('localStorage',allPointers);
   const destinations = allPointers?.red ? allPointers.red.map(point =>[point.lng,point.lat]) : [];
   const locations = allPointers?.blue ? allPointers.blue.map(point =>[point.lng,point.lat]) : [];
@@ -97,7 +94,7 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
 
   const handleTransportationType = (transportationType) => {
     setTransportation(transportationType);
-    if (strFlatPoints?.length && strPoiPoints?.length) {
+    if (allPointers.red?.length && allPointers.blue?.length) {
       calculateDirectionsTable(transportationType);
       calculateRoutes(transportationType);
     }
@@ -141,7 +138,8 @@ SidePanelContent.propTypes = {
   onFlatModeChanged: PropTypes.func,
   onPhaseChanged: PropTypes.func,
   onRoutesChange: PropTypes.func.isRequired,
-  onDirectionsChange: PropTypes.func.isRequired
+  onDirectionsChange: PropTypes.func.isRequired,
+  allPointers: PropTypes.object
 };
 
 export default SidePanelContent;

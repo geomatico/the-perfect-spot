@@ -10,14 +10,12 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import {grey} from '@mui/material/colors';
 
-const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHightlight}) => {
-  //const {originPoints: strOriginPoints} = useParams();
-  //const params = useParams();
+const DirectionsTable = ({directions,  onDeleteDirectionHightlight}) => {
   
   const{t} = useTranslation();
   const allPointers = JSON.parse(localStorage.getItem('ThePerfectSpot'));
 
-  const locations = allPointers.red ? allPointers.red.map(point=>[point.lng,point.lat]) : [] ;
+  const locations = allPointers.blue ? allPointers.blue.map(point=>[point.lng,point.lat]) : [] ;
 
   directions.forEach(function (element) {
     let sum = 0;
@@ -30,14 +28,10 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
 
   let dir = directions.map(d => (d.data.avg));
   let isSmallest = dir.indexOf(Math.min(...dir));
-  console.log('isSmallest'+isSmallest);
 
-  const columnNames = allPointers?.blue ? allPointers.blue.map(point => point.name) : [];
-  const rowNames = allPointers?.red ? allPointers.red.map(point => point.name) : [];
-  //const columnNames = params?.originPointsNames ? JSON.parse(params.originPointsNames) : [];
-  //const rowNames = params?.pointsNames ? JSON.parse(params.pointsNames) : [];
-  console.log('ROWNAMES',rowNames);
-  console.log('DIRECITONS',directions);
+  const columnNames = allPointers.blue ? allPointers.blue.map(point => point.name) : [];
+  const rowNames = allPointers.red ? allPointers.red.map(point => point.name) : [];
+
   return <>
     {
       directions && directions.length > 0 &&
@@ -56,7 +50,6 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
         <TableBody>
           {directions.map((row, i) => (
             <TableRow
-              onMouseEnter={() => onDirectionHighlight(i)}
               onMouseOut={onDeleteDirectionHightlight}
               key={row.name + Math.random()}
               sx={{'&:last-child td, &:last-child th': {border: 0}, '&:hover': {bgcolor: 'grey.200'}, border: i==isSmallest ? '2px solid red': undefined}}
@@ -89,8 +82,7 @@ const DirectionsTable = ({directions, onDirectionHighlight, onDeleteDirectionHig
 
 DirectionsTable.propTypes = {
   directions: PropTypes.array.isRequired,
-  onDirectionHighlight: PropTypes.func.isRequired,
-  onDeleteDirectionHightlight: PropTypes.func.isRequired,
+  onDeleteDirectionHightlight: PropTypes.func.isRequired
 };
 
 export default DirectionsTable;
