@@ -10,7 +10,6 @@ import {
   REMOVE_FLAT_MODE,
   REMOVE_POI_MODE
 } from '../../config';
-import {useNavigate, useParams} from 'react-router-dom';
 import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
 import DirectionsTable from '../../components/DirectionsTable';
@@ -19,13 +18,9 @@ import ModalInfo from '../../components/ModalInfo';
 import ModalAddPoint from '../../components/ModalAddPoint';
 
 
-const toStr = (a) => JSON.stringify(a);
 
-const MainContent = ({mapStyle, mode, routes, directions}) => {
+const MainContent = ({mapStyle, mode, routes, directions,onPointersChange,allPointers}) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
-  const [allPointers,setAllPointers] = useState({red: undefined, blue: undefined});
-  const [highlightDirection, setHighlightDirection] = useState(undefined);
-  console.log('routes', routes);
   const [openModal, setOpenModal] = useState(false);
   const handleOpen = () => setOpenModal(true);
 
@@ -35,14 +30,14 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       if (mode === ADD_POI_MODE) {
         const bluePoints = [...allPointers.blue];
         bluePoints.pop();
-        setAllPointers(prevState =>({
+        onPointersChange(prevState =>({
           ...prevState ,blue: bluePoints
         }));
 
       }else if(mode === ADD_FLAT_MODE){
         const redPoints = [...allPointers.red];
         redPoints.pop();
-        setAllPointers(prevState =>({
+        onPointersChange(prevState =>({
           ...prevState ,red: redPoints
         }));
       }
@@ -55,43 +50,8 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   const mapRef = useRef();
   const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
   const handleSearchResult = ({bbox}) => flyTo(bbox);
-  const navigate = useNavigate();
-
-  const {points: strPoiPoints, originPoints: strFlatPoints, pointsNames, originPointsNames} = useParams();
-
-  const points = strPoiPoints ? JSON.parse(strPoiPoints) : [];
-  const originPoints = strFlatPoints ? JSON.parse(strFlatPoints) : [];
 
   const [text, setText] = useState(t('point'));
-
-  const initialState = {
-    strPoiPoints: strPoiPoints ? JSON.parse(strPoiPoints) : [],
-    strFlatPoints: strFlatPoints ? JSON.parse(strFlatPoints) : [],
-    pointsNames: pointsNames ? JSON.parse(pointsNames) : [],
-    originPointsNames: originPointsNames ? JSON.parse(originPointsNames) : [],
-  };
-  const [stateUrl, setStateUrl] = useState(initialState);
-
-  useEffect(() => {
-    const url = `../map/${toStr(stateUrl.strPoiPoints)}/${toStr(stateUrl.strFlatPoints)}/${toStr(stateUrl.pointsNames)}/${toStr(stateUrl.originPointsNames)}`;
-    navigate(url);
-  }, [stateUrl]);
-
-  const setPoints = points => {
-    if (mode === 'ADD_FLAT' || mode === 'REMOVE_FLAT') {
-      setStateUrl({
-        ...stateUrl,
-        strPoiPoints: points
-      });
-    }
-    if (mode === 'ADD_POI' || mode === 'REMOVE_POI') {
-      setStateUrl({
-        ...stateUrl,
-        strFlatPoints: points
-      });
-    }
-    if (mode === 'ADD_FLAT' || mode === 'ADD_POI') handleOpen();
-  };
 
   const COLOR = MAPSTYLES.find(ms => ms.id === mapStyle)?.overlayColor;
 
@@ -99,23 +59,9 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
 
     const empty = {
       type: 'FeatureCollection',
-      features: []
+      features:[]
     };
-    console.log('allPointers',allPointers);
     const centers = {
-      type: 'FeatureCollection',
-      features: allPointers.blue?.map((p, i) => ({
-        type: 'Feature',
-        id: i,
-        properties: {},
-        geometry: {
-          type: 'Point',
-          coordinates: p
-        }
-      }))
-    };
-
-    const centersOrigin = {
       type: 'FeatureCollection',
       features: allPointers.red?.map((p, i) => ({
         type: 'Feature',
@@ -123,7 +69,20 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         properties: {},
         geometry: {
           type: 'Point',
-          coordinates: p
+          coordinates: [p.lng,p.lat]
+        }
+      }))
+    };
+
+    const centersOrigin = {
+      type: 'FeatureCollection',
+      features: allPointers.blue?.map((p, i) => ({
+        type: 'Feature',
+        id: i,
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: [p.lng,p.lat]
         }
       }))
     };
@@ -143,8 +102,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         data: routes || empty
       },
     };
-  }, [allPointers, originPoints]);
-
+  }, [allPointers,routes,directions]);
   const layers = useMemo(() => {
     return [
       {
@@ -203,9 +161,8 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
 
   const handleClick = e => {
     if (mode === ADD_POI_MODE) {
-      setPoints([...originPoints, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
      
-      setAllPointers(prevState => ({
+      onPointersChange(prevState => ({
         ...prevState,
         blue: prevState.blue === undefined
           ? [{ lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }]
@@ -217,14 +174,12 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       handleOpen();
     } else if (mode === REMOVE_POI_MODE) {
       
-      setAllPointers(prevState => ({
+      onPointersChange(prevState => ({
         ...prevState, blue : prevState.blue.filter((p, i) => i !== e.features[0].id)
       }));
-      setPoints(originPoints.filter((p, i) => i !== e.features[0].id));
 
     } else if (mode === ADD_FLAT_MODE) {
-      setPoints([...points, [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)]]);
-      setAllPointers(prevState => ({
+      onPointersChange(prevState => ({
         ...prevState,
         red: prevState.red === undefined
           ? [{ lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }]
@@ -236,10 +191,9 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       handleOpen();
 
     } else if (mode === REMOVE_FLAT_MODE) {
-      setAllPointers(prevState => ({
+      onPointersChange(prevState => ({
         ...prevState, red: prevState.red.filter((p, i) => i !== e.features[0].id)
       }));
-      setPoints(points.filter((p, i) => i !== e.features[0].id));
     }
   };
  
@@ -247,7 +201,6 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   
   useEffect(()=>{
     handleSave();
-    console.log('localstorage',localStorage.getItem('ThePerfectSpot').blue);
   },[allPointers]);
 
   const [cursor, setCursor] = useState('pointer');
@@ -260,7 +213,6 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     setCursor('no-drop');
   }, []);
   const onMouseLeave = useCallback(() => setCursor('auto'), []);
-
 
   // habilita/deshabilita capas segun el modo seleccionado
   const calculateInteractiveLayers = () => {
@@ -280,10 +232,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   const handleSaveName = () => {
     if(text === '')  return;
     if (mode === 'ADD_POI') {
-      setStateUrl({
-        ...stateUrl,
-        originPointsNames: [...stateUrl.originPointsNames, text]
-      });
+    
     
       const lastBluePoint = allPointers.blue[allPointers.blue.length - 1];
      
@@ -297,15 +246,12 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         return point;
       });
 
-      setAllPointers(prevState =>({
+      onPointersChange(prevState =>({
         ...prevState,blue:updatebluePoints
       }));
    
     } else if (mode === 'ADD_FLAT') {
-      setStateUrl({
-        ...stateUrl,
-        pointsNames: [...stateUrl.pointsNames, text]
-      });
+    
       const lastRedPoint = allPointers.red[allPointers.red.length -1];
       const updateRedPoint = allPointers.red.map(point=>{
         if (point === lastRedPoint) {
@@ -316,7 +262,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         }
         return point;
       });
-      setAllPointers(prevState =>({
+      onPointersChange(prevState =>({
         ...prevState,red:updateRedPoint
       }));
     }
@@ -325,8 +271,6 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   };
 
 
-  const handleDirectionHighlight = (i) => setHighlightDirection(i);
-  console.log('highlightDirection', highlightDirection);
   return <>
     <ModalInfo/>
     {openModal && <ModalAddPoint 
@@ -368,7 +312,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable directions={directions} onDirectionHighlight={handleDirectionHighlight} pointers={allPointers}/>
+      <DirectionsTable directions={directions}  pointers={allPointers}/>
     </div>
   </>;
 };
@@ -378,7 +322,9 @@ MainContent.propTypes = {
   mapStyle: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any,
-  directions: PropTypes.array.isRequired
+  directions: PropTypes.array.isRequired,
+  allPointers: PropTypes.object,
+  onPointersChange: PropTypes.func
 };
 
 export default MainContent;
