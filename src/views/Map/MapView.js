@@ -11,7 +11,7 @@ const Map = () => {
   const [mode, setMode] = useState(ADD_POI_MODE);
   const [routes, setRoutes] = useState(null);
   const [directions, setDirections] = useState([]);
-  const [allPointers,setAllPointers] = useState(localStorage.getItem('ThePerfectSpot') !==null?JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
+  const [allPoints,setallPoints] = useState(localStorage.getItem('ThePerfectSpot') !==null?JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
 
   const onModeChanged = () => {
     setMode(mode === ADD_POI_MODE || REMOVE_POI_MODE ? ADD_FLAT_MODE : ADD_POI_MODE);
@@ -26,7 +26,7 @@ const Map = () => {
     onRoutesChange={setRoutes}
     directions={directions}
     onDirectionsChange={setDirections}
-    allPointers={allPointers}
+    allPoints={allPoints}
   />;
 
   const mainContent = <MainContent
@@ -35,8 +35,8 @@ const Map = () => {
     mode={mode}
     routes={routes}
     directions={directions}
-    onPointersChange = {setAllPointers}
-    allPointers = {allPointers}
+    onPointersChange = {setallPoints}
+    allPoints = {allPoints}
   />;
 
   return <Layout
