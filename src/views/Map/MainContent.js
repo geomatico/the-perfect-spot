@@ -19,6 +19,8 @@ import {Modal, TextField} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ModalInfo from '../../components/ModalInfo';
+import red from '@mui/material/colors/red';
+import blue  from '@mui/material/colors/blue';
 
 const inputContainerStyles = {
   position: 'absolute',
@@ -30,7 +32,8 @@ const inputContainerStyles = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
-  m: 4
+  m: 4,
+  textAlign: 'center'
 };
 
 const toStr = (a) => JSON.stringify(a);
@@ -256,8 +259,12 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   };
 
   const buttonColors= {
-    color : mode==='ADD_POI' ? 'blue':'red',
-    borderColor: mode==='ADD_POI'? 'blue':'red'
+    color : mode === 'ADD_POI' ? 'white':'white',
+    borderColor: mode==='ADD_POI'? blue : red,
+    backgroundColor : mode === 'ADD_POI'? blue[800] : red[700],
+    '&:hover' :{
+      backgroundColor: mode === 'ADD_POI' ? blue[700] : red[600], 
+    }
   };
 
   const handleDirectionHighlight = (i) => setHighlightDirection(i);
@@ -276,13 +283,13 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
         <TextField
           error={!text}
           helperText={!text ? t('mandatoryField') : ''}
-          sx={{mt: 2}}
+          sx={{mt: 2, textAlign:'center'}}
           value={text}
           onChange={(element) => handleChangeText(element)}
           variant="outlined"
         />
-        <Box mt={2}>
-          <Button variant="outlined" sx={buttonColors} onClick={handleSaveName}>{t('done')}</Button>
+        <Box mt={2} sx={{textAlign:'center'}}>
+          <Button variant="contained" sx={buttonColors} onClick={handleSaveName}>{t('done')}</Button>
         </Box>
       </Box>
     </Modal>
