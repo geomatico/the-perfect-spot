@@ -10,13 +10,13 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { grey} from '@mui/material/colors';
 
-const DirectionsTable = ({directions, allPoints}) => {
+const DirectionsTable = ({calculatedRoutes, allPoints}) => {
   
   const{t} = useTranslation();
 
-  const locations = allPoints.blue ? allPoints.blue.map(point=>[point.lng,point.lat]) : [] ;
+  const bluePoints = allPoints.blue ? allPoints.blue.map(point =>point): [] ;
 
-  directions.forEach(function (element) {
+  calculatedRoutes.forEach(function (element) {
     let sum = 0;
     for( var i = 0; i < element.data.length; i++ ){
       sum += parseInt( element.data[i][1], 10 );
@@ -25,44 +25,42 @@ const DirectionsTable = ({directions, allPoints}) => {
     element.data.avg = Math.round( avg * 10)/10;
   });
 
-  let dir = directions.map(d => (d.data.avg));
-  let isSmallest = dir.indexOf(Math.min(...dir));
+  let dir = calculatedRoutes.map(d => (d.data.avg));
+  let shortestRouteIndex = dir.indexOf(Math.min(...dir));
 
-  const columnNames = allPoints.blue ? allPoints.blue.map(point => point.name) : [];
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
-
   return <>
     {
-      directions && directions.length > 0 &&
+      calculatedRoutes && calculatedRoutes.length > 0 &&
       <Table sx={{minWidth: 300}} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell key={'empty'} align="right"></TableCell>
             {
-              locations.map((location, i) => <TableCell key={location + i} align="right">
-                <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>{columnNames[i]?.toUpperCase()}</Typography>
+              bluePoints.map((bluePoint, index) => <TableCell key={bluePoint + index} align="right">
+                <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>{bluePoint.name?.toUpperCase()}</Typography>
               </TableCell>)
             }
             <TableCell key={'average'} align="right">{t('averageTime')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {directions.map((row, i) => (
+          {calculatedRoutes.map((row, index) => (
             <TableRow
-              key={row.name + Math.random()}
-              sx={{'&:last-child td, &:last-child th': {border: 0}, '&:hover': {bgcolor: 'grey.200'}, border: i==isSmallest ? '2px solid red': undefined}}
+              key={index}
+              sx={{'&:hover': {bgcolor: 'grey.200'}, border: index==shortestRouteIndex ? '2px solid red': undefined}}
             >
               <TableCell component="th" scope="row">
                 <Stack>
-                  <Typography sx={{fontWeight: 'bold', color: 'secondary.main'}}>{rowNames[i]?.toUpperCase()}</Typography>
+                  <Typography sx={{fontWeight: 'bold', color: 'secondary.main'}}>{rowNames[index]?.toUpperCase()}</Typography>
                   <Typography variant='body2' sx={{color: grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
                 </Stack>
               </TableCell>
               {
-                row.data.map((d) => (
-                  <TableCell key={d} align="right">{
-                    d.map((x, i ) => (
-                      <span key={x}>{x + (i === 0 ? 'km' : 'min')}<br/></span>
+                row.data.map((data) => (
+                  <TableCell key={data} align="right">{
+                    data.map((value, index ) => (
+                      <span key={value}>{value + (index === 0 ? 'km' : 'min')}<br/></span>
                     ))
                   }</TableCell>
                 ))
@@ -79,11 +77,17 @@ const DirectionsTable = ({directions, allPoints}) => {
 };
 
 DirectionsTable.propTypes = {
-  directions: PropTypes.array.isRequired,
+  calculatedRoutes: PropTypes.array.isRequired,
   allPoints: PropTypes.shape({
-    red: PropTypes.array.isRequired,
-    blue: PropTypes.array.isRequired
-  })
+    red: PropTypes.arrayOf(PropTypes.shape({
+      lng: PropTypes.number.isRequired,
+      lat: PropTypes.number.isRequired
+    })).isRequired,
+    blue: PropTypes.arrayOf(PropTypes.shape({
+      lng: PropTypes.number.isRequired,
+      lat: PropTypes.number.isRequired
+    })).isRequired,
+  }).isRequired
 };
 
 export default DirectionsTable;

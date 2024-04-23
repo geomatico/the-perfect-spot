@@ -42,16 +42,16 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
   ];
 
   const [transportation, setTransportation] = useState(transportOptions[0].id);
-  console.log('localStorage',allPoints);
-  const destinations = allPoints?.red ? allPoints.red.map(point =>[point.lng,point.lat]) : [];
-  const locations = allPoints?.blue ? allPoints.blue.map(point =>[point.lng,point.lat]) : [];
+  
+  const redPointsCoords = allPoints?.red ? allPoints.red.map(({lng,lat}) => [lng,lat]) : [];
+  const bluePointsCoords = allPoints?.blue ? allPoints.blue.map(({lng,lat}) => [lng,lat]) : [];
 
   const calculateDirectionsTable = (transportationType) => {
-    getInfo(locations, destinations, transportationType || transportation).then(data => {
+    getInfo(bluePointsCoords, redPointsCoords, transportationType || transportation).then(data => {
       const finalRows = data.destinations.map((destination, destinationIndex) => {
         return {
           name: destination.name,
-          data: locations.map((loc, locationIndex) => {
+          data: bluePointsCoords.map((loc, locationIndex) => {
             return [
               (data.distances[locationIndex][destinationIndex] / 1000).toFixed(1),
               (data.durations[locationIndex][destinationIndex] / 60).toFixed(1)
@@ -65,8 +65,8 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
 
   const calculateRoutes = (transportationType) => {
     const promises = {};
-    locations.forEach((location, idx) => {
-      destinations.forEach(destination => {
+    bluePointsCoords.forEach((location, idx) => {
+      redPointsCoords.forEach(destination => {
         if (promises[idx]?.length) {
           promises[idx].push(getDirections([location], [destination], transportationType || transportation));
         } else {
@@ -139,7 +139,16 @@ SidePanelContent.propTypes = {
   onPhaseChanged: PropTypes.func,
   onRoutesChange: PropTypes.func.isRequired,
   onDirectionsChange: PropTypes.func.isRequired,
-  allPoints: PropTypes.object
+  allPoints: PropTypes.shape({
+    red: PropTypes.arrayOf(PropTypes.shape({
+      lng: PropTypes.number.isRequired,
+      lat: PropTypes.number.isRequired
+    })).isRequired,
+    blue: PropTypes.arrayOf(PropTypes.shape({
+      lng: PropTypes.number.isRequired,
+      lat: PropTypes.number.isRequired
+    })).isRequired,
+  }).isRequired
 };
 
 export default SidePanelContent;

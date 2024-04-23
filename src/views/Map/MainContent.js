@@ -33,9 +33,11 @@ const inputContainerStyles = {
 };
 
 
-const MainContent = ({mapStyle, mode, routes, directions, onPointersChange,allPoints}) => {
+const MainContent = ({mapStyle, mode, routes, directions,onChangePoints}) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
+  const [allPoints,setallPoints] = useState(localStorage.getItem('ThePerfectSpot') !==null?JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
+
   const handleOpen = () => setOpenModal(true);
   const handleClose = (event, reason) => {
     // para que no se cierre con click fuera de la modal si esc
@@ -43,14 +45,14 @@ const MainContent = ({mapStyle, mode, routes, directions, onPointersChange,allPo
       if (mode === ADD_POI_MODE) {
         const bluePoints = [...allPoints.blue];
         bluePoints.pop();
-        onPointersChange(prevState =>({
+        setallPoints(prevState =>({
           ...prevState ,blue: bluePoints
         }));
 
       }else if(mode === ADD_FLAT_MODE){
         const redPoints = [...allPoints.red];
         redPoints.pop();
-        onPointersChange(prevState =>({
+        setallPoints(prevState =>({
           ...prevState ,red: redPoints
         }));
       }
@@ -175,7 +177,7 @@ const MainContent = ({mapStyle, mode, routes, directions, onPointersChange,allPo
   const handleClick = e => {
     if (mode === ADD_POI_MODE) {
      
-      onPointersChange(prevState => ({
+      setallPoints(prevState => ({
         ...prevState,
         blue: prevState.blue === undefined
           ? [{ lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }]
@@ -187,12 +189,12 @@ const MainContent = ({mapStyle, mode, routes, directions, onPointersChange,allPo
       handleOpen();
     } else if (mode === REMOVE_POI_MODE) {
       
-      onPointersChange(prevState => ({
+      setallPoints(prevState => ({
         ...prevState, blue : prevState.blue.filter((p, i) => i !== e.features[0].id)
       }));
 
     } else if (mode === ADD_FLAT_MODE) {
-      onPointersChange(prevState => ({
+      setallPoints(prevState => ({
         ...prevState,
         red: prevState.red === undefined
           ? [{ lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }]
@@ -204,17 +206,16 @@ const MainContent = ({mapStyle, mode, routes, directions, onPointersChange,allPo
       handleOpen();
 
     } else if (mode === REMOVE_FLAT_MODE) {
-      onPointersChange(prevState => ({
+      setallPoints(prevState => ({
         ...prevState, red: prevState.red.filter((p, i) => i !== e.features[0].id)
       }));
     }
   };
  
-  const handleSave = () => localStorage.setItem('ThePerfectSpot',JSON.stringify(allPoints));
-  
-  useEffect(()=>{
-    handleSave();
-  },[allPoints]);
+  const handleSavePoint = () =>{ 
+    localStorage.setItem('ThePerfectSpot',JSON.stringify(allPoints));
+    onChangePoints(allPoints);
+  };
 
   const [cursor, setCursor] = useState('pointer');
 
@@ -259,10 +260,11 @@ const MainContent = ({mapStyle, mode, routes, directions, onPointersChange,allPo
         }
         return point;
       });
-      onPointersChange(prevState =>({
+      setallPoints(prevState =>({
         ...prevState,blue:updatebluePoints
       }));
-      
+      handleSavePoint();
+
     } else if (mode === 'ADD_FLAT') {
       
       const lastRedPoint = allPoints.red[allPoints.red.length -1];
@@ -275,9 +277,10 @@ const MainContent = ({mapStyle, mode, routes, directions, onPointersChange,allPo
         }
         return point;
       });
-      onPointersChange(prevState =>({
+      setallPoints(prevState =>({
         ...prevState,red:updateRedPoint
       }));
+      handleSavePoint();
     }
     handleClose();
     setText(t('point'));
@@ -343,7 +346,7 @@ const MainContent = ({mapStyle, mode, routes, directions, onPointersChange,allPo
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable directions={directions} allPoints={allPoints}/>
+      <DirectionsTable calculatedRoutes={directions} allPoints={allPoints}/>
     </div>
   </>;
 };
@@ -354,8 +357,7 @@ MainContent.propTypes = {
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any,
   directions: PropTypes.array.isRequired,
-  allPoints: PropTypes.object,
-  onPointersChange: PropTypes.func
+  onChangePoints: PropTypes.func.isRequired
 };
 
 export default MainContent;
