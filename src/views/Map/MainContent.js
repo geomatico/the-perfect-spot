@@ -247,10 +247,10 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   return <>
     <ModalInfo/>
     {openModal && <ModalAddPoint 
-      poiType={mode}
-      poiName={text}
-      onChangePoiName={handleChangeText}
-      onSavePoiName={handleSaveName}
+      pointType={mode}
+      pointName={text}
+      onChangePointName={handleChangeText}
+      onSavePointName={handleSaveName}
       onClose={handleClose}
     />
     }
