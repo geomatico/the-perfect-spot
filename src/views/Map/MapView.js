@@ -11,7 +11,7 @@ const Map = () => {
   const [mode, setMode] = useState(ADD_POI_MODE);
   const [routes, setRoutes] = useState(null);
   const [directions, setDirections] = useState([]);
-  const [allPoints,setAllPoints] = useState(localStorage.getItem('ThePerfectSpot') !==null?JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
+  const [allPoints,setAllPoints] = useState(localStorage.getItem('ThePerfectSpot') ? JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
   const onModeChanged = () => {
     setMode(mode === ADD_POI_MODE || REMOVE_POI_MODE ? ADD_FLAT_MODE : ADD_POI_MODE);
   };
@@ -23,7 +23,6 @@ const Map = () => {
     onFlatModeChanged={setMode}
     onPhaseChanged={onModeChanged}
     onRoutesChange={setRoutes}
-    directions={directions}
     onDirectionsChange={setDirections}
     allPoints={allPoints}
   />;
@@ -33,7 +32,7 @@ const Map = () => {
     mapStyle={mapStyle}
     mode={mode}
     routes={routes}
-    directions={directions}
+    calculatedRoutes={directions}
     onChangePoints={setAllPoints}
   />;
 
