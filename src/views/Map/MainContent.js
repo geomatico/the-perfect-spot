@@ -15,23 +15,9 @@ import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
 import DirectionsTable from '../../components/DirectionsTable';
 import Box from '@mui/material/Box';
-import {Modal, TextField} from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import ModalInfo from '../../components/ModalInfo';
+import ModalAddPoint from '../../components/ModalAddPoint';
 
-const inputContainerStyles = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-  m: 4
-};
 
 const toStr = (a) => JSON.stringify(a);
 
@@ -235,7 +221,7 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
   };
 
   const handleChangeText = (x) => {
-    setText(x.target.value);
+    setText(x);
   };
 
   const handleSaveName = () => {
@@ -255,37 +241,19 @@ const MainContent = ({mapStyle, mode, routes, directions}) => {
     setText(t('point'));
   };
 
-  const buttonColors= {
-    color : mode==='ADD_POI' ? 'blue':'red',
-    borderColor: mode==='ADD_POI'? 'blue':'red'
-  };
 
   const handleDirectionHighlight = (i) => setHighlightDirection(i);
   console.log('highlightDirection', highlightDirection);
   return <>
     <ModalInfo/>
-    <Modal
-      open={openModal}
+    {openModal && <ModalAddPoint 
+      poiType={mode}
+      poiName={text}
+      onChangePoiName={handleChangeText}
+      onSavePoiName={handleSaveName}
       onClose={handleClose}
-      disableBackdropClick
-    >
-      <Box sx={inputContainerStyles}>
-        <Typography id="modal-modal-title" variant="body1">
-          {mode === 'ADD_POI' ? t('insertPOIName') : t('insertFLATName')}
-        </Typography>
-        <TextField
-          error={!text}
-          helperText={!text ? t('mandatoryField') : ''}
-          sx={{mt: 2}}
-          value={text}
-          onChange={(element) => handleChangeText(element)}
-          variant="outlined"
-        />
-        <Box mt={2}>
-          <Button variant="outlined" sx={buttonColors} onClick={handleSaveName}>{t('done')}</Button>
-        </Box>
-      </Box>
-    </Modal>
+    />
+    }
     <Map
       ref={mapRef}
       mapStyle={mapStyle}
