@@ -19,10 +19,10 @@ import ModalAddPoint from '../../components/ModalAddPoint';
 
 
 
-const MainContent = ({mapStyle, mode, routes, directions,onChangePoints}) => {
+const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints}) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
-  const [allPoints,setallPoints] = useState(localStorage.getItem('ThePerfectSpot') !==null?JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
+  const [allPoints,setAllPoints] = useState(localStorage.getItem('ThePerfectSpot') ? JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = (event, reason) => {
@@ -31,14 +31,14 @@ const MainContent = ({mapStyle, mode, routes, directions,onChangePoints}) => {
       if (mode === ADD_POI_MODE) {
         const bluePoints = [...allPoints.blue];
         bluePoints.pop();
-        setallPoints(prevState =>({
+        setAllPoints(prevState =>({
           ...prevState ,blue: bluePoints
         }));
 
       }else if(mode === ADD_FLAT_MODE){
         const redPoints = [...allPoints.red];
         redPoints.pop();
-        setallPoints(prevState =>({
+        setAllPoints(prevState =>({
           ...prevState ,red: redPoints
         }));
       }
@@ -103,7 +103,7 @@ const MainContent = ({mapStyle, mode, routes, directions,onChangePoints}) => {
         data: routes || empty
       },
     };
-  }, [allPoints,routes,directions]);
+  }, [allPoints,routes,calculatedRoutes]);
   const layers = useMemo(() => {
     return [
       {
@@ -163,7 +163,7 @@ const MainContent = ({mapStyle, mode, routes, directions,onChangePoints}) => {
   const handleClick = e => {
     if (mode === ADD_POI_MODE) {
      
-      setallPoints(prevState => ({
+      setAllPoints(prevState => ({
         ...prevState,
         blue: prevState.blue === undefined
           ? [{ lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }]
@@ -175,12 +175,12 @@ const MainContent = ({mapStyle, mode, routes, directions,onChangePoints}) => {
       handleOpen();
     } else if (mode === REMOVE_POI_MODE) {
       
-      setallPoints(prevState => ({
+      setAllPoints(prevState => ({
         ...prevState, blue : prevState.blue.filter((p, i) => i !== e.features[0].id)
       }));
 
     } else if (mode === ADD_FLAT_MODE) {
-      setallPoints(prevState => ({
+      setAllPoints(prevState => ({
         ...prevState,
         red: prevState.red === undefined
           ? [{ lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }]
@@ -192,17 +192,17 @@ const MainContent = ({mapStyle, mode, routes, directions,onChangePoints}) => {
       handleOpen();
 
     } else if (mode === REMOVE_FLAT_MODE) {
-      setallPoints(prevState => ({
+      setAllPoints(prevState => ({
         ...prevState, red: prevState.red.filter((p, i) => i !== e.features[0].id)
       }));
     }
   };
  
-  const handleSavePoint = () =>{ 
+  useEffect(()=>{
     localStorage.setItem('ThePerfectSpot',JSON.stringify(allPoints));
     onChangePoints(allPoints);
-  };
-
+  },[allPoints]);
+  
   const [cursor, setCursor] = useState('pointer');
 
   useEffect(() => {
@@ -245,10 +245,9 @@ const MainContent = ({mapStyle, mode, routes, directions,onChangePoints}) => {
         }
         return point;
       });
-      setallPoints(prevState =>({
+      setAllPoints(prevState =>({
         ...prevState,blue:updatebluePoints
       }));
-      handleSavePoint();
 
     } else if (mode === 'ADD_FLAT') {
       
@@ -262,10 +261,9 @@ const MainContent = ({mapStyle, mode, routes, directions,onChangePoints}) => {
         }
         return point;
       });
-      setallPoints(prevState =>({
+      setAllPoints(prevState =>({
         ...prevState,red:updateRedPoint
       }));
-      handleSavePoint();
     }
     handleClose();
     setText(t('point'));
@@ -313,7 +311,7 @@ const MainContent = ({mapStyle, mode, routes, directions,onChangePoints}) => {
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable calculatedRoutes={directions} allPoints={allPoints}/>
+      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints}/>
     </div>
   </>;
 };
@@ -323,7 +321,7 @@ MainContent.propTypes = {
   mapStyle: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any,
-  directions: PropTypes.array.isRequired,
+  calculatedRoutes: PropTypes.array.isRequired,
   onChangePoints: PropTypes.func.isRequired
 };
 

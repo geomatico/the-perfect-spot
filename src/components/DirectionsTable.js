@@ -37,7 +37,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints}) => {
           <TableRow>
             <TableCell key={'empty'} align="right"></TableCell>
             {
-              bluePoints.map((bluePoint, index) => <TableCell key={bluePoint + index} align="right">
+              bluePoints.map((bluePoint, index) => <TableCell key={index} align="right">
                 <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>{bluePoint.name?.toUpperCase()}</Typography>
               </TableCell>)
             }
@@ -48,7 +48,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints}) => {
           {calculatedRoutes.map((row, index) => (
             <TableRow
               key={index}
-              sx={{'&:hover': {bgcolor: 'grey.200'}, border: index==shortestRouteIndex ? '2px solid red': undefined}}
+              sx={{'&:hover': {bgcolor: 'grey.200'}, border: index === shortestRouteIndex ? '2px solid red': undefined}}
             >
               <TableCell component="th" scope="row">
                 <Stack>
