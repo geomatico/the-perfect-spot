@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 
 import Stack from '@mui/material/Stack';
@@ -19,7 +19,7 @@ const ScrollableContent = styled(Box)({
 });
 
 
-const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, mode, onChangeCalculatedRoutes,allPoints}) => {
+const SidePanelContent = ({onBlueModeChanged, onRedModeChanged, onRoutesChange, mode, onChangeCalculatedRoutes,allPoints,  onChangePoints}) => {
 
   const {t} = useTranslation();
   const transportOptions = [
@@ -47,6 +47,10 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
   const bluePointsCoords = allPoints?.blue ? allPoints.blue.map(({lng,lat}) => [lng,lat]) : [];
 
   const calculateDirectionsTable = (transportationType) => {
+    if (bluePointsCoords.length === 0 || redPointsCoords.length === 0) {
+      onChangeCalculatedRoutes([]);
+      return;
+    }
     getInfo(bluePointsCoords, redPointsCoords, transportationType || transportation).then(data => {
       const finalRows = data.destinations.map((destination, destinationIndex) => {
         return {
@@ -100,6 +104,10 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
     }
 
   };
+  useEffect(() => {
+    calculateRoutes();
+    calculateDirectionsTable(transportation);
+  }, [allPoints.red, allPoints.blue]);
 
   return <Stack sx={{
     height: '100%',
@@ -117,13 +125,14 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
       <Box my={2}>
         <POISidePanel
           mode={mode}
-          onPOIModeChanged={onPOIModeChanged}
+          onBlueModeChanged={onBlueModeChanged}
         />
         <FlatSidePanel
           mode={mode}
-          onFlatModeChanged={onFlatModeChanged}
+          onRedModeChanged={onRedModeChanged}
           onCalculateRoutes={calculateRoutes}
           onCalculateDirections={calculateDirectionsTable}
+          onChangePoints={onChangePoints}
         />
       </Box>
     </ScrollableContent>
@@ -134,21 +143,24 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
 SidePanelContent.propTypes = {
   mapStyle: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
-  onPOIModeChanged: PropTypes.func,
-  onFlatModeChanged: PropTypes.func,
-  onPhaseChanged: PropTypes.func,
+  onBlueModeChanged: PropTypes.func,
+  onRedModeChanged: PropTypes.func,
+  onModeChanged: PropTypes.func,
   onRoutesChange: PropTypes.func.isRequired,
   onChangeCalculatedRoutes: PropTypes.func.isRequired,
   allPoints: PropTypes.shape({
     red: PropTypes.arrayOf(PropTypes.shape({
       lng: PropTypes.number.isRequired,
-      lat: PropTypes.number.isRequired
+      lat: PropTypes.number.isRequired,
+      name: PropTypes.string
     })).isRequired,
     blue: PropTypes.arrayOf(PropTypes.shape({
       lng: PropTypes.number.isRequired,
-      lat: PropTypes.number.isRequired
+      lat: PropTypes.number.isRequired,
+      name: PropTypes.string
     })).isRequired,
-  }).isRequired
+  }).isRequired,
+  onChangePoints: PropTypes.func.isRequired
 };
 
 export default SidePanelContent;

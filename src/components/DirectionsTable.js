@@ -31,7 +31,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints}) => {
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
   return <>
     {
-      calculatedRoutes && calculatedRoutes.length > 0 &&
+      calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length &&
       <Table sx={{minWidth: 300}} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -81,11 +81,13 @@ DirectionsTable.propTypes = {
   allPoints: PropTypes.shape({
     red: PropTypes.arrayOf(PropTypes.shape({
       lng: PropTypes.number.isRequired,
-      lat: PropTypes.number.isRequired
+      lat: PropTypes.number.isRequired,
+      name: PropTypes.string
     })).isRequired,
     blue: PropTypes.arrayOf(PropTypes.shape({
       lng: PropTypes.number.isRequired,
-      lat: PropTypes.number.isRequired
+      lat: PropTypes.number.isRequired,
+      name: PropTypes.string
     })).isRequired,
   }).isRequired
 };

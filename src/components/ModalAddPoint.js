@@ -27,7 +27,7 @@ const  ModalAddPoint = ({pointType,pointName,onChangePointName,onSavePointName,o
   const handleChangePoiName = pointName => onChangePointName(pointName);
   const handleSaveName = () => onSavePointName();
 
-  const buttonColor = pointType === 'ADD_POI' ? 'primary' : 'secondary';
+  const buttonColor = pointType === 'ADD_BLUE' ? 'primary' : 'secondary';
 
  
   return (
@@ -52,7 +52,7 @@ const  ModalAddPoint = ({pointType,pointName,onChangePointName,onSavePointName,o
   );
 };
 ModalAddPoint.propTypes = {
-  pointType: PropTypes.oneOf(['ADD_POI','ADD_FLAT']).isRequired,
+  pointType: PropTypes.oneOf(['ADD_BLUE','ADD_RED']).isRequired,
   pointName: PropTypes.string.isRequired,
   onChangePointName: PropTypes.func.isRequired,
   onSavePointName: PropTypes.func.isRequired,

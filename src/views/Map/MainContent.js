@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import Map from '@geomatico/geocomponents/Map';
 
 import {
-  ADD_FLAT_MODE,
-  ADD_POI_MODE,
+  ADD_RED_MODE,
+  ADD_BLUE_MODE,
   INITIAL_VIEWPORT,
-  MAPSTYLES,
-  REMOVE_FLAT_MODE,
-  REMOVE_POI_MODE
+  REMOVE_RED_MODE,
+  REMOVE_BLUE_MODE
 } from '../../config';
 import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
@@ -16,31 +15,30 @@ import DirectionsTable from '../../components/DirectionsTable';
 import Box from '@mui/material/Box';
 import ModalInfo from '../../components/ModalInfo';
 import ModalAddPoint from '../../components/ModalAddPoint';
+import { primaryColor, secondaryColor } from '../../theme';
 
 
-
-const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints}) => {
+const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints}) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
-  const [allPoints,setAllPoints] = useState(localStorage.getItem('ThePerfectSpot') ? JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = (event, reason) => {
     // para que no se cierre con click fuera de la modal si esc
     if (reason && (reason === 'backdropClick' || reason === 'escapeKeyDown')){
-      if (mode === ADD_POI_MODE) {
+      if (mode === ADD_BLUE_MODE) {
         const bluePoints = [...allPoints.blue];
         bluePoints.pop();
-        setAllPoints(prevState =>({
-          ...prevState ,blue: bluePoints
-        }));
-
-      }else if(mode === ADD_FLAT_MODE){
+        onChangePoints({
+          ...allPoints, blue: bluePoints
+        });
+     
+      }else if(mode === ADD_RED_MODE){
         const redPoints = [...allPoints.red];
         redPoints.pop();
-        setAllPoints(prevState =>({
-          ...prevState ,red: redPoints
-        }));
+        onChangePoints({
+          ...allPoints, red: redPoints
+        });
       }
     }
     setOpenModal(false);
@@ -54,7 +52,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
 
   const [text, setText] = useState(t('point'));
 
-  const COLOR = MAPSTYLES.find(ms => ms.id === mapStyle)?.overlayColor;
+  const COLOR = mode === ADD_BLUE_MODE ? primaryColor : secondaryColor;
 
   const sources = useMemo(() => {
 
@@ -62,7 +60,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
       type: 'FeatureCollection',
       features:[]
     };
-    const centers = {
+    const redPoints = {
       type: 'FeatureCollection',
       features: allPoints.red?.map(({lng,lat}, index) => ({
         type: 'Feature',
@@ -75,7 +73,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
       }))
     };
 
-    const centersOrigin = {
+    const bluePoints = {
       type: 'FeatureCollection',
       features: allPoints.blue?.map(({lng,lat}, index) => ({
         type: 'Feature',
@@ -90,20 +88,20 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
 
 
     return {
-      centers: {
+      redPoints: {
         type: 'geojson',
-        data: centers
+        data: redPoints
       },
-      centersOrigin: {
+      bluePoints: {
         type: 'geojson',
-        data: centersOrigin
+        data: bluePoints
       },
       directions: {
         type: 'geojson',
         data: routes || empty
       },
     };
-  }, [allPoints,routes,calculatedRoutes]);
+  }, [allPoints,routes]);
   const layers = useMemo(() => {
     return [
       {
@@ -120,8 +118,8 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
         }
       },
       {
-        id: 'centers',
-        source: 'centers',
+        id: 'redPoints',
+        source: 'redPoints',
         type: 'circle',
         paint: {
           'circle-color': 'red',
@@ -131,8 +129,8 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
         }
       },
       {
-        id: 'centersOrigin',
-        source: 'centersOrigin',
+        id: 'bluePoints',
+        source: 'bluePoints',
         type: 'circle',
         paint: {
           'circle-color': COLOR,
@@ -161,38 +159,42 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
   }, [mapStyle]);
 
   const handleClick = e => {
-    if (mode === ADD_POI_MODE) {
+    const coords = e.lngLat;
+    if (mode === ADD_BLUE_MODE) {
      
-      setAllPoints(prevState => ({
-        ...prevState,
-        blue: prevState.blue === undefined
-          ? [{ lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }]
-          : [ ...prevState.blue,
-            { lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }
-          ]
-      }));
+      onChangePoints({
+        ...allPoints,
+        blue: [
+          ...allPoints.blue,
+          {
+            lng: +coords.lng.toFixed(5),
+            lat: +coords.lat.toFixed(5)
+          }]
+      });
       
       handleOpen();
-    } else if (mode === REMOVE_POI_MODE) {
+    } else if (mode === REMOVE_BLUE_MODE) {
       
-      setAllPoints(prevState => ({
+      onChangePoints(prevState => ({
         ...prevState, blue : prevState.blue.filter((p, i) => i !== e.features[0].id)
       }));
 
-    } else if (mode === ADD_FLAT_MODE) {
-      setAllPoints(prevState => ({
-        ...prevState,
-        red: prevState.red === undefined
-          ? [{ lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }]
-          : [
-            ...prevState.red,
-            { lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }
-          ]
-      }));
+    } else if (mode === ADD_RED_MODE) {
+      
+      onChangePoints({
+        ...allPoints,
+        red: [
+          ...allPoints.red,
+          {
+            lng: +coords.lng.toFixed(5),
+            lat: +coords.lat.toFixed(5)
+          }]
+      });
+      
       handleOpen();
 
-    } else if (mode === REMOVE_FLAT_MODE) {
-      setAllPoints(prevState => ({
+    } else if (mode === REMOVE_RED_MODE) {
+      onChangePoints(prevState => ({
         ...prevState, red: prevState.red.filter((p, i) => i !== e.features[0].id)
       }));
     }
@@ -206,7 +208,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
   const [cursor, setCursor] = useState('pointer');
 
   useEffect(() => {
-    setCursor(mode === ADD_POI_MODE ? 'pointer' : 'auto');
+    setCursor(mode === ADD_BLUE_MODE ? 'pointer' : 'auto');
   }, [mode]);
 
   const onMouseEnter = useCallback(() => {
@@ -216,10 +218,10 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
 
   // habilita/deshabilita capas segun el modo seleccionado
   const calculateInteractiveLayers = () => {
-    if (mode === REMOVE_POI_MODE) {
-      return ['centersOrigin'];
-    } else if (mode === REMOVE_FLAT_MODE) {
-      return ['centers'];
+    if (mode === REMOVE_BLUE_MODE) {
+      return ['bluePoints'];
+    } else if (mode === REMOVE_RED_MODE) {
+      return ['redPoints'];
     } else {
       return undefined;
     }
@@ -231,12 +233,12 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
 
   const handleSaveName = () => {
     if(text === '')  return;
-    if (mode === 'ADD_POI') {
+    if (mode === 'ADD_BLUE') {
     
     
       const lastBluePoint = allPoints.blue[allPoints.blue.length - 1];
      
-      const updatebluePoints = allPoints.blue.map(point =>{
+      const updateBluePoints = allPoints.blue.map(point =>{
         if (point === lastBluePoint) {
           return {
             ...point,
@@ -245,11 +247,11 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
         }
         return point;
       });
-      setAllPoints(prevState =>({
-        ...prevState,blue:updatebluePoints
-      }));
+      onChangePoints({
+        ...allPoints,blue:updateBluePoints
+      });
 
-    } else if (mode === 'ADD_FLAT') {
+    } else if (mode === 'ADD_RED') {
       
       const lastRedPoint = allPoints.red[allPoints.red.length -1];
       const updateRedPoint = allPoints.red.map(point=>{
@@ -261,9 +263,9 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints})
         }
         return point;
       });
-      setAllPoints(prevState =>({
-        ...prevState,red:updateRedPoint
-      }));
+      onChangePoints({
+        ...allPoints,red:updateRedPoint
+      });
     }
     handleClose();
     setText(t('point'));
@@ -322,7 +324,19 @@ MainContent.propTypes = {
   mode: PropTypes.string.isRequired,
   routes: PropTypes.any,
   calculatedRoutes: PropTypes.array.isRequired,
-  onChangePoints: PropTypes.func.isRequired
+  onChangePoints: PropTypes.func.isRequired,
+  allPoints: PropTypes.shape({
+    red: PropTypes.arrayOf(PropTypes.shape({
+      lng: PropTypes.number.isRequired,
+      lat: PropTypes.number.isRequired,
+      name: PropTypes.string
+    })).isRequired,
+    blue: PropTypes.arrayOf(PropTypes.shape({
+      lng: PropTypes.number.isRequired,
+      lat: PropTypes.number.isRequired,
+      name: PropTypes.string
+    })).isRequired,
+  }).isRequired
 };
 
 export default MainContent;
