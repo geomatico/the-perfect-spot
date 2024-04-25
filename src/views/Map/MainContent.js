@@ -266,6 +266,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       onChangePoints({
         ...allPoints,red:updateRedPoint
       });
+
     }
     handleClose();
     setText(t('point'));
