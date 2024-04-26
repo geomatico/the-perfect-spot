@@ -4,7 +4,7 @@ import Layout from '../../components/Layout';
 import SidePanelContent from './SidePanelContent';
 import MainContent from './MainContent';
 
-import {ADD_RED_MODE, ADD_BLUE_MODE, INITIAL_MAPSTYLE_URL, REMOVE_BLUE_MODE} from '../../config';
+import { ADD_BLUE_MODE, INITIAL_MAPSTYLE_URL} from '../../config';
 
 const Map = () => {
   const [mapStyle, setMapStyle] = useState(INITIAL_MAPSTYLE_URL);
@@ -12,16 +12,9 @@ const Map = () => {
   const [routes, setRoutes] = useState(null);
   const [calculatedRoutes, setCalculatedRoutes] = useState([]);
   const [allPoints,setAllPoints] = useState(localStorage.getItem('ThePerfectSpot') ? JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
-  const onModeChanged = () => {
-    setMode(mode === ADD_BLUE_MODE || REMOVE_BLUE_MODE ? ADD_RED_MODE : ADD_BLUE_MODE);
-  };
 
   const sidePanelContent = <SidePanelContent
-    mapStyle={mapStyle}
-    mode={mode}
-    onBlueModeChanged={setMode}
-    onRedModeChanged={setMode}
-    onModeChanged={onModeChanged}
+    onChangeModePoints={setMode}
     onRoutesChange={setRoutes}
     onChangeCalculatedRoutes={setCalculatedRoutes}
     allPoints={allPoints}

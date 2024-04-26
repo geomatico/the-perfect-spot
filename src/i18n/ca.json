@@ -28,5 +28,7 @@
   "remove_origin": "Elimina un possible spot",
   "remove_poi": "Elimina un punt important",
   "search": "Cerca...",
-  "transportType": "Com et desplaces?"
+  "transportType": "Com et desplaces?",
+  "removeButton": "esborrar tots els punts"
+
 }

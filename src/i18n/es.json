@@ -28,5 +28,6 @@
   "remove_origin": "Elimina un posible spot",
   "remove_poi": "Elimina un sitio importante",
   "search": "Busca...",
-  "transportType": "¿Cómo te desplazas?"
+  "transportType": "¿Cómo te desplazas?",
+  "removeButton": "Borrar todos los puntos"
 }
