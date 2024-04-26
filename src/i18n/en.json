@@ -25,5 +25,8 @@
   "remove_origin": "Remove a possible spot",
   "remove_poi": "Remove an important place",
   "search": "Search...",
-  "transportType": "How do you travel?"
+  "transportType": "How do you travel?",
+  "deleteAllPoints": "Do you want to delete all points?",
+  "cancel": "Cancel",
+  "delete": "Delete"
 }

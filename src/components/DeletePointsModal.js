@@ -4,7 +4,10 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
+import {useTranslation} from 'react-i18next';
+
 function DeletePointsModal({ onChangePoints, onChangeStateModal }) {
+  const {t} = useTranslation();
   const handleDeletePoints = () => {
     onChangePoints({ red: [], blue: [] });
     localStorage.removeItem('ThePerfectSpot');
@@ -17,13 +20,13 @@ function DeletePointsModal({ onChangePoints, onChangeStateModal }) {
   return (
     <>
       <Dialog open={true} onClose={handleClose}>
-        <DialogTitle>{'¿Quieres borrar todos los puntos?'}</DialogTitle>
+        <DialogTitle>{t('deleteAllPoints')}</DialogTitle>
         <DialogActions sx={{ justifyContent: 'center'}}>
           <Button variant='outlined' onClick={handleDeletePoints}>
-            Borrar
+            {t('delete')}
           </Button>
           <Button variant='outlined' onClick={handleClose}>
-            Cancelar
+            {t('cancel')}
           </Button>
         </DialogActions>
       </Dialog>
