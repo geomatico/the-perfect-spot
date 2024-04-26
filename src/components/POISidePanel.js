@@ -10,20 +10,20 @@ import ButtonGroup from '@geomatico/geocomponents/ButtonGroup';
 
 //UTILS
 import {useTranslation} from 'react-i18next';
-import {ADD_POI_MODE, REMOVE_POI_MODE} from '../config';
+import {ADD_BLUE_MODE, REMOVE_BLUE_MODE} from '../config';
 import Box from '@mui/material/Box';
 
-const POISidePanel = ({mode, onPOIModeChanged}) => {
+const POISidePanel = ({mode, onBlueModeChanged}) => {
   const {t} = useTranslation();
-  const handlePOICLick = newMode => newMode && onPOIModeChanged(newMode);
+  const handlePOICLick = newMode => newMode && onBlueModeChanged(newMode);
 
   const items = [
     {
-      id: ADD_POI_MODE,
+      id: ADD_BLUE_MODE,
       content: <Tooltip title={t('add_poi')}><AddIcon/></Tooltip>
     },
     {
-      id: REMOVE_POI_MODE,
+      id: REMOVE_BLUE_MODE,
       content: <Tooltip title={t('remove_poi')}><RemoveIcon/></Tooltip>
     },
   ];
@@ -41,12 +41,12 @@ const POISidePanel = ({mode, onPOIModeChanged}) => {
 };
 
 POISidePanel.propTypes = {
-  onPOIModeChanged: PropTypes.func,
+  onBlueModeChanged: PropTypes.func,
   mode: PropTypes.string,
 };
 
 POISidePanel.defaultProps = {
-  mode: ADD_POI_MODE
+  mode: ADD_BLUE_MODE
 };
 
 export default POISidePanel;

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 
 import Stack from '@mui/material/Stack';
@@ -8,7 +8,6 @@ import styled from '@mui/styles/styled';
 import SelectInput from '@geomatico/geocomponents/SelectInput';
 import Geomatico from '../../components/Geomatico';
 import {getDirections, getInfo} from '../../utils/ors';
-import {useParams} from 'react-router-dom';
 import POISidePanel from '../../components/POISidePanel';
 import FlatSidePanel from '../../components/FlatSidePanel';
 import {useTranslation} from 'react-i18next';
@@ -20,9 +19,8 @@ const ScrollableContent = styled(Box)({
 });
 
 
-const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, mode, onDirectionsChange}) => {
+const SidePanelContent = ({onBlueModeChanged, onRedModeChanged, onRoutesChange, mode, onChangeCalculatedRoutes,allPoints,  onChangePoints}) => {
 
-  const {points: strPoiPoints, originPoints: strFlatPoints} = useParams();
   const {t} = useTranslation();
   const transportOptions = [
     {
@@ -44,16 +42,20 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
   ];
 
   const [transportation, setTransportation] = useState(transportOptions[0].id);
-
-  const destinations = strPoiPoints ? JSON.parse(strPoiPoints) : [];
-  const locations = strFlatPoints ? JSON.parse(strFlatPoints) : [];
+  
+  const redPointsCoords = allPoints?.red ? allPoints.red.map(({lng,lat}) => [lng,lat]) : [];
+  const bluePointsCoords = allPoints?.blue ? allPoints.blue.map(({lng,lat}) => [lng,lat]) : [];
 
   const calculateDirectionsTable = (transportationType) => {
-    getInfo(locations, destinations, transportationType || transportation).then(data => {
+    if (bluePointsCoords.length === 0 || redPointsCoords.length === 0) {
+      onChangeCalculatedRoutes([]);
+      return;
+    }
+    getInfo(bluePointsCoords, redPointsCoords, transportationType || transportation).then(data => {
       const finalRows = data.destinations.map((destination, destinationIndex) => {
         return {
           name: destination.name,
-          data: locations.map((loc, locationIndex) => {
+          data: bluePointsCoords.map((loc, locationIndex) => {
             return [
               (data.distances[locationIndex][destinationIndex] / 1000).toFixed(1),
               (data.durations[locationIndex][destinationIndex] / 60).toFixed(1)
@@ -61,14 +63,14 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
           }),
         };
       });
-      onDirectionsChange(finalRows);
+      onChangeCalculatedRoutes(finalRows);
     });
   };
 
   const calculateRoutes = (transportationType) => {
     const promises = {};
-    locations.forEach((location, idx) => {
-      destinations.forEach(destination => {
+    bluePointsCoords.forEach((location, idx) => {
+      redPointsCoords.forEach(destination => {
         if (promises[idx]?.length) {
           promises[idx].push(getDirections([location], [destination], transportationType || transportation));
         } else {
@@ -96,12 +98,16 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
 
   const handleTransportationType = (transportationType) => {
     setTransportation(transportationType);
-    if (strFlatPoints?.length && strPoiPoints?.length) {
+    if (allPoints.red?.length && allPoints.blue?.length) {
       calculateDirectionsTable(transportationType);
       calculateRoutes(transportationType);
     }
 
   };
+  useEffect(() => {
+    calculateRoutes();
+    calculateDirectionsTable(transportation);
+  }, [allPoints.red, allPoints.blue]);
 
   return <Stack sx={{
     height: '100%',
@@ -119,13 +125,14 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
       <Box my={2}>
         <POISidePanel
           mode={mode}
-          onPOIModeChanged={onPOIModeChanged}
+          onBlueModeChanged={onBlueModeChanged}
         />
         <FlatSidePanel
           mode={mode}
-          onFlatModeChanged={onFlatModeChanged}
+          onRedModeChanged={onRedModeChanged}
           onCalculateRoutes={calculateRoutes}
           onCalculateDirections={calculateDirectionsTable}
+          onChangePoints={onChangePoints}
         />
       </Box>
     </ScrollableContent>
@@ -136,11 +143,24 @@ const SidePanelContent = ({onPOIModeChanged, onFlatModeChanged, onRoutesChange, 
 SidePanelContent.propTypes = {
   mapStyle: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
-  onPOIModeChanged: PropTypes.func,
-  onFlatModeChanged: PropTypes.func,
-  onPhaseChanged: PropTypes.func,
+  onBlueModeChanged: PropTypes.func,
+  onRedModeChanged: PropTypes.func,
+  onModeChanged: PropTypes.func,
   onRoutesChange: PropTypes.func.isRequired,
-  onDirectionsChange: PropTypes.func.isRequired
+  onChangeCalculatedRoutes: PropTypes.func.isRequired,
+  allPoints: PropTypes.shape({
+    red: PropTypes.arrayOf(PropTypes.shape({
+      lng: PropTypes.number.isRequired,
+      lat: PropTypes.number.isRequired,
+      name: PropTypes.string
+    })).isRequired,
+    blue: PropTypes.arrayOf(PropTypes.shape({
+      lng: PropTypes.number.isRequired,
+      lat: PropTypes.number.isRequired,
+      name: PropTypes.string
+    })).isRequired,
+  }).isRequired,
+  onChangePoints: PropTypes.func.isRequired
 };
 
 export default SidePanelContent;
