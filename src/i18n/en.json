@@ -4,8 +4,11 @@
   "add_poi": "Add an important place",
   "averageTime": "Average time",
   "baseMap": "Base Map",
+  "cancel": "Cancel",
   "cycling-regular": "Bike",
   "dark": "Dark",
+  "delete": "Delete",
+  "deleteAllPoints": "Do you want to delete all points?",
   "done": "Done",
   "driving-car": "Driving car",
   "driving-hgv": "Public transport",
@@ -25,8 +28,5 @@
   "remove_origin": "Remove a possible spot",
   "remove_poi": "Remove an important place",
   "search": "Search...",
-  "transportType": "How do you travel?",
-  "deleteAllPoints": "Do you want to delete all points?",
-  "cancel": "Cancel",
-  "delete": "Delete"
+  "transportType": "How do you travel?"
 }

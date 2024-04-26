@@ -4,8 +4,11 @@
   "add_poi": "Afegeix un punt important",
   "averageTime": "Temps mitjà",
   "baseMap": "Cartografia base",
+  "cancel": "cancel·lar",
   "cycling-regular": "Bicicleta",
   "dark": "Fosc",
+  "delete": "Esborrar",
+  "deleteAllPoints": "Vols esborrar tots els punts?",
   "done": "Fet!",
   "driving-car": "En cotxe",
   "driving-hgv": "Transport públic",
@@ -25,8 +28,5 @@
   "remove_origin": "Elimina un possible spot",
   "remove_poi": "Elimina un punt important",
   "search": "Cerca...",
-  "transportType": "Com et desplaces?",
-  "deleteAllPoints": "Vols esborrar tots els punts?",
-  "cancel": "cancel·lar",
-  "delete": "Esborrar"
+  "transportType": "Com et desplaces?"
 }
