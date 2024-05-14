@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import {
-  ADD_RED_MODE,
-  REMOVE_RED_MODE,
-  ADD_BLUE_MODE,
-  REMOVE_BLUE_MODE,
-} from '../config';
 import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
 import DeletePointsModal from './DeletePointsModal';
@@ -20,11 +14,12 @@ import RemoveIcon from '@mui/icons-material/WrongLocation';
 function PointsSidePanels({onChangePoints, onChangeModePoints }) {
   const { t } = useTranslation();
  
-  const [selectedMode, setSelectedMode] = useState('bluePoints-ADD_BLUE');
+  const [selectedMode, setSelectedMode] = useState('BLUE-ADD_');
   const handleFlatClick = (newMode) => {
     if (newMode) {
       setSelectedMode(newMode);
-      const changeMode = newMode.slice(newMode.indexOf('-') + 1);
+      const modeSort = newMode.split('-');
+      const changeMode= modeSort[1]+modeSort[0];
       onChangeModePoints(changeMode);
     }
   };
@@ -34,7 +29,7 @@ function PointsSidePanels({onChangePoints, onChangeModePoints }) {
   };
   const buttonGroupItemsBlue = [
     {
-      id: ADD_BLUE_MODE,
+      id: 'ADD_',
       content: 
         <Tooltip title={t('add_poi')}>
           <AddIcon />
@@ -42,7 +37,7 @@ function PointsSidePanels({onChangePoints, onChangeModePoints }) {
       
     },
     {
-      id: REMOVE_BLUE_MODE,
+      id: 'REMOVE_',
       content: 
         <Tooltip title={t('remove_poi')}>
           <RemoveIcon />
@@ -51,57 +46,48 @@ function PointsSidePanels({onChangePoints, onChangeModePoints }) {
     },
   ];
 
-  const buttonGroupItemsRed = [
-    {
-      id: ADD_RED_MODE,
-      content: 
-        <Tooltip title={t('add_origin')}>
-          <AddIcon />
-        </Tooltip>
-      
-    },
-    {
-      id: REMOVE_RED_MODE,
-      content: 
-        <Tooltip title={t('remove_origin')}>
-          <RemoveIcon />
-        </Tooltip>
-      
-    },
-  ];
 
   const categoriesBlue = [
     {
-      id: 'bluePoints',
+      id: 'BLUE',
       description: <Typography>{t('originPoints')}</Typography>,
     },
-  ];
-
-  const categoriesRed = [
     {
-      id: 'redPoints',
+      id: 'RED',
       description: <Typography>{t('finalPoints')}</Typography>,
     },
   ];
 
+  const customSx = {
+    '& .ButtonGroup-button': {
+      backgroundColor: 'black',
+      '&:hover': {
+        backgroundColor: 'blue'
+      },
+      '&.Mui-selected': {
+        backgroundColor: 'red',
+        '&:hover': {
+          backgroundColor: 'blue'
+        }
+      }
+    },
+    '& .ButtonGroup-buttonContent': {
+      color: 'red',
+    }
+  };
   return (
     <>
-      <ButtonGroupList
-        buttonGroupVariant='outlined'
-        categories={categoriesBlue}
-        buttonGroupItems={buttonGroupItemsBlue}
-        selectedItemId={selectedMode}
-        onItemClick={handleFlatClick}
-      />
-
-      <ButtonGroupList
-        buttonGroupVariant='outlined'
-        buttonGroupColor='#d70f0f'
-        categories={categoriesRed}
-        buttonGroupItems={buttonGroupItemsRed}
-        selectedItemId={selectedMode}
-        onItemClick={handleFlatClick}
-      />
+      <div className="custom-ButtonGroupList">
+        <ButtonGroupList
+          buttonGroupVariant='outlined'
+          categories={categoriesBlue}
+          buttonGroupItems={buttonGroupItemsBlue}
+          selectedItemId={selectedMode}
+          onItemClick={handleFlatClick}
+          sx={customSx}
+        />
+      </div>
+     
       <Button
         variant='contained'
         color='secondary'
@@ -116,8 +102,11 @@ function PointsSidePanels({onChangePoints, onChangeModePoints }) {
           onChangePoints={onChangePoints}
         />
       )}
+      
     </>
+    
   );
+  
 }
 
 PointsSidePanels.propTypes = {
