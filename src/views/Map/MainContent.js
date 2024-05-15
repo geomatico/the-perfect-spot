@@ -21,7 +21,7 @@ import { primaryColor, secondaryColor } from '../../theme';
 const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints}) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
-
+  const [nearestRedPoint,setNearestRedPoint] = useState(null);
   const handleOpen = () => setOpenModal(true);
   const handleClose = (event, reason) => {
     // para que no se cierre con click fuera de la modal si esc
@@ -85,8 +85,20 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         }
       }))
     };
-
-
+    const nearestPoint = {
+      type: 'FeatureCollection',
+      features:[
+        {
+          type: 'Feature',
+          id: 1,
+          properties: {},
+          geometry:{
+            type: 'Point',
+            coordinates: [allPoints?.red[nearestRedPoint]?.lng, allPoints?.red[nearestRedPoint]?.lat] 
+          }
+        }
+      ]
+    };      
     return {
       redPoints: {
         type: 'geojson',
@@ -100,6 +112,10 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         type: 'geojson',
         data: routes || empty
       },
+      nearestRedPoint: {
+        type: 'geojson',
+        data: nearestPoint || empty
+      }
     };
   }, [allPoints,routes]);
   const layers = useMemo(() => {
@@ -154,6 +170,17 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         'paint': {
           'text-color': 'red',
         }
+      },
+      {
+        id: 'nearestRedPoint',
+        source: 'nearestRedPoint',
+        type: 'circle',
+        paint: {
+          'circle-color': '#5AA469',
+          'circle-radius': 10,
+          'circle-stroke-color': '#FFFFFF',
+          'circle-stroke-width': 2,
+        }
       }
     ];
   }, [mapStyle]);
@@ -204,7 +231,6 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
     localStorage.setItem('ThePerfectSpot',JSON.stringify(allPoints));
     onChangePoints(allPoints);
   },[allPoints]);
-  
   const [cursor, setCursor] = useState('pointer');
 
   useEffect(() => {
@@ -314,7 +340,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints}/>
+      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints} onChangeNearestRedPoint={setNearestRedPoint}/>
     </div>
   </>;
 };

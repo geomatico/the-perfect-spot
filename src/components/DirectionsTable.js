@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { grey} from '@mui/material/colors';
 
-const DirectionsTable = ({calculatedRoutes, allPoints}) => {
+const DirectionsTable = ({calculatedRoutes, allPoints, onChangeNearestRedPoint}) => {
   
   const{t} = useTranslation();
 
@@ -27,7 +27,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints}) => {
 
   let dir = calculatedRoutes.map(d => (d.data.avg));
   let shortestRouteIndex = dir.indexOf(Math.min(...dir));
-
+  onChangeNearestRedPoint(shortestRouteIndex >=0 ? shortestRouteIndex:0);
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
   return <>
     {
@@ -89,7 +89,8 @@ DirectionsTable.propTypes = {
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
     })).isRequired,
-  }).isRequired
+  }).isRequired,
+  onChangeNearestRedPoint: PropTypes.func.isRequired
 };
 
 export default DirectionsTable;
