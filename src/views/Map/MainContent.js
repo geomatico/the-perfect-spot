@@ -117,7 +117,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         data: nearestPoint || empty
       }
     };
-  }, [allPoints,routes]);
+  }, [allPoints,routes, nearestRedPoint]);
   const layers = useMemo(() => {
     return [
       {

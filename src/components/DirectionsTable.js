@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
@@ -24,10 +24,14 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeNearestRedPoint})
     let avg = sum/element.data.length;
     element.data.avg = Math.round( avg * 10)/10;
   });
+  
 
   let dir = calculatedRoutes.map(d => (d.data.avg));
   let shortestRouteIndex = dir.indexOf(Math.min(...dir));
-  onChangeNearestRedPoint(shortestRouteIndex >=0 ? shortestRouteIndex:0);
+  useEffect(()=>{
+    onChangeNearestRedPoint(shortestRouteIndex >= 0 ? shortestRouteIndex : 0);
+  },[shortestRouteIndex]);
+
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
   return <>
     {
