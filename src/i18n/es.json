@@ -1,7 +1,7 @@
 {
   "add": "Añade",
   "add_origin": "Añade un posible spot",
-  "add_poi": "Añade un sitio importante",
+  "add_poi": "Añade un punto",
   "averageTime": "Tiempo medio",
   "baseMap": "Cartografía base",
   "cancel": "Cancelar",
@@ -27,7 +27,7 @@
   "remove": "Elimina",
   "removeButton": "Borrar todos los puntos",
   "remove_origin": "Elimina un posible spot",
-  "remove_poi": "Elimina un sitio importante",
+  "remove_poi": "Elimina un punto",
   "search": "Busca...",
   "transportType": "¿Cómo te desplazas?"
 }

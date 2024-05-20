@@ -124,7 +124,8 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
        
         <PointsSidePanels 
           onChangeModePoints={onChangeModePoints}
-          onChangePoints={onChangePoints} />
+          onChangePoints={onChangePoints}
+        />          
       </Box>
     </ScrollableContent>
     <Geomatico/>

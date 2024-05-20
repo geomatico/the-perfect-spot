@@ -1,7 +1,7 @@
 {
   "add": "Add",
   "add_origin": "Add a possible spot",
-  "add_poi": "Add an important place",
+  "add_poi": "Add a point",
   "averageTime": "Average time",
   "baseMap": "Base Map",
   "cancel": "Cancel",
@@ -27,7 +27,7 @@
   "remove": "Remove",
   "removeButton": "Delete all points",
   "remove_origin": "Remove a possible spot",
-  "remove_poi": "Remove an important place",
+  "remove_poi": "Remove a point",
   "search": "Search...",
   "transportType": "How do you travel?"
 }

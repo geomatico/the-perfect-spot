@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/AddLocationAlt';
 import RemoveIcon from '@mui/icons-material/WrongLocation';
 
-function PointsSidePanels({onChangePoints, onChangeModePoints }) {
+function PointsSidePanels({onChangePoints, onChangeModePoints}) {
   const { t } = useTranslation();
  
   const [selectedMode, setSelectedMode] = useState('BLUE-ADD_');
@@ -19,7 +19,7 @@ function PointsSidePanels({onChangePoints, onChangeModePoints }) {
     if (newMode) {
       setSelectedMode(newMode);
       const modeSort = newMode.split('-');
-      const changeMode= modeSort[1]+modeSort[0];
+      const changeMode= modeSort[1] + modeSort[0];
       onChangeModePoints(changeMode);
     }
   };
@@ -58,35 +58,53 @@ function PointsSidePanels({onChangePoints, onChangeModePoints }) {
     },
   ];
 
-  const customSx = {
-    '& .ButtonGroup-button': {
-      backgroundColor: 'black',
-      '&:hover': {
-        backgroundColor: 'blue'
-      },
-      '&.Mui-selected': {
-        backgroundColor: 'red',
-        '&:hover': {
-          backgroundColor: 'blue'
+  const handleButtonColor = (pointMode) => {
+    console.log(pointMode.includes('RED'));
+    if (pointMode.includes('RED')) {
+      return {
+        '& .ButtonGroup-button': {
+          '&.Mui-selected': {
+            border: '2px solid #d70f0f',
+            backgroundColor: 'white',
+            '&:hover': {
+              border : '2px solid #d70f0f',
+              backgroundColor: 'white',
+            }
+          }
+        },
+        '& .ButtonGroup-buttonContent': {
+          color: '#d70f0f'
         }
-      }
-    },
-    '& .ButtonGroup-buttonContent': {
-      color: 'red',
+      };
+    }else{
+      return {
+        '& .ButtonGroup-button': {
+          '&.Mui-selected': {
+            backgroundColor: 'white !important',
+          }
+        },
+        '& .ButtonGroup-buttonContent': {
+          color: '#26549e'
+        }
+      };
     }
   };
+  
+
+  const customSx = {
+    ...handleButtonColor(selectedMode),
+  };
+  
   return (
     <>
-      <div className="custom-ButtonGroupList">
-        <ButtonGroupList
-          buttonGroupVariant='outlined'
-          categories={categoriesBlue}
-          buttonGroupItems={buttonGroupItemsBlue}
-          selectedItemId={selectedMode}
-          onItemClick={handleFlatClick}
-          sx={customSx}
-        />
-      </div>
+      <ButtonGroupList
+        buttonGroupVariant='outlined'
+        categories={categoriesBlue}
+        buttonGroupItems={buttonGroupItemsBlue}
+        selectedItemId={selectedMode}
+        onItemClick={handleFlatClick}
+        sx={customSx}
+      />
      
       <Button
         variant='contained'
