@@ -52,7 +52,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeNearestRedPoint})
           {calculatedRoutes.map((row, index) => (
             <TableRow
               key={index}
-              sx={{'&:hover': {bgcolor: 'grey.200'}, border: index === shortestRouteIndex ? '2px solid red': undefined}}
+              sx={{'&:hover': {bgcolor: 'grey.200'}, border: index === shortestRouteIndex ? '2px solid #40A578': undefined}}
             >
               <TableCell component="th" scope="row">
                 <Stack>

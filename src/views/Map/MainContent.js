@@ -177,7 +177,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         type: 'circle',
         paint: {
           'circle-color': '#5AA469',
-          'circle-radius': 10,
+          'circle-radius': 14,
           'circle-stroke-color': '#FFFFFF',
           'circle-stroke-width': 2,
         }
