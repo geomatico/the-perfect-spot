@@ -10,12 +10,11 @@ import ButtonGroupList from '@geomatico/geocomponents/ButtonGroupList';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/AddLocationAlt';
 import RemoveIcon from '@mui/icons-material/WrongLocation';
-
 function PointsSidePanels({onChangePoints, onChangeModePoints}) {
   const { t } = useTranslation();
  
   const [selectedMode, setSelectedMode] = useState('BLUE-ADD_');
-  const handleFlatClick = (newMode) => {
+  const handlePointClick = (newMode) => {
     if (newMode) {
       setSelectedMode(newMode);
       const modeSort = newMode.split('-');
@@ -27,7 +26,7 @@ function PointsSidePanels({onChangePoints, onChangeModePoints}) {
   const handleOpenModal = () => {
     setOpenModal(true);
   };
-  const buttonGroupItemsBlue = [
+  const buttonGroupItems = [
     {
       id: 'ADD_',
       content: 
@@ -47,7 +46,7 @@ function PointsSidePanels({onChangePoints, onChangeModePoints}) {
   ];
 
 
-  const categoriesBlue = [
+  const categories = [
     {
       id: 'BLUE',
       description: <Typography>{t('originPoints')}</Typography>,
@@ -59,32 +58,31 @@ function PointsSidePanels({onChangePoints, onChangeModePoints}) {
   ];
 
   const handleButtonColor = (pointMode) => {
-    console.log(pointMode.includes('RED'));
     if (pointMode.includes('RED')) {
       return {
         '& .ButtonGroup-button': {
           '&.Mui-selected': {
-            border: '2px solid #d70f0f',
-            backgroundColor: 'white',
+            border: theme => `2px solid ${theme.palette.secondary.main}`,
+            backgroundColor: theme => `${theme.palette.common.white}`,
             '&:hover': {
-              border : '2px solid #d70f0f',
-              backgroundColor: 'white',
+              border: theme =>  `2px solid ${theme.palette.secondary.main}`,
+              backgroundColor: theme => `${theme.palette.common.white}`,
             }
           }
         },
         '& .ButtonGroup-buttonContent': {
-          color: '#d70f0f'
+          color: theme => `${theme.palette.secondary.main}`
         }
       };
     }else{
       return {
         '& .ButtonGroup-button': {
           '&.Mui-selected': {
-            backgroundColor: 'white !important',
+            backgroundColor: theme => `${theme.palette.common.white} !important`,
           }
         },
         '& .ButtonGroup-buttonContent': {
-          color: '#26549e'
+          color: theme => `${theme.palette.primary.main}`
         }
       };
     }
@@ -99,10 +97,10 @@ function PointsSidePanels({onChangePoints, onChangeModePoints}) {
     <>
       <ButtonGroupList
         buttonGroupVariant='outlined'
-        categories={categoriesBlue}
-        buttonGroupItems={buttonGroupItemsBlue}
+        categories={categories}
+        buttonGroupItems={buttonGroupItems}
         selectedItemId={selectedMode}
-        onItemClick={handleFlatClick}
+        onItemClick={handlePointClick}
         sx={customSx}
       />
      
