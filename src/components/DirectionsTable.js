@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { grey} from '@mui/material/colors';
 
-const DirectionsTable = ({calculatedRoutes, allPoints}) => {
+const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint}) => {
   
   const{t} = useTranslation();
 
@@ -27,7 +27,15 @@ const DirectionsTable = ({calculatedRoutes, allPoints}) => {
 
   let dir = calculatedRoutes.map(d => (d.data.avg));
   let shortestRouteIndex = dir.indexOf(Math.min(...dir));
+  const handleCellHover = (redId) =>{
+    onChangeHover(true);
+    onChangeIdHoverPoint(redId);
+  };
 
+  const handleCellLeave = () => {
+    onChangeHover(false);
+    onChangeIdHoverPoint(undefined);
+  };
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
   return <>
     {
@@ -46,7 +54,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints}) => {
         </TableHead>
         <TableBody>
           {calculatedRoutes.map((row, index) => (
-            <TableRow
+            <TableRow onMouseEnter={()=>handleCellHover(allPoints.red[index].id)} onMouseLeave={()=> handleCellLeave()}
               key={index}
               sx={{'&:hover': {bgcolor: 'grey.200'}, border: index === shortestRouteIndex ? '2px solid red': undefined}}
             >
@@ -58,7 +66,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints}) => {
               </TableCell>
               {
                 row.data.map((data) => (
-                  <TableCell key={data} align="right">{
+                  <TableCell  key={data} align="right">{
                     data.map((value, index ) => (
                       <span key={value}>{value + (index === 0 ? 'km' : 'min')}<br/></span>
                     ))
@@ -80,16 +88,20 @@ DirectionsTable.propTypes = {
   calculatedRoutes: PropTypes.array.isRequired,
   allPoints: PropTypes.shape({
     red: PropTypes.arrayOf(PropTypes.shape({
+      id:  PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
     })).isRequired,
     blue: PropTypes.arrayOf(PropTypes.shape({
+      id:  PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
     })).isRequired,
-  }).isRequired
+  }).isRequired,
+  onChangeHover: PropTypes.func.isRequired,
+  onChangeIdHoverPoint: PropTypes.func.isRequired
 };
 
 export default DirectionsTable;

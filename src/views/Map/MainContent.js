@@ -16,13 +16,13 @@ import Box from '@mui/material/Box';
 import ModalInfo from '../../components/ModalInfo';
 import ModalAddPoint from '../../components/ModalAddPoint';
 import { primaryColor, secondaryColor } from '../../theme';
-
-
-const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints}) => {
+import { v4 as uuid } from 'uuid';
+const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
-
   const handleOpen = () => setOpenModal(true);
+
+  
   const handleClose = (event, reason) => {
     // para que no se cierre con click fuera de la modal si esc
     if (reason && (reason === 'backdropClick' || reason === 'escapeKeyDown')){
@@ -49,28 +49,35 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
   const mapRef = useRef();
   const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
   const handleSearchResult = ({bbox}) => flyTo(bbox);
-
   const [text, setText] = useState(t('point'));
 
   const COLOR = mode === ADD_BLUE_MODE ? primaryColor : secondaryColor;
-
   const sources = useMemo(() => {
 
     const empty = {
       type: 'FeatureCollection',
       features:[]
     };
+    const filterRedPoint = hover ? allPoints.red.find(({id})=> id === idHoverPoint) : null;
     const redPoints = {
       type: 'FeatureCollection',
-      features: allPoints.red?.map(({lng,lat}, index) => ({
+      features: hover ? [{
+        type: 'Feature',
+        id: 1,
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates:  [filterRedPoint.lng,filterRedPoint.lat]
+        }
+      }]: allPoints.red?.map(({lng,lat},index) => ({
         type: 'Feature',
         id: index,
         properties: {},
         geometry: {
           type: 'Point',
-          coordinates: [lng,lat]
+          coordinates:  [lng,lat] 
         }
-      }))
+      })) 
     };
 
     const bluePoints = {
@@ -81,7 +88,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         properties: {},
         geometry: {
           type: 'Point',
-          coordinates: [lng,lat]
+          coordinates:  [lng,lat] 
         }
       }))
     };
@@ -90,7 +97,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
     return {
       redPoints: {
         type: 'geojson',
-        data: redPoints
+        data:   redPoints
       },
       bluePoints: {
         type: 'geojson',
@@ -98,10 +105,13 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       },
       directions: {
         type: 'geojson',
-        data: routes || empty
+        data: routes && hover ? {
+          type : 'FeatureCollection',
+          features: routes.features.filter(route => route.properties.redPointId  === idHoverPoint)
+        } : routes || empty
       },
     };
-  }, [allPoints,routes]);
+  }, [allPoints,routes,hover,idHoverPoint]);
   const layers = useMemo(() => {
     return [
       {
@@ -154,7 +164,8 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         'paint': {
           'text-color': 'red',
         }
-      }
+      },
+  
     ];
   }, [mapStyle]);
 
@@ -167,8 +178,9 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         blue: [
           ...allPoints.blue,
           {
+            id : uuid(),
             lng: +coords.lng.toFixed(5),
-            lat: +coords.lat.toFixed(5)
+            lat: +coords.lat.toFixed(5),
           }]
       });
       
@@ -186,8 +198,10 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         red: [
           ...allPoints.red,
           {
+            id: uuid(),
             lng: +coords.lng.toFixed(5),
-            lat: +coords.lat.toFixed(5)
+            lat: +coords.lat.toFixed(5),
+            
           }]
       });
       
@@ -314,7 +328,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints}/>
+      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints} onChangeHover={onChangeHover} onChangeIdHoverPoint={onChangeIdHoverPoint}/>
     </div>
   </>;
 };
@@ -337,7 +351,14 @@ MainContent.propTypes = {
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
     })).isRequired,
-  }).isRequired
+  }).isRequired,
+  hover: PropTypes.bool.isRequired,
+  onChangeHover: PropTypes.func.isRequired,
+  idHoverPoint: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.oneOf([null])
+  ]),
+  onChangeIdHoverPoint: PropTypes.func.isRequired
 };
 
 export default MainContent;

@@ -11,6 +11,8 @@ const Map = () => {
   const [mode, setMode] = useState(ADD_BLUE_MODE);
   const [routes, setRoutes] = useState(null);
   const [calculatedRoutes, setCalculatedRoutes] = useState([]);
+  const [hover, setHover] = useState(false);
+  const [idHoverPoint,setIdHoverPoint] = useState(null);
   const [allPoints,setAllPoints] = useState(localStorage.getItem('ThePerfectSpot') ? JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
   const onModeChanged = () => {
     setMode(mode === ADD_BLUE_MODE || REMOVE_BLUE_MODE ? ADD_RED_MODE : ADD_BLUE_MODE);
@@ -36,6 +38,10 @@ const Map = () => {
     calculatedRoutes={calculatedRoutes}
     onChangePoints={setAllPoints}
     allPoints={allPoints}
+    hover={hover}
+    onChangeHover={setHover}
+    idHoverPoint={idHoverPoint}
+    onChangeIdHoverPoint={setIdHoverPoint}
   />;
 
   return <Layout
