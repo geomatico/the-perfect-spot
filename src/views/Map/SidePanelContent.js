@@ -16,7 +16,6 @@ const ScrollableContent = styled(Box)({
   padding: '8px',
 });
 
-
 const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculatedRoutes, allPoints, onChangePoints}) => {
 
   const {t} = useTranslation();
@@ -40,7 +39,7 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
   ];
 
   const [transportation, setTransportation] = useState(transportOptions[0].id);
-  
+
   const redPointsCoords = allPoints?.red ? allPoints.red.map(({lng,lat}) => [lng,lat]) : [];
   const bluePointsCoords = allPoints?.blue ? allPoints.blue.map(({lng,lat}) => [lng,lat]) : [];
 
@@ -68,27 +67,30 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
   const calculateRoutes = (transportationType) => {
     const promises = {};
     bluePointsCoords.forEach((location, idx) => {
-      redPointsCoords.forEach(destination => {
-        if (promises[idx]?.length) {
-          promises[idx].push(getDirections([location], [destination], transportationType || transportation));
+      redPointsCoords.forEach((destination, redIdx) => {
+        if (promises[idx]?.length) { 
+          promises[idx].push(getDirections([location], [destination], transportationType || transportation).then(data => ({ data, redPointId: allPoints.red[redIdx].id })));
         } else {
-          promises[idx] = [getDirections([location], [destination], transportationType || transportation)];
+          promises[idx] = [getDirections([location], [destination], transportationType || transportation).then(data => ({ data, redPointId: allPoints.red[redIdx].id }))];
         }
       });
     });
 
     Promise.all(Object.values(promises).flat())
       .then((data) => {
-        const features = data.map(f => f.features).flat();
+        const features = data.map(f => f.data.features.map(feature => (
+          {
+            ...feature,
+            properties: {
+              ...feature.properties,
+              duration: (feature.properties.summary.duration / 60).toFixed(1) + 'min',
+              redPointId: f.redPointId  
+            }
+          }
+        ))).flat();
         const featureCollection = {
           type: 'FeatureCollection',
           features: features
-            .map(feature => (
-              {
-                ...feature,
-                ...{properties: {duration: (feature.properties.summary.duration / 60).toFixed(1) + 'min'}}
-              }
-            )),
         };
         onRoutesChange(featureCollection);
       });
@@ -103,7 +105,7 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
 
   };
   useEffect(() => {
-    calculateRoutes();
+    calculateRoutes(transportation);
     calculateDirectionsTable(transportation);
   }, [allPoints.red, allPoints.blue]);
 
@@ -139,11 +141,13 @@ SidePanelContent.propTypes = {
   onChangeCalculatedRoutes: PropTypes.func.isRequired,
   allPoints: PropTypes.shape({
     red: PropTypes.arrayOf(PropTypes.shape({
+      id:  PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
     })).isRequired,
     blue: PropTypes.arrayOf(PropTypes.shape({
+      id:  PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string

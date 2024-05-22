@@ -11,6 +11,8 @@ const Map = () => {
   const [mode, setMode] = useState(ADD_BLUE_MODE);
   const [routes, setRoutes] = useState(null);
   const [calculatedRoutes, setCalculatedRoutes] = useState([]);
+  const [hover, setHover] = useState(false);
+  const [idHoverPoint,setIdHoverPoint] = useState(null);
   const [allPoints,setAllPoints] = useState(localStorage.getItem('ThePerfectSpot') ? JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
 
   const sidePanelContent = <SidePanelContent
@@ -29,6 +31,10 @@ const Map = () => {
     calculatedRoutes={calculatedRoutes}
     onChangePoints={setAllPoints}
     allPoints={allPoints}
+    hover={hover}
+    onChangeHover={setHover}
+    idHoverPoint={idHoverPoint}
+    onChangeIdHoverPoint={setIdHoverPoint}
   />;
 
   return <Layout
