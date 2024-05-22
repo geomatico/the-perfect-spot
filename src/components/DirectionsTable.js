@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
@@ -8,9 +8,11 @@ import TableBody from '@mui/material/TableBody';
 import {useTranslation} from 'react-i18next';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { grey} from '@mui/material/colors';
+import { grey,green} from '@mui/material/colors';
+import { lighten } from '@mui/material';
 
-const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint}) => {
+
+const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint}) => {
   
   const{t} = useTranslation();
 
@@ -24,9 +26,13 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     let avg = sum/element.data.length;
     element.data.avg = Math.round( avg * 10)/10;
   });
+  
 
   let dir = calculatedRoutes.map(d => (d.data.avg));
   let shortestRouteIndex = dir.indexOf(Math.min(...dir));
+  useEffect(()=>{
+    onChangeNearestRedPoint(shortestRouteIndex >= 0 ? shortestRouteIndex : null);
+  },[shortestRouteIndex]);
   const handleCellHover = (redId) =>{
     onChangeHover(true);
     onChangeIdHoverPoint(redId);
@@ -56,12 +62,12 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
           {calculatedRoutes.map((row, index) => (
             <TableRow onMouseEnter={()=>handleCellHover(allPoints.red[index].id)} onMouseLeave={()=> handleCellLeave()}
               key={index}
-              sx={{'&:hover': {bgcolor: 'grey.200'}, border: index === shortestRouteIndex ? '2px solid red': undefined}}
+              sx={{'&:hover': index === shortestRouteIndex ? {bgcolor: lighten(green[400],0.75)} : {bgcolor: 'grey.200'}  , border: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.success.light}`: undefined}}
             >
               <TableCell component="th" scope="row">
                 <Stack>
-                  <Typography sx={{fontWeight: 'bold', color: 'secondary.main'}}>{rowNames[index]?.toUpperCase()}</Typography>
-                  <Typography variant='body2' sx={{color: grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
+                  <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'success.main': 'secondary.main'}}>{rowNames[index]?.toUpperCase()}</Typography>
+                  <Typography variant='body2' sx={{color: index === shortestRouteIndex ? 'success.main': grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
                 </Stack>
               </TableCell>
               {
@@ -100,6 +106,7 @@ DirectionsTable.propTypes = {
       name: PropTypes.string
     })).isRequired,
   }).isRequired,
+  onChangeNearestRedPoint: PropTypes.func.isRequired,
   onChangeHover: PropTypes.func.isRequired,
   onChangeIdHoverPoint: PropTypes.func.isRequired
 };

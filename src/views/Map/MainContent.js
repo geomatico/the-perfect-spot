@@ -20,6 +20,7 @@ import { v4 as uuid } from 'uuid';
 const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
+  const [nearestRedPoint,setNearestRedPoint] = useState(null);
   const handleOpen = () => setOpenModal(true);
 
   
@@ -92,8 +93,20 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         }
       }))
     };
-
-
+    const nearestPoint = {
+      type: 'FeatureCollection',
+      features:[
+        {
+          type: 'Feature',
+          id: 1,
+          properties: {},
+          geometry:{
+            type: 'Point',
+            coordinates: [allPoints?.red[nearestRedPoint]?.lng, allPoints?.red[nearestRedPoint]?.lat] 
+          }
+        }
+      ]
+    };      
     return {
       redPoints: {
         type: 'geojson',
@@ -110,8 +123,12 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
           features: routes.features.filter(route => route.properties.redPointId  === idHoverPoint)
         } : routes || empty
       },
+      nearestRedPoint: {
+        type: 'geojson',
+        data: nearestPoint || empty
+      }
     };
-  }, [allPoints,routes,hover,idHoverPoint]);
+  }, [allPoints,routes,hover,idHoverPoint,nearestRedPoint]);
   const layers = useMemo(() => {
     return [
       {
@@ -165,7 +182,17 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
           'text-color': 'red',
         }
       },
-  
+      {
+        id: 'nearestRedPoint',
+        source: 'nearestRedPoint',
+        type: 'circle',
+        paint: {
+          'circle-color': '#5AA469',
+          'circle-radius': 14,
+          'circle-stroke-color': '#FFFFFF',
+          'circle-stroke-width': 2,
+        }
+      }
     ];
   }, [mapStyle]);
 
@@ -218,7 +245,6 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
     localStorage.setItem('ThePerfectSpot',JSON.stringify(allPoints));
     onChangePoints(allPoints);
   },[allPoints]);
-  
   const [cursor, setCursor] = useState('pointer');
 
   useEffect(() => {
@@ -328,7 +354,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints} onChangeHover={onChangeHover} onChangeIdHoverPoint={onChangeIdHoverPoint}/>
+      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints} onChangeNearestRedPoint={setNearestRedPoint} onChangeHover={onChangeHover} onChangeIdHoverPoint={onChangeIdHoverPoint}/>
     </div>
   </>;
 };
