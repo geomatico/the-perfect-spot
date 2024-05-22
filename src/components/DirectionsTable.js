@@ -8,7 +8,8 @@ import TableBody from '@mui/material/TableBody';
 import {useTranslation} from 'react-i18next';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { grey} from '@mui/material/colors';
+import { grey,green} from '@mui/material/colors';
+import { lighten } from '@mui/material';
 
 const DirectionsTable = ({calculatedRoutes, allPoints, onChangeNearestRedPoint}) => {
   
@@ -29,7 +30,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeNearestRedPoint})
   let dir = calculatedRoutes.map(d => (d.data.avg));
   let shortestRouteIndex = dir.indexOf(Math.min(...dir));
   useEffect(()=>{
-    onChangeNearestRedPoint(shortestRouteIndex >= 0 ? shortestRouteIndex : 0);
+    onChangeNearestRedPoint(shortestRouteIndex >= 0 ? shortestRouteIndex : null);
   },[shortestRouteIndex]);
 
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
@@ -52,12 +53,12 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeNearestRedPoint})
           {calculatedRoutes.map((row, index) => (
             <TableRow
               key={index}
-              sx={{'&:hover': {bgcolor: 'grey.200'}, border: index === shortestRouteIndex ? '2px solid #40A578': undefined}}
+              sx={{'&:hover': index === shortestRouteIndex ? {bgcolor: lighten(green[400],0.75)} : {bgcolor: 'grey.200'}  , border: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.success.light}`: undefined}}
             >
               <TableCell component="th" scope="row">
                 <Stack>
-                  <Typography sx={{fontWeight: 'bold', color: 'secondary.main'}}>{rowNames[index]?.toUpperCase()}</Typography>
-                  <Typography variant='body2' sx={{color: grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
+                  <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'success.main': 'secondary.main'}}>{rowNames[index]?.toUpperCase()}</Typography>
+                  <Typography variant='body2' sx={{color: index === shortestRouteIndex ? 'success.main': grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
                 </Stack>
               </TableCell>
               {
