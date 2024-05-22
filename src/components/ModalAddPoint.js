@@ -34,7 +34,7 @@ const  ModalAddPoint = ({pointType,pointName,onChangePointName,onSavePointName,o
     <Modal open={true} onClose={onClose}>
       <Box sx={inputContainerStyles}>
         <Typography id="modal-modal-title" variant="body1" sx={{textAlign:'center'}}> 
-          {pointType === 'ADD_POI' ? t('insertPOIName') : t('insertFLATName')}
+          {pointType === 'ADD_BLUE' ? t('insertPOIName') : t('insertFLATName')}
         </Typography>
         <TextField
           error={!pointName}
