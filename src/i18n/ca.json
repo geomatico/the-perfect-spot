@@ -1,7 +1,7 @@
 {
   "add": "Afegeix",
   "add_origin": "Afegeix un possible spot",
-  "add_poi": "Afegeix un punt important",
+  "add_poi": "Afegeix un punt",
   "averageTime": "Temps mitjà",
   "baseMap": "Cartografia base",
   "cancel": "cancel·lar",
@@ -25,8 +25,9 @@
   "originPoints": "My places",
   "point": "Punt",
   "remove": "Esborra",
+  "removeButton": "Esborrar tots els punts",
   "remove_origin": "Elimina un possible spot",
-  "remove_poi": "Elimina un punt important",
+  "remove_poi": "Elimina un punt",
   "search": "Cerca...",
   "transportType": "Com et desplaces?"
 }

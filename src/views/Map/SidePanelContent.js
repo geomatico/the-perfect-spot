@@ -2,13 +2,12 @@ import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 
 import Stack from '@mui/material/Stack';
+import PointsSidePanels from '../../components/PointsSidePanels';
 import Box from '@mui/material/Box';
 import styled from '@mui/styles/styled';
 import SelectInput from '@geomatico/geocomponents/SelectInput';
 import Geomatico from '../../components/Geomatico';
 import {getDirections, getInfo} from '../../utils/ors';
-import POISidePanel from '../../components/POISidePanel';
-import FlatSidePanel from '../../components/FlatSidePanel';
 import {useTranslation} from 'react-i18next';
 import Typography from '@mui/material/Typography';
 
@@ -17,7 +16,7 @@ const ScrollableContent = styled(Box)({
   padding: '8px',
 });
 
-const SidePanelContent = ({onBlueModeChanged, onRedModeChanged, onRoutesChange, mode, onChangeCalculatedRoutes, allPoints, onChangePoints}) => {
+const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculatedRoutes, allPoints, onChangePoints}) => {
 
   const {t} = useTranslation();
   const transportOptions = [
@@ -124,17 +123,11 @@ const SidePanelContent = ({onBlueModeChanged, onRedModeChanged, onRoutesChange, 
           onOptionChange={handleTransportationType} minWidth='100%'/>
       </Box>
       <Box my={2}>
-        <POISidePanel
-          mode={mode}
-          onBlueModeChanged={onBlueModeChanged}
-        />
-        <FlatSidePanel
-          mode={mode}
-          onRedModeChanged={onRedModeChanged}
-          onCalculateRoutes={calculateRoutes}
-          onCalculateDirections={calculateDirectionsTable}
+       
+        <PointsSidePanels 
+          onChangeModePoints={onChangeModePoints}
           onChangePoints={onChangePoints}
-        />
+        />          
       </Box>
     </ScrollableContent>
     <Geomatico/>
@@ -143,10 +136,7 @@ const SidePanelContent = ({onBlueModeChanged, onRedModeChanged, onRoutesChange, 
 
 SidePanelContent.propTypes = {
   mapStyle: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  onBlueModeChanged: PropTypes.func,
-  onRedModeChanged: PropTypes.func,
-  onModeChanged: PropTypes.func,
+  onChangeModePoints: PropTypes.func,
   onRoutesChange: PropTypes.func.isRequired,
   onChangeCalculatedRoutes: PropTypes.func.isRequired,
   allPoints: PropTypes.shape({
