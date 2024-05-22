@@ -11,7 +11,8 @@ import Stack from '@mui/material/Stack';
 import { grey,green} from '@mui/material/colors';
 import { lighten } from '@mui/material';
 
-const DirectionsTable = ({calculatedRoutes, allPoints, onChangeNearestRedPoint}) => {
+
+const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint}) => {
   
   const{t} = useTranslation();
 
@@ -32,7 +33,15 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeNearestRedPoint})
   useEffect(()=>{
     onChangeNearestRedPoint(shortestRouteIndex >= 0 ? shortestRouteIndex : null);
   },[shortestRouteIndex]);
+  const handleCellHover = (redId) =>{
+    onChangeHover(true);
+    onChangeIdHoverPoint(redId);
+  };
 
+  const handleCellLeave = () => {
+    onChangeHover(false);
+    onChangeIdHoverPoint(undefined);
+  };
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
   return <>
     {
@@ -51,7 +60,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeNearestRedPoint})
         </TableHead>
         <TableBody>
           {calculatedRoutes.map((row, index) => (
-            <TableRow
+            <TableRow onMouseEnter={()=>handleCellHover(allPoints.red[index].id)} onMouseLeave={()=> handleCellLeave()}
               key={index}
               sx={{'&:hover': index === shortestRouteIndex ? {bgcolor: lighten(green[400],0.75)} : {bgcolor: 'grey.200'}  , border: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.success.light}`: undefined}}
             >
@@ -63,7 +72,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeNearestRedPoint})
               </TableCell>
               {
                 row.data.map((data) => (
-                  <TableCell key={data} align="right">{
+                  <TableCell  key={data} align="right">{
                     data.map((value, index ) => (
                       <span key={value}>{value + (index === 0 ? 'km' : 'min')}<br/></span>
                     ))
@@ -85,17 +94,21 @@ DirectionsTable.propTypes = {
   calculatedRoutes: PropTypes.array.isRequired,
   allPoints: PropTypes.shape({
     red: PropTypes.arrayOf(PropTypes.shape({
+      id:  PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
     })).isRequired,
     blue: PropTypes.arrayOf(PropTypes.shape({
+      id:  PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
     })).isRequired,
   }).isRequired,
-  onChangeNearestRedPoint: PropTypes.func.isRequired
+  onChangeNearestRedPoint: PropTypes.func.isRequired,
+  onChangeHover: PropTypes.func.isRequired,
+  onChangeIdHoverPoint: PropTypes.func.isRequired
 };
 
 export default DirectionsTable;

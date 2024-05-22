@@ -2,14 +2,12 @@ import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 
 import Stack from '@mui/material/Stack';
-
+import PointsSidePanels from '../../components/PointsSidePanels';
 import Box from '@mui/material/Box';
 import styled from '@mui/styles/styled';
 import SelectInput from '@geomatico/geocomponents/SelectInput';
 import Geomatico from '../../components/Geomatico';
 import {getDirections, getInfo} from '../../utils/ors';
-import POISidePanel from '../../components/POISidePanel';
-import FlatSidePanel from '../../components/FlatSidePanel';
 import {useTranslation} from 'react-i18next';
 import Typography from '@mui/material/Typography';
 
@@ -18,8 +16,7 @@ const ScrollableContent = styled(Box)({
   padding: '8px',
 });
 
-
-const SidePanelContent = ({onBlueModeChanged, onRedModeChanged, onRoutesChange, mode, onChangeCalculatedRoutes,allPoints,  onChangePoints}) => {
+const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculatedRoutes, allPoints, onChangePoints}) => {
 
   const {t} = useTranslation();
   const transportOptions = [
@@ -42,7 +39,7 @@ const SidePanelContent = ({onBlueModeChanged, onRedModeChanged, onRoutesChange, 
   ];
 
   const [transportation, setTransportation] = useState(transportOptions[0].id);
-  
+
   const redPointsCoords = allPoints?.red ? allPoints.red.map(({lng,lat}) => [lng,lat]) : [];
   const bluePointsCoords = allPoints?.blue ? allPoints.blue.map(({lng,lat}) => [lng,lat]) : [];
 
@@ -70,27 +67,30 @@ const SidePanelContent = ({onBlueModeChanged, onRedModeChanged, onRoutesChange, 
   const calculateRoutes = (transportationType) => {
     const promises = {};
     bluePointsCoords.forEach((location, idx) => {
-      redPointsCoords.forEach(destination => {
-        if (promises[idx]?.length) {
-          promises[idx].push(getDirections([location], [destination], transportationType || transportation));
+      redPointsCoords.forEach((destination, redIdx) => {
+        if (promises[idx]?.length) { 
+          promises[idx].push(getDirections([location], [destination], transportationType || transportation).then(data => ({ data, redPointId: allPoints.red[redIdx].id })));
         } else {
-          promises[idx] = [getDirections([location], [destination], transportationType || transportation)];
+          promises[idx] = [getDirections([location], [destination], transportationType || transportation).then(data => ({ data, redPointId: allPoints.red[redIdx].id }))];
         }
       });
     });
 
     Promise.all(Object.values(promises).flat())
       .then((data) => {
-        const features = data.map(f => f.features).flat();
+        const features = data.map(f => f.data.features.map(feature => (
+          {
+            ...feature,
+            properties: {
+              ...feature.properties,
+              duration: (feature.properties.summary.duration / 60).toFixed(1) + 'min',
+              redPointId: f.redPointId  
+            }
+          }
+        ))).flat();
         const featureCollection = {
           type: 'FeatureCollection',
           features: features
-            .map(feature => (
-              {
-                ...feature,
-                ...{properties: {duration: (feature.properties.summary.duration / 60).toFixed(1) + 'min'}}
-              }
-            )),
         };
         onRoutesChange(featureCollection);
       });
@@ -105,7 +105,7 @@ const SidePanelContent = ({onBlueModeChanged, onRedModeChanged, onRoutesChange, 
 
   };
   useEffect(() => {
-    calculateRoutes();
+    calculateRoutes(transportation);
     calculateDirectionsTable(transportation);
   }, [allPoints.red, allPoints.blue]);
 
@@ -123,17 +123,11 @@ const SidePanelContent = ({onBlueModeChanged, onRedModeChanged, onRoutesChange, 
           onOptionChange={handleTransportationType} minWidth='100%'/>
       </Box>
       <Box my={2}>
-        <POISidePanel
-          mode={mode}
-          onBlueModeChanged={onBlueModeChanged}
-        />
-        <FlatSidePanel
-          mode={mode}
-          onRedModeChanged={onRedModeChanged}
-          onCalculateRoutes={calculateRoutes}
-          onCalculateDirections={calculateDirectionsTable}
+       
+        <PointsSidePanels 
+          onChangeModePoints={onChangeModePoints}
           onChangePoints={onChangePoints}
-        />
+        />          
       </Box>
     </ScrollableContent>
     <Geomatico/>
@@ -142,19 +136,18 @@ const SidePanelContent = ({onBlueModeChanged, onRedModeChanged, onRoutesChange, 
 
 SidePanelContent.propTypes = {
   mapStyle: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  onBlueModeChanged: PropTypes.func,
-  onRedModeChanged: PropTypes.func,
-  onModeChanged: PropTypes.func,
+  onChangeModePoints: PropTypes.func,
   onRoutesChange: PropTypes.func.isRequired,
   onChangeCalculatedRoutes: PropTypes.func.isRequired,
   allPoints: PropTypes.shape({
     red: PropTypes.arrayOf(PropTypes.shape({
+      id:  PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
     })).isRequired,
     blue: PropTypes.arrayOf(PropTypes.shape({
+      id:  PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
