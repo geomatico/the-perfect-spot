@@ -12,6 +12,8 @@
   "done": "Hecho",
   "driving-car": "En coche",
   "driving-hgv": "Transporte público",
+  "editNameBluePoint": "Edita el nombre del punto azul",
+  "editNameRedPoint": "Edita el nombre del punto rojo",
   "editor": "Puntos de interés",
   "finalPoints": "Posibles spots",
   "find_the": "Encuentra el ",
@@ -28,9 +30,7 @@
   "removeButton": "Borrar todos los puntos",
   "remove_origin": "Elimina un posible spot",
   "remove_poi": "Elimina un punto",
+  "saveNamePoint": "Guardar",
   "search": "Busca...",
-  "transportType": "¿Cómo te desplazas?",
-  "editNameBluePoint": "Edita el nombre del punto azul",
-  "editNameRedPoint": "Edita el nombre del punto rojo",
-  "saveNamePoint": "Guardar"
+  "transportType": "¿Cómo te desplazas?"
 }

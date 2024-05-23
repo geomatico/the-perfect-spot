@@ -12,6 +12,8 @@
   "done": "Fet!",
   "driving-car": "En cotxe",
   "driving-hgv": "Transport públic",
+  "editNameBluePoint": "Edita el nom del punt blau",
+  "editNameRedPoint": "Edita el nom del punt vermell",
   "editor": "Editor d'instal·lacions",
   "finalPoints": "Posibles spots",
   "find_the": "Troba el ",
@@ -28,10 +30,7 @@
   "removeButton": "Esborrar tots els punts",
   "remove_origin": "Elimina un possible spot",
   "remove_poi": "Elimina un punt",
+  "saveNamePoint": "Guardar",
   "search": "Cerca...",
-  "transportType": "Com et desplaces?",
-  "editNameBluePoint": "Edita el nom del punt blau",
-  "editNameRedPoint": "Edita el nom del punt vermell",
-  "saveNamePoint": "Guardar"
-
+  "transportType": "Com et desplaces?"
 }
