@@ -354,7 +354,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints} onChangeNearestRedPoint={setNearestRedPoint} onChangeHover={onChangeHover} onChangeIdHoverPoint={onChangeIdHoverPoint}/>
+      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints} onChangeNearestRedPoint={setNearestRedPoint} onChangeHover={onChangeHover} onChangeIdHoverPoint={onChangeIdHoverPoint} onChangePoints={onChangePoints}/>
     </div>
   </>;
 };

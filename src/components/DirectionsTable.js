@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
@@ -10,12 +10,15 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { grey,green} from '@mui/material/colors';
 import { lighten } from '@mui/material';
-
-
-const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint}) => {
+import EditIcon from '@mui/icons-material/Edit';
+import Button from '@mui/material/Button';
+import ModalEditPoint from './ModalEditPoint';
+const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, onChangePoints}) => {
   
   const{t} = useTranslation();
-
+  const [openModal,setOpenModal] = useState(null);
+  const [indexSelectPoint,setIndexSelectPoint] = useState(null);
+  const [modeEditPoint, setModeEditPoint] = useState(null);
   const bluePoints = allPoints.blue ? allPoints.blue.map(point =>point): [] ;
 
   calculatedRoutes.forEach(function (element) {
@@ -42,6 +45,14 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     onChangeHover(false);
     onChangeIdHoverPoint(undefined);
   };
+  const handleClickIcon = (index,mode)=>{
+    setModeEditPoint(mode);
+    setIndexSelectPoint(index);
+    setOpenModal(true);
+  };
+  const handleCloseModal = ()=>{
+    setOpenModal(false);
+  };
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
   return <>
     {
@@ -52,7 +63,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
             <TableCell key={'empty'} align="right"></TableCell>
             {
               bluePoints.map((bluePoint, index) => <TableCell key={index} align="right">
-                <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>{bluePoint.name?.toUpperCase()}</Typography>
+                <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}><Button onClick={()=>handleClickIcon(index,'blue')} size={'small'} ><EditIcon  fontSize={'small'}  /></Button> {bluePoint.name?.toUpperCase()}</Typography>
               </TableCell>)
             }
             <TableCell key={'average'} align="right">{t('averageTime')}</TableCell>
@@ -66,7 +77,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
             >
               <TableCell component="th" scope="row">
                 <Stack>
-                  <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'success.main': 'secondary.main'}}>{rowNames[index]?.toUpperCase()}</Typography>
+                  <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'success.main': 'secondary.main'}}><Button onClick={()=>handleClickIcon(index,'red')} size={'small'} ><EditIcon sx= {{ color: index=== shortestRouteIndex ? theme => theme.palette.success.main : theme => theme.palette.secondary.main}} fontSize={'small'} /></Button> {rowNames[index]?.toUpperCase()}</Typography>
                   <Typography variant='body2' sx={{color: index === shortestRouteIndex ? 'success.main': grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
                 </Stack>
               </TableCell>
@@ -86,6 +97,13 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
           ))}
         </TableBody>
       </Table>
+    }
+    { openModal && <ModalEditPoint 
+      allPoints={allPoints}
+      onChangePoints={onChangePoints}
+      indexPointSelect={indexSelectPoint}
+      onClose={handleCloseModal} 
+      mode={modeEditPoint} />
     }
   </>;
 };
@@ -108,7 +126,8 @@ DirectionsTable.propTypes = {
   }).isRequired,
   onChangeNearestRedPoint: PropTypes.func.isRequired,
   onChangeHover: PropTypes.func.isRequired,
-  onChangeIdHoverPoint: PropTypes.func.isRequired
+  onChangeIdHoverPoint: PropTypes.func.isRequired,
+  onChangePoints: PropTypes.func.isRequired
 };
 
 export default DirectionsTable;

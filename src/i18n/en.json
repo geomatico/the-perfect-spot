@@ -29,5 +29,8 @@
   "remove_origin": "Remove a possible spot",
   "remove_poi": "Remove a point",
   "search": "Search...",
-  "transportType": "How do you travel?"
+  "transportType": "How do you travel?",
+  "editNameBluePoint": "Edit the name of the blue point",
+  "editNameRedPoint": "Edit the name of the red point",
+  "saveNamePoint": "Save"
 }
