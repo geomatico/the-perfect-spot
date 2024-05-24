@@ -1,5 +1,6 @@
 let _cache = {};
 
+let requestError= false ;
 export default {
   get: (url) => {
     return _cache[url] ?
@@ -29,11 +30,16 @@ export default {
     }).then(response => {
       if (response.status === 200 && response.ok) {
         return response.json();
-      } else {
+      }else if (response.status === 429){
+        requestError = true;
+      }else {
         return Promise.reject({message: response.statusText});
       }
     }).catch(response => {
       return Promise.reject(response.message);
     });
+  },
+  getError : () =>{
+    return requestError;
   }
 };

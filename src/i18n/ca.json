@@ -29,5 +29,7 @@
   "remove_origin": "Elimina un possible spot",
   "remove_poi": "Elimina un punt",
   "search": "Cerca...",
-  "transportType": "Com et desplaces?"
+  "transportType": "Com et desplaces?",
+  "requestLimit" : "S'ha acabat el límit de peticions. Si us plau espere",
+  "seconds": "segons per continuar"
 }

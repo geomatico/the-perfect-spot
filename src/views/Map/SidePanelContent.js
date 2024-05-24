@@ -10,14 +10,15 @@ import Geomatico from '../../components/Geomatico';
 import {getDirections, getInfo} from '../../utils/ors';
 import {useTranslation} from 'react-i18next';
 import Typography from '@mui/material/Typography';
-
+import http from '../../utils/http';
+import LoadingError from '../../components/LoadingError';
 const ScrollableContent = styled(Box)({
   overflow: 'auto',
   padding: '8px',
 });
 
 const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculatedRoutes, allPoints, onChangePoints}) => {
-
+  const requestError = http.getError();
   const {t} = useTranslation();
   const transportOptions = [
     {
@@ -130,6 +131,7 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
         />          
       </Box>
     </ScrollableContent>
+    { requestError && <LoadingError />}
     <Geomatico/>
   </Stack>;
 };
