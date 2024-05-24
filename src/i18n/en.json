@@ -28,8 +28,8 @@
   "removeButton": "Delete all points",
   "remove_origin": "Remove a possible spot",
   "remove_poi": "Remove a point",
-  "search": "Search...",
-  "transportType": "How do you travel?",
   "requestLimit": "It has reached the request limit. Please wait",
-  "seconds": "seconds to continue"
+  "search": "Search...",
+  "seconds": "seconds to continue",
+  "transportType": "How do you travel?"
 }
