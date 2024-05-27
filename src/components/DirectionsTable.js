@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import {useTranslation} from 'react-i18next';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { grey,green} from '@mui/material/colors';
-import { lighten } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
-import Button from '@mui/material/Button';
 import ModalEditPoint from './ModalEditPoint';
+import Box from '@mui/material/Box';
+
+import {grey, green} from '@mui/material/colors';
+import {lighten} from '@mui/material';
+
+import {useTranslation} from 'react-i18next';
+
 const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, onChangePoints}) => {
   
   const{t} = useTranslation();
@@ -63,7 +68,14 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
             <TableCell key={'empty'} align="right"></TableCell>
             {
               bluePoints.map((bluePoint, index) => <TableCell key={index} align="right">
-                <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}><Button onClick={()=>handleClickIcon(index,'blue')} size={'small'} ><EditIcon  fontSize={'small'}  /></Button> {bluePoint.name?.toUpperCase()}</Typography>
+                <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                  <IconButton onClick={()=>handleClickIcon(index,'blue')} size='small'>
+                    <EditIcon sx={{color: 'primary.main'}} fontSize='small'/>
+                  </IconButton>
+                  <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
+                    {bluePoint.name?.toUpperCase()}
+                  </Typography>
+                </Box>
               </TableCell>)
             }
             <TableCell key={'average'} align="right">{t('averageTime')}</TableCell>
@@ -77,7 +89,14 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
             >
               <TableCell component="th" scope="row">
                 <Stack>
-                  <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'success.main': 'secondary.main'}}><Button onClick={()=>handleClickIcon(index,'red')} size={'small'} ><EditIcon sx= {{ color: index=== shortestRouteIndex ? theme => theme.palette.success.main : theme => theme.palette.secondary.main}} fontSize={'small'} /></Button> {rowNames[index]?.toUpperCase()}</Typography>
+                  <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                    <IconButton onClick={()=>handleClickIcon(index,'red')} size='small'>
+                      <EditIcon sx= {{ color: index=== shortestRouteIndex ? theme => theme.palette.success.main : theme => theme.palette.secondary.main}} fontSize='small'/>
+                    </IconButton>
+                    <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'success.main': 'secondary.main'}}>
+                      {rowNames[index]?.toUpperCase()}
+                    </Typography>
+                  </Box>
                   <Typography variant='body2' sx={{color: index === shortestRouteIndex ? 'success.main': grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
                 </Stack>
               </TableCell>
