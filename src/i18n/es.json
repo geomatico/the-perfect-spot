@@ -12,6 +12,8 @@
   "done": "Hecho",
   "driving-car": "En coche",
   "driving-hgv": "Transporte público",
+  "editNameBluePoint": "Edita el nombre del punto azul",
+  "editNameRedPoint": "Edita el nombre del punto rojo",
   "editor": "Puntos de interés",
   "finalPoints": "Posibles spots",
   "find_the": "Encuentra el ",
@@ -30,7 +32,11 @@
   "removeButton": "Borrar todos los puntos",
   "remove_origin": "Elimina un posible spot",
   "remove_poi": "Elimina un punto",
+<<<<<<< 47-edit-name-point
+  "saveNamePoint": "Guardar",
+=======
   "requestLimit": "Se ha terminado el límite de peticiones. Por favor espere",
+>>>>>>> main
   "search": "Busca...",
   "seconds": "segundos para continuar",
   "transportType": "¿Cómo te desplazas?"

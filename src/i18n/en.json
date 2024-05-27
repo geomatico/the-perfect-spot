@@ -12,6 +12,8 @@
   "done": "Done",
   "driving-car": "Driving car",
   "driving-hgv": "Public transport",
+  "editNameBluePoint": "Edit the name of the blue point",
+  "editNameRedPoint": "Edit the name of the red point",
   "editor": "Site editor",
   "finalPoints": "Posibles spots",
   "find_the": "Find the ",
@@ -30,7 +32,11 @@
   "removeButton": "Delete all points",
   "remove_origin": "Remove a possible spot",
   "remove_poi": "Remove a point",
+<<<<<<< 47-edit-name-point
+  "saveNamePoint": "Save",
+=======
   "requestLimit": "It has reached the request limit. Please wait",
+>>>>>>> main
   "search": "Search...",
   "seconds": "seconds to continue",
   "transportType": "How do you travel?"
