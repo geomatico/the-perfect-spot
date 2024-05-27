@@ -28,6 +28,8 @@
   "removeButton": "Esborrar tots els punts",
   "remove_origin": "Elimina un possible spot",
   "remove_poi": "Elimina un punt",
+  "requestLimit": "S'ha acabat el límit de peticions. Si us plau espere",
   "search": "Cerca...",
+  "seconds": "segons per continuar",
   "transportType": "Com et desplaces?"
 }

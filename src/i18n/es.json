@@ -28,6 +28,8 @@
   "removeButton": "Borrar todos los puntos",
   "remove_origin": "Elimina un posible spot",
   "remove_poi": "Elimina un punto",
+  "requestLimit": "Se ha terminado el límite de peticiones. Por favor espere",
   "search": "Busca...",
+  "seconds": "segundos para continuar",
   "transportType": "¿Cómo te desplazas?"
 }
