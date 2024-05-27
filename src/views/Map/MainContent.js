@@ -48,7 +48,24 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
   const {t, i18n} = useTranslation();
 
   const mapRef = useRef();
-  const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
+  const flyTo = bbox => {
+    console.log(bbox);
+    if (mapRef.current) {
+      const currentPitch = mapRef.current.getPitch();
+      const currentBearing = mapRef.current.getBearing();
+      console.log(currentBearing);
+      console.log(currentPitch);
+      mapRef.current?.fitBounds(bbox, {duration: 1000});
+
+      setTimeout(() => {
+        mapRef.current.easeTo({
+          pitch: currentPitch,
+          bearing: currentBearing,
+          duration: 1000
+        });
+      }, 500);
+    }
+  };
   const handleSearchResult = ({bbox}) => flyTo(bbox);
   const [text, setText] = useState(t('point'));
 
