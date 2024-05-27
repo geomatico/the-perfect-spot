@@ -20,8 +20,10 @@
   "foot-walking": "Foot walking",
   "goBack": "Go back",
   "image": "Image",
-  "insertFLATName": "Name of a possible spot (Ex: Rooftop 850€)",
-  "insertPOIName": "Name of one of my places (Ex: My parent's home)",
+  "insertBlueExample": "(Ex: My parent's home)",
+  "insertBlueName": "Name of one of my places:",
+  "insertRedExample": "(Ex: Rooftop 850€)",
+  "insertRedName": "Name of a possible spot:",
   "mandatoryField": "Mandatory field",
   "map": "Map",
   "originPoints": "My places",
@@ -30,7 +32,12 @@
   "removeButton": "Delete all points",
   "remove_origin": "Remove a possible spot",
   "remove_poi": "Remove a point",
+<<<<<<< 47-edit-name-point
   "saveNamePoint": "Save",
+=======
+  "requestLimit": "It has reached the request limit. Please wait",
+>>>>>>> main
   "search": "Search...",
+  "seconds": "seconds to continue",
   "transportType": "How do you travel?"
 }

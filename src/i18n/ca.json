@@ -20,8 +20,10 @@
   "foot-walking": "Caminant",
   "goBack": "Tornar enrere",
   "image": "Imatge",
-  "insertFLATName": "Nom de possible spot (Ex: Àtic xulo 850€)",
-  "insertPOIName": "Nom del meu lloc important (Ej: Casa de mons pares)",
+  "insertBlueExample": "(Ej: Casa de mons pares)",
+  "insertBlueName": "Nom del meu lloc important:",
+  "insertRedExample": "(Ex: Àtic xulo 850€)",
+  "insertRedName": "Nom de possible spot:",
   "mandatoryField": "Camp obligatori",
   "map": "Mapa",
   "originPoints": "My places",
@@ -30,7 +32,12 @@
   "removeButton": "Esborrar tots els punts",
   "remove_origin": "Elimina un possible spot",
   "remove_poi": "Elimina un punt",
+<<<<<<< 47-edit-name-point
   "saveNamePoint": "Guardar",
+=======
+  "requestLimit": "S'ha acabat el límit de peticions. Si us plau espere",
+>>>>>>> main
   "search": "Cerca...",
+  "seconds": "segons per continuar",
   "transportType": "Com et desplaces?"
 }

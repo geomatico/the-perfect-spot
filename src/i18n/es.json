@@ -20,8 +20,10 @@
   "foot-walking": "Caminando",
   "goBack": "Ir atrás",
   "image": "Imagen",
-  "insertFLATName": "Nombre de posible spot (Ej: Ático chulo 850€)",
-  "insertPOIName": "Nombre de mi sitio importante (Ej: Casa de mis padres)",
+  "insertBlueExample": "(Ej: Casa de mis padres)",
+  "insertBlueName": "Elige un nombre de mi sitio importante:",
+  "insertRedExample": "(Ej: Ático chulo 850€)",
+  "insertRedName": "Elige un nombre de posible spot:",
   "mandatoryField": "Campo obligatorio",
   "map": "Mapa",
   "originPoints": "Mis sitios importantes",
@@ -30,7 +32,12 @@
   "removeButton": "Borrar todos los puntos",
   "remove_origin": "Elimina un posible spot",
   "remove_poi": "Elimina un punto",
+<<<<<<< 47-edit-name-point
   "saveNamePoint": "Guardar",
+=======
+  "requestLimit": "Se ha terminado el límite de peticiones. Por favor espere",
+>>>>>>> main
   "search": "Busca...",
+  "seconds": "segundos para continuar",
   "transportType": "¿Cómo te desplazas?"
 }
