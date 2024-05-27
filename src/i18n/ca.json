@@ -32,11 +32,8 @@
   "removeButton": "Esborrar tots els punts",
   "remove_origin": "Elimina un possible spot",
   "remove_poi": "Elimina un punt",
-<<<<<<< 47-edit-name-point
   "saveNamePoint": "Guardar",
-=======
   "requestLimit": "S'ha acabat el límit de peticions. Si us plau espere",
->>>>>>> main
   "search": "Cerca...",
   "seconds": "segons per continuar",
   "transportType": "Com et desplaces?"

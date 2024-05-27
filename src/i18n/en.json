@@ -32,11 +32,8 @@
   "removeButton": "Delete all points",
   "remove_origin": "Remove a possible spot",
   "remove_poi": "Remove a point",
-<<<<<<< 47-edit-name-point
-  "saveNamePoint": "Save",
-=======
   "requestLimit": "It has reached the request limit. Please wait",
->>>>>>> main
+  "saveNamePoint": "Save",
   "search": "Search...",
   "seconds": "seconds to continue",
   "transportType": "How do you travel?"
