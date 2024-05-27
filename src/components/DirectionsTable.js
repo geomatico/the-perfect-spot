@@ -13,7 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ModalEditPoint from './ModalEditPoint';
 import Box from '@mui/material/Box';
 
-import {grey, green} from '@mui/material/colors';
+import {grey, red} from '@mui/material/colors';
 import {lighten} from '@mui/material';
 
 import {useTranslation} from 'react-i18next';
@@ -85,19 +85,19 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
           {calculatedRoutes.map((row, index) => (
             <TableRow onMouseEnter={()=>handleCellHover(allPoints.red[index].id)} onMouseLeave={()=> handleCellLeave()}
               key={index}
-              sx={{'&:hover': index === shortestRouteIndex ? {bgcolor: lighten(green[400],0.75)} : {bgcolor: 'grey.200'}  , border: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.success.light}`: undefined}}
+              sx={{'&:hover': index === shortestRouteIndex ? {bgcolor: lighten(red[50],0.75)} : {bgcolor: 'grey.200'}  , border: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined}}
             >
               <TableCell component="th" scope="row">
                 <Stack>
                   <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                     <IconButton onClick={()=>handleClickIcon(index,'red')} size='small'>
-                      <EditIcon sx= {{ color: index=== shortestRouteIndex ? theme => theme.palette.success.main : theme => theme.palette.secondary.main}} fontSize='small'/>
+                      <EditIcon sx= {{ color: index=== shortestRouteIndex ? theme => theme.palette.secondary.dark : theme => theme.palette.secondary.main}} fontSize='small'/>
                     </IconButton>
-                    <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'success.main': 'secondary.main'}}>
+                    <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark': 'secondary.main'}}>
                       {rowNames[index]?.toUpperCase()}
                     </Typography>
                   </Box>
-                  <Typography variant='body2' sx={{color: index === shortestRouteIndex ? 'success.main': grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
+                  <Typography variant='body2' sx={{color: index === shortestRouteIndex ? 'secondary.dark': grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
                 </Stack>
               </TableCell>
               {

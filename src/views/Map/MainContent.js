@@ -187,9 +187,9 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         source: 'nearestRedPoint',
         type: 'circle',
         paint: {
-          'circle-color': '#5AA469',
+          'circle-color': '#d00000',
           'circle-radius': 14,
-          'circle-stroke-color': '#FFFFFF',
+          'circle-stroke-color': '#d00000',
           'circle-stroke-width': 2,
         }
       }
