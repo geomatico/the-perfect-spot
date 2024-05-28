@@ -5,7 +5,8 @@ const ors_api = 'https://api.openrouteservice.org/v2/matrix/';
 export const ors_modes = {
   'foot-walking': 'foot-walking',
   'cycling-regular': 'cycling-regular',
-  'driving-car': 'driving-car'
+  'driving-car': 'driving-car',
+  'driving-hgv':'driving-hgv'
 };
 
 const getRange =(start, end)=> {
