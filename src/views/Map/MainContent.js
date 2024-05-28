@@ -102,7 +102,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
           properties: {},
           geometry:{
             type: 'Point',
-            coordinates: [allPoints?.red[nearestRedPoint]?.lng, allPoints?.red[nearestRedPoint]?.lat] 
+            coordinates: !hover || idHoverPoint === allPoints?.red[nearestRedPoint].id ? [allPoints?.red[nearestRedPoint]?.lng, allPoints?.red[nearestRedPoint]?.lat] : empty
           }
         }
       ]
@@ -187,9 +187,9 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         source: 'nearestRedPoint',
         type: 'circle',
         paint: {
-          'circle-color': '#5AA469',
+          'circle-color': '#d00000',
           'circle-radius': 14,
-          'circle-stroke-color': '#FFFFFF',
+          'circle-stroke-color': '#d00000',
           'circle-stroke-width': 2,
         }
       }
@@ -368,11 +368,13 @@ MainContent.propTypes = {
   onChangePoints: PropTypes.func.isRequired,
   allPoints: PropTypes.shape({
     red: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
     })).isRequired,
     blue: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
