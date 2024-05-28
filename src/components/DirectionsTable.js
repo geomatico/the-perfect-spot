@@ -12,13 +12,18 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import ModalEditPoint from './ModalEditPoint';
 import Box from '@mui/material/Box';
-
+import StraightenIcon from '@mui/icons-material/Straighten';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {grey, red} from '@mui/material/colors';
 import {lighten} from '@mui/material';
 
 import {useTranslation} from 'react-i18next';
 
-const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, onChangePoints}) => {
+const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, onChangePoints, typeTransport}) => {
   
   const{t} = useTranslation();
   const [openModal,setOpenModal] = useState(null);
@@ -59,71 +64,98 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     setOpenModal(false);
   };
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
+  const transportIcons = {
+    'foot-walking': <DirectionsRunIcon />,
+    'cycling-regular': <DirectionsBikeIcon />,
+    'driving-car': <DirectionsCarIcon />,
+    'driving-hgv': <DirectionsBusIcon />
+  };
   return <>
-    {
-      calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length &&
-      <Table sx={{minWidth: 300}} aria-label="simple table">
+    {calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length && allPoints.red.length && (
+      <Table sx={{ minWidth: 300 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell key={'empty'} align="right"></TableCell>
-            {
-              bluePoints.map((bluePoint, index) => <TableCell key={index} align="right">
-                <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                  <IconButton onClick={()=>handleClickIcon(index,'blue')} size='small'>
-                    <EditIcon sx={{color: 'primary.main'}} fontSize='small'/>
+            <TableCell key="empty" align="right"></TableCell>
+            {bluePoints.map((bluePoint, index) => (
+              <TableCell key={index} align="right">
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                  <IconButton onClick={() => handleClickIcon(index, 'blue')} size="small">
+                    <EditIcon sx={{ color: 'primary.main' }} fontSize="small" />
                   </IconButton>
-                  <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
+                  <Typography sx={{ fontWeight: 'bold', color: 'primary.main', wordWrap: 'break-word' , whiteSpace:'normal', maxWidth:200}}>
                     {bluePoint.name?.toUpperCase()}
                   </Typography>
                 </Box>
-              </TableCell>)
-            }
-            <TableCell key={'average'} align="right">{t('averageTime')}</TableCell>
+              </TableCell>
+            ))}
+            <TableCell key="average" align="right">
+              <span style={{display:'flex', flexWrap:'wrap', alignContent:'center'}}>
+                {t('averageTime')}
+                {transportIcons[typeTransport]}
+
+              </span>
+
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {calculatedRoutes.map((row, index) => (
-            <TableRow onMouseEnter={()=>handleCellHover(allPoints.red[index].id)} onMouseLeave={()=> handleCellLeave()}
+            <TableRow
               key={index}
-              sx={{'&:hover': index === shortestRouteIndex ? {bgcolor: lighten(red[50],0.75)} : {bgcolor: 'grey.200'}  , border: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined}}
+              onMouseEnter={() => handleCellHover(allPoints.red[index].id)}
+              onMouseLeave={handleCellLeave}
+              sx={{
+                '&:hover': index === shortestRouteIndex
+                  ? { bgcolor: lighten(red[50], 0.75) }
+                  : { bgcolor: 'grey.200' },
+                border: index === shortestRouteIndex
+                  ? theme => `2px solid ${theme.palette.secondary.dark}`
+                  : undefined,
+              }}
             >
               <TableCell component="th" scope="row">
                 <Stack>
-                  <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                    <IconButton onClick={()=>handleClickIcon(index,'red')} size='small'>
-                      <EditIcon sx= {{ color: index=== shortestRouteIndex ? theme => theme.palette.secondary.dark : theme => theme.palette.secondary.main}} fontSize='small'/>
+                  <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <IconButton onClick={() => handleClickIcon(index, 'red')} size="small">
+                      <EditIcon sx={{ color: index === shortestRouteIndex ? 'secondary.dark' : 'secondary.main' }} fontSize="small" />
                     </IconButton>
-                    <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark': 'secondary.main'}}>
+                    <Typography sx={{ fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark' : 'secondary.main' ,  wordBreak: 'break-word',
+                      whiteSpace: 'normal',overflowWrap: 'break-word',
+                      maxWidth: 200}}>
                       {rowNames[index]?.toUpperCase()}
                     </Typography>
                   </Box>
-                  <Typography variant='body2' sx={{color: index === shortestRouteIndex ? 'secondary.dark': grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
+                  <Typography variant="body2" sx={{ color: index === shortestRouteIndex ? 'secondary.dark' : grey[500], fontStyle: 'italic' }}>
+                    {row.name}
+                  </Typography>
                 </Stack>
               </TableCell>
-              {
-                row.data.map((data) => (
-                  <TableCell  key={data} align="right">{
-                    data.map((value, index ) => (
-                      <span key={value}>{value + (index === 0 ? 'km' : 'min')}<br/></span>
-                    ))
-                  }</TableCell>
-                ))
-              }
+              {row.data.map((d, i) => (
+                <TableCell key={i} align="center">
+                  {d.map((x, i) => (
+                    <span key={x} style={{ display: 'flex', alignItems: 'center',margin:'auto',width:100}}>
+                      <span style={{ marginRight: 10, display: 'flex', alignItems: 'center',}}>
+                        {i === 0 && <StraightenIcon />}
+                        {i === 1 && <AccessTimeIcon />}
+                      </span>
+                      {x + (i === 0 ? 'km' : 'min')}
+                    </span>
+                  ))}
+                </TableCell>
+              ))}
               <TableCell component="th" scope="row" align="center">
-                {row.data.avg} min
+                <span style={{display:'flex', alignItems:'center'}}>
+                  {row.data.avg} min <AccessTimeIcon sx={{ fontSize: 30, marginLeft:1 }} />
+                </span>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    }
-    { openModal && <ModalEditPoint 
-      allPoints={allPoints}
-      onChangePoints={onChangePoints}
-      indexPointSelect={indexSelectPoint}
-      onClose={handleCloseModal} 
-      mode={modeEditPoint} />
-    }
+    )}
+    {openModal && (
+      <ModalEditPoint allPoints={allPoints} onChangePoints={onChangePoints} indexPointSelect={indexSelectPoint} onClose={handleCloseModal} mode={modeEditPoint} />
+    )}
   </>;
 };
 
@@ -146,7 +178,8 @@ DirectionsTable.propTypes = {
   onChangeNearestRedPoint: PropTypes.func.isRequired,
   onChangeHover: PropTypes.func.isRequired,
   onChangeIdHoverPoint: PropTypes.func.isRequired,
-  onChangePoints: PropTypes.func.isRequired
+  onChangePoints: PropTypes.func.isRequired,
+  typeTransport: PropTypes.string.isRequired
 };
 
 export default DirectionsTable;

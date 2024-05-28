@@ -14,13 +14,14 @@ const Map = () => {
   const [hover, setHover] = useState(false);
   const [idHoverPoint,setIdHoverPoint] = useState(null);
   const [allPoints,setAllPoints] = useState(localStorage.getItem('ThePerfectSpot') ? JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
-
+  const [typeTransport, setTypeTransport] = useState('foot-walking');
   const sidePanelContent = <SidePanelContent
     onChangeModePoints={setMode}
     onRoutesChange={setRoutes}
     onChangeCalculatedRoutes={setCalculatedRoutes}
     allPoints={allPoints}
     onChangePoints={setAllPoints}
+    onChangeTypeTransport = {setTypeTransport}
   />;
 
   const mainContent = <MainContent
@@ -35,6 +36,7 @@ const Map = () => {
     onChangeHover={setHover}
     idHoverPoint={idHoverPoint}
     onChangeIdHoverPoint={setIdHoverPoint}
+    typeTransport={typeTransport}
   />;
 
   return <Layout
