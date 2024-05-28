@@ -65,10 +65,10 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
   };
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
   const transportIcons = {
-    'foot-walking': <DirectionsRunIcon />,
-    'cycling-regular': <DirectionsBikeIcon />,
-    'driving-car': <DirectionsCarIcon />,
-    'driving-hgv': <DirectionsBusIcon />
+    'foot-walking': <DirectionsRunIcon sx={{color:grey[700]}}/>,
+    'cycling-regular': <DirectionsBikeIcon sx={{color:grey[700]}}/>,
+    'driving-car': <DirectionsCarIcon sx={{color:grey[700]}}/>,
+    'driving-hgv': <DirectionsBusIcon sx={{color:grey[700]}}/>
   };
   return <>
     {calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length && allPoints.red.length && (
@@ -115,7 +115,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
             >
               <TableCell component="th" scope="row">
                 <Stack>
-                  <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                     <IconButton onClick={() => handleClickIcon(index, 'red')} size="small">
                       <EditIcon sx={{ color: index === shortestRouteIndex ? 'secondary.dark' : 'secondary.main' }} fontSize="small" />
                     </IconButton>
@@ -135,8 +135,8 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
                   {d.map((x, i) => (
                     <span key={x} style={{ display: 'flex', alignItems: 'center',margin:'auto',width:100}}>
                       <span style={{ marginRight: 10, display: 'flex', alignItems: 'center',}}>
-                        {i === 0 && <StraightenIcon />}
-                        {i === 1 && <AccessTimeIcon />}
+                        {i === 0 && <StraightenIcon sx={{color:grey[700]}}/>}
+                        {i === 1 && <AccessTimeIcon sx={{color:grey[700]}}/>}
                       </span>
                       {x + (i === 0 ? 'km' : 'min')}
                     </span>
@@ -145,7 +145,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
               ))}
               <TableCell component="th" scope="row" align="center">
                 <span style={{display:'flex', alignItems:'center'}}>
-                  {row.data.avg} min <AccessTimeIcon sx={{ fontSize: 30, marginLeft:1 }} />
+                  {row.data.avg} min <AccessTimeIcon sx={{ fontSize: 30, marginLeft:1, color:grey[700] }} />
                 </span>
               </TableCell>
             </TableRow>
