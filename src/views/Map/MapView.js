@@ -21,6 +21,7 @@ const Map = () => {
     onChangeCalculatedRoutes={setCalculatedRoutes}
     allPoints={allPoints}
     onChangePoints={setAllPoints}
+    mode={mode}
   />;
 
   const mainContent = <MainContent

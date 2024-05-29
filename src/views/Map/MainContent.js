@@ -6,8 +6,6 @@ import {
   ADD_RED_MODE,
   ADD_BLUE_MODE,
   INITIAL_VIEWPORT,
-  REMOVE_RED_MODE,
-  REMOVE_BLUE_MODE
 } from '../../config';
 import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
@@ -212,13 +210,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       });
       
       handleOpen();
-    } else if (mode === REMOVE_BLUE_MODE) {
-      
-      onChangePoints(prevState => ({
-        ...prevState, blue : prevState.blue.filter((p, i) => i !== e.features[0].id)
-      }));
-
-    } else if (mode === ADD_RED_MODE) {
+    }  else if (mode === ADD_RED_MODE) {
       
       onChangePoints({
         ...allPoints,
@@ -234,13 +226,22 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       
       handleOpen();
 
-    } else if (mode === REMOVE_RED_MODE) {
-      onChangePoints(prevState => ({
-        ...prevState, red: prevState.red.filter((p, i) => i !== e.features[0].id)
-      }));
+    } else if (mode === 'REMOVE') {
+      const {point} = e;
+      const features = mapRef.current.queryRenderedFeatures(point, {
+        layers: ['redPoints', 'bluePoints']
+      });
+      if (features[0]) {
+        features[0].source === 'bluePoints' ?  onChangePoints({
+          ...allPoints, blue : allPoints.blue.filter((p, i) => i !== features[0].id)
+        }) : onChangePoints({
+          ...allPoints, red: allPoints.red.filter((p, i) => i !== features[0].id)
+        });
+      }
+     
     }
   };
- 
+  
   useEffect(()=>{
     localStorage.setItem('ThePerfectSpot',JSON.stringify(allPoints));
     onChangePoints(allPoints);
@@ -249,6 +250,14 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
 
   useEffect(() => {
     setCursor(mode === ADD_BLUE_MODE ? 'pointer' : 'auto');
+
+    if (mode === 'REMOVE') {
+      setCursor('crosshair');
+    }else if(mode === ADD_BLUE_MODE || ADD_RED_MODE){
+      setCursor('pointer');
+    }else{
+      setCursor('auto');
+    }
   }, [mode]);
 
   const onMouseEnter = useCallback(() => {
@@ -256,16 +265,6 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
   }, []);
   const onMouseLeave = useCallback(() => setCursor('auto'), []);
 
-  // habilita/deshabilita capas segun el modo seleccionado
-  const calculateInteractiveLayers = () => {
-    if (mode === REMOVE_BLUE_MODE) {
-      return ['bluePoints'];
-    } else if (mode === REMOVE_RED_MODE) {
-      return ['redPoints'];
-    } else {
-      return undefined;
-    }
-  };
 
   const handleChangeText = (x) => {
     setText(x);
@@ -330,7 +329,6 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       sources={sources}
       layers={layers}
       onViewportChange={setViewport}
-      interactiveLayerIds={calculateInteractiveLayers()}
       cursor={cursor}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -354,7 +352,10 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints} onChangeNearestRedPoint={setNearestRedPoint} onChangeHover={onChangeHover} onChangeIdHoverPoint={onChangeIdHoverPoint} onChangePoints={onChangePoints}/>
+      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints}
+        onChangeNearestRedPoint={setNearestRedPoint} onChangeHover={onChangeHover} 
+        onChangeIdHoverPoint={onChangeIdHoverPoint} onChangePoints={onChangePoints}
+        mode={mode}/>
     </div>
   </>;
 };

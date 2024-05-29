@@ -9,17 +9,27 @@ import ButtonGroupList from '@geomatico/geocomponents/ButtonGroupList';
 // UTILS
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/AddLocationAlt';
-import RemoveIcon from '@mui/icons-material/WrongLocation';
-function PointsSidePanels({onChangePoints, onChangeModePoints}) {
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+function PointsSidePanels({onChangePoints, onChangeModePoints, mode}) {
   const { t } = useTranslation();
  
   const [selectedMode, setSelectedMode] = useState('BLUE-ADD_');
   const handlePointClick = (newMode) => {
     if (newMode) {
+      const splitMode = newMode.split('-');
       setSelectedMode(newMode);
-      const modeSort = newMode.split('-');
-      const changeMode= modeSort[1] + modeSort[0];
-      onChangeModePoints(changeMode);
+      onChangeModePoints(splitMode[1]);
+    }
+  };
+
+  const handlePointClickEdit = (newMode) =>{
+    if (newMode) {
+      setSelectedMode(newMode);
+      newMode === 'Edit-REMOVE' ?
+        onChangeModePoints('REMOVE'): onChangeModePoints('EDIT');
+      
     }
   };
   const [openModal, setOpenModal] = useState(false);
@@ -28,7 +38,7 @@ function PointsSidePanels({onChangePoints, onChangeModePoints}) {
   };
   const buttonGroupItems = [
     {
-      id: 'ADD_',
+      id: 'ADD_BLUE',
       content: 
         <Tooltip title={t('add_poi')}>
           <AddIcon />
@@ -36,24 +46,45 @@ function PointsSidePanels({onChangePoints, onChangeModePoints}) {
       
     },
     {
-      id: 'REMOVE_',
+      id: 'ADD_RED',
       content: 
-        <Tooltip title={t('remove_poi')}>
-          <RemoveIcon />
+        <Tooltip title={t('add_origin')}>
+          <AddIcon />
         </Tooltip>
       
     },
   ];
 
+  const buttonGroupEdit = [
+    {
+      id: 'EDIT',
+      content:
+       <Tooltip title={'editar'} >
+         <EditIcon />
+       </Tooltip>
+
+    },
+    {
+      id:'REMOVE',
+      content: 
+        <Tooltip title={'ELimina'}>
+          <DeleteIcon />
+        </Tooltip>
+    }
+  ];
+
+  const categoriesGroupEdit =[
+    {
+      id: 'Edit',
+      description: <Typography> </Typography>,
+    }
+  ];
+
 
   const categories = [
     {
-      id: 'BLUE',
-      description: <Typography>{t('originPoints')}</Typography>,
-    },
-    {
-      id: 'RED',
-      description: <Typography>{t('finalPoints')}</Typography>,
+      id: 'Points',
+      description: <Typography>{t('addPoint')}</Typography>,
     },
   ];
 
@@ -96,12 +127,21 @@ function PointsSidePanels({onChangePoints, onChangeModePoints}) {
   return (
     <>
       <ButtonGroupList
+        disabled = {mode === 'EDIT' ? true : false}
         buttonGroupVariant='outlined'
         categories={categories}
         buttonGroupItems={buttonGroupItems}
         selectedItemId={selectedMode}
         onItemClick={handlePointClick}
         sx={customSx}
+      />
+
+      <ButtonGroupList 
+        buttonGroupVariant = 'outlined'
+        categories ={categoriesGroupEdit}
+        buttonGroupItems={buttonGroupEdit}
+        selectedItemId = {selectedMode}
+        onItemClick= {handlePointClickEdit}
       />
      
       <Button
@@ -128,6 +168,7 @@ function PointsSidePanels({onChangePoints, onChangeModePoints}) {
 PointsSidePanels.propTypes = {
   onChangePoints: PropTypes.func.isRequired,
   onChangeModePoints: PropTypes.func.isRequired,
+  mode: PropTypes.string.isRequired
 };
 
 export default PointsSidePanels;

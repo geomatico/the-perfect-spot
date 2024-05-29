@@ -12,13 +12,13 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import ModalEditPoint from './ModalEditPoint';
 import Box from '@mui/material/Box';
-
+import TextField from '@mui/material/TextField';
 import {grey, red} from '@mui/material/colors';
 import {lighten} from '@mui/material';
 
 import {useTranslation} from 'react-i18next';
 
-const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, onChangePoints}) => {
+const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, onChangePoints, mode}) => {
   
   const{t} = useTranslation();
   const [openModal,setOpenModal] = useState(null);
@@ -58,6 +58,19 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
   const handleCloseModal = ()=>{
     setOpenModal(false);
   };
+  const handleEditPoint = (name,index,mode) =>{
+    const pointUpdated = mode === 'red' ? allPoints.red[index] : allPoints.blue[index];
+    pointUpdated.name = name;
+    onChangePoints({
+      ...allPoints,red: allPoints.red.filter((point,i)=>{
+        if (i === index) {
+          return pointUpdated;
+        }else{
+          return point;
+        }
+      })
+    });
+  };
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
   return <>
     {
@@ -93,9 +106,9 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
                     <IconButton onClick={()=>handleClickIcon(index,'red')} size='small'>
                       <EditIcon sx= {{ color: index=== shortestRouteIndex ? theme => theme.palette.secondary.dark : theme => theme.palette.secondary.main}} fontSize='small'/>
                     </IconButton>
-                    <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark': 'secondary.main'}}>
+                    { mode === 'EDIT'? <TextField  size='small' value={rowNames[index]?.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value)}/>: <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark': 'secondary.main'}}>
                       {rowNames[index]?.toUpperCase()}
-                    </Typography>
+                    </Typography>}
                   </Box>
                   <Typography variant='body2' sx={{color: index === shortestRouteIndex ? 'secondary.dark': grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
                 </Stack>
@@ -146,7 +159,8 @@ DirectionsTable.propTypes = {
   onChangeNearestRedPoint: PropTypes.func.isRequired,
   onChangeHover: PropTypes.func.isRequired,
   onChangeIdHoverPoint: PropTypes.func.isRequired,
-  onChangePoints: PropTypes.func.isRequired
+  onChangePoints: PropTypes.func.isRequired,
+  mode: PropTypes.string.isRequired
 };
 
 export default DirectionsTable;

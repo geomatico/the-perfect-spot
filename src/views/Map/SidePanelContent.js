@@ -17,7 +17,7 @@ const ScrollableContent = styled(Box)({
   padding: '8px',
 });
 
-const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculatedRoutes, allPoints, onChangePoints}) => {
+const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculatedRoutes, allPoints, onChangePoints, mode}) => {
   const requestError = http.getError();
   const {t} = useTranslation();
   const transportOptions = [
@@ -120,6 +120,7 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
         <Typography variant='overline'>{t('transportType')}</Typography>
         <SelectInput
           options={transportOptions}
+          disabled={true}
           selectedOptionId={transportation}
           onOptionChange={handleTransportationType} minWidth='100%'/>
       </Box>
@@ -128,6 +129,7 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
         <PointsSidePanels 
           onChangeModePoints={onChangeModePoints}
           onChangePoints={onChangePoints}
+          mode={mode}
         />          
       </Box>
     </ScrollableContent>
@@ -155,7 +157,8 @@ SidePanelContent.propTypes = {
       name: PropTypes.string
     })).isRequired,
   }).isRequired,
-  onChangePoints: PropTypes.func.isRequired
+  onChangePoints: PropTypes.func.isRequired,
+  mode: PropTypes.string.isRequired
 };
 
 export default SidePanelContent;
