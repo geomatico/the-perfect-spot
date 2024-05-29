@@ -48,19 +48,12 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
   const {t, i18n} = useTranslation();
 
   const mapRef = useRef();
-  const flyTo = bbox => {
-    const currentPitch = mapRef.current.getPitch();
-    const currentBearing = mapRef.current.getBearing();
-    mapRef.current?.fitBounds(bbox, {duration: 1000});
-    setTimeout(() => {
-      mapRef.current.easeTo({
-        pitch: currentPitch,
-        bearing: currentBearing,
-        duration: 1000
-      });
-    }, 1000);
+  const flyTo = (lat,lon) => {
+    mapRef.current?.flyTo({
+      center: [lon,lat]
+    });
   };
-  const handleSearchResult = ({bbox}) => flyTo(bbox);
+  const handleSearchResult = ({lat,lon}) => flyTo(lat,lon);
   const [text, setText] = useState(t('point'));
 
   const COLOR = mode === ADD_BLUE_MODE ? primaryColor : secondaryColor;
