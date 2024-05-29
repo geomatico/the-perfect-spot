@@ -24,8 +24,8 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
   const [openModal,setOpenModal] = useState(null);
   const [indexSelectPoint,setIndexSelectPoint] = useState(null);
   const [modeEditPoint, setModeEditPoint] = useState(null);
+  const [editedPointNames, setEditedPointNames] = useState(allPoints);
   const bluePoints = allPoints.blue ? allPoints.blue.map(point =>point): [] ;
-
   calculatedRoutes.forEach(function (element) {
     let sum = 0;
     for( var i = 0; i < element.data.length; i++ ){
@@ -58,10 +58,30 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
   const handleCloseModal = ()=>{
     setOpenModal(false);
   };
+
   const handleEditPoint = (name,index,mode) =>{
-    const pointUpdated = mode === 'red' ? allPoints.red[index] : allPoints.blue[index];
-    pointUpdated.name = name;
-    onChangePoints({
+ 
+    const pointsUpdated = mode=== 'red' ? editedPointNames.red.map((point,i)=>{
+      if (i === index) {
+        return {
+          ...point , name:name
+        };
+      }
+      return point;
+    }) : editedPointNames.blue.map((point,i)=>{
+      if (i === index) {
+        return {
+          ...point , name:name
+        };
+      }
+      return point;
+    });
+    mode==='red'? setEditedPointNames({
+      ...editedPointNames,red: pointsUpdated
+    }) : setEditedPointNames({
+      ...editedPointNames,blue: pointsUpdated
+    });
+  /*  onChangePoints({
       ...allPoints,red: allPoints.red.filter((point,i)=>{
         if (i === index) {
           return pointUpdated;
@@ -69,8 +89,12 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
           return point;
         }
       })
-    });
+    });*/
   };
+
+  useEffect(()=>{
+    onChangePoints(editedPointNames);
+  },[mode]);
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
   return <>
     {
@@ -85,9 +109,9 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
                   <IconButton onClick={()=>handleClickIcon(index,'blue')} size='small'>
                     <EditIcon sx={{color: 'primary.main'}} fontSize='small'/>
                   </IconButton>
-                  <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
+                  { mode === 'EDIT'? <TextField  size='small' value={editedPointNames.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>: <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
                     {bluePoint.name?.toUpperCase()}
-                  </Typography>
+                  </Typography>}
                 </Box>
               </TableCell>)
             }
@@ -106,7 +130,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
                     <IconButton onClick={()=>handleClickIcon(index,'red')} size='small'>
                       <EditIcon sx= {{ color: index=== shortestRouteIndex ? theme => theme.palette.secondary.dark : theme => theme.palette.secondary.main}} fontSize='small'/>
                     </IconButton>
-                    { mode === 'EDIT'? <TextField  size='small' value={rowNames[index]?.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value)}/>: <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark': 'secondary.main'}}>
+                    { mode === 'EDIT'? <TextField  size='small' value={editedPointNames.red[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'red')}/>: <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark': 'secondary.main'}}>
                       {rowNames[index]?.toUpperCase()}
                     </Typography>}
                   </Box>
