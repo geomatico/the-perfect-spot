@@ -15,7 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 function PointsSidePanels({onChangePoints, onChangeModePoints, mode}) {
   const { t } = useTranslation();
  
-  const [selectedMode, setSelectedMode] = useState('BLUE-ADD_');
+  const [selectedMode, setSelectedMode] = useState('Points-ADD_BLUE');
   const handlePointClick = (newMode) => {
     if (newMode) {
       const splitMode = newMode.split('-');

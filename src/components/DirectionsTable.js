@@ -8,9 +8,6 @@ import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
-import ModalEditPoint from './ModalEditPoint';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import {grey, red} from '@mui/material/colors';
@@ -21,9 +18,6 @@ import {useTranslation} from 'react-i18next';
 const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, onChangePoints, mode}) => {
   
   const{t} = useTranslation();
-  const [openModal,setOpenModal] = useState(null);
-  const [indexSelectPoint,setIndexSelectPoint] = useState(null);
-  const [modeEditPoint, setModeEditPoint] = useState(null);
   const [editedPointNames, setEditedPointNames] = useState(allPoints);
   const bluePoints = allPoints.blue ? allPoints.blue.map(point =>point): [] ;
   calculatedRoutes.forEach(function (element) {
@@ -50,15 +44,6 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     onChangeHover(false);
     onChangeIdHoverPoint(undefined);
   };
-  const handleClickIcon = (index,mode)=>{
-    setModeEditPoint(mode);
-    setIndexSelectPoint(index);
-    setOpenModal(true);
-  };
-  const handleCloseModal = ()=>{
-    setOpenModal(false);
-  };
-
   const handleEditPoint = (name,index,mode) =>{
  
     const pointsUpdated = mode=== 'red' ? editedPointNames.red.map((point,i)=>{
@@ -81,20 +66,15 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     }) : setEditedPointNames({
       ...editedPointNames,blue: pointsUpdated
     });
-  /*  onChangePoints({
-      ...allPoints,red: allPoints.red.filter((point,i)=>{
-        if (i === index) {
-          return pointUpdated;
-        }else{
-          return point;
-        }
-      })
-    });*/
   };
 
   useEffect(()=>{
     onChangePoints(editedPointNames);
   },[mode]);
+
+  useEffect(()=>{
+    setEditedPointNames(allPoints);
+  },[allPoints]);
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
   return <>
     {
@@ -106,9 +86,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
             {
               bluePoints.map((bluePoint, index) => <TableCell key={index} align="right">
                 <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                  <IconButton onClick={()=>handleClickIcon(index,'blue')} size='small'>
-                    <EditIcon sx={{color: 'primary.main'}} fontSize='small'/>
-                  </IconButton>
+               
                   { mode === 'EDIT'? <TextField  size='small' value={editedPointNames.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>: <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
                     {bluePoint.name?.toUpperCase()}
                   </Typography>}
@@ -127,10 +105,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
               <TableCell component="th" scope="row">
                 <Stack>
                   <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                    <IconButton onClick={()=>handleClickIcon(index,'red')} size='small'>
-                      <EditIcon sx= {{ color: index=== shortestRouteIndex ? theme => theme.palette.secondary.dark : theme => theme.palette.secondary.main}} fontSize='small'/>
-                    </IconButton>
-                    { mode === 'EDIT'? <TextField  size='small' value={editedPointNames.red[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'red')}/>: <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark': 'secondary.main'}}>
+                    { mode === 'EDIT'? <TextField color='secondary' size='small' value={editedPointNames.red[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'red')}/>: <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark': 'secondary.main'}}>
                       {rowNames[index]?.toUpperCase()}
                     </Typography>}
                   </Box>
@@ -153,13 +128,6 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
           ))}
         </TableBody>
       </Table>
-    }
-    { openModal && <ModalEditPoint 
-      allPoints={allPoints}
-      onChangePoints={onChangePoints}
-      indexPointSelect={indexSelectPoint}
-      onClose={handleCloseModal} 
-      mode={modeEditPoint} />
     }
   </>;
 };

@@ -310,7 +310,46 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
     handleClose();
     setText(t('point'));
   };
+ 
+  const onMove = ()=>{
+    setCursor('grabbing');
+  };
 
+  if (mapRef.current) {
+
+    mapRef.current.on('mousedown', 'bluePoints', (e) => {
+      if (!e.point) return;
+      setCursor('grab');
+      e.preventDefault();
+      const indexPoint = e.features[0].id;
+      const onUp = (event) =>{
+        const coords = event.lngLat;
+        console.log('1',allPoints);
+
+        onChangePoints({
+          ...allPoints , blue: allPoints.blue.map((point,idx)=>{
+            if(idx === indexPoint){
+              return {
+                ...point, lat: coords.lat, lng: coords.lng
+              };
+            }
+            return point;
+          })
+        });
+        console.log(allPoints);
+        setCursor('auto');
+        mapRef.current.off('mousemove',onMove);
+        mapRef.current.off('touchmove',onMove);
+      };
+      mapRef.current.on('mousemove',onMove);
+      mapRef.current.once('mouseup', onUp);
+    });
+  } else {
+    console.log('mapRef.current is undefined');
+  }
+  
+
+  
 
   return <>
     <ModalInfo/>

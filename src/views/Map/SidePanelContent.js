@@ -106,9 +106,12 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
 
   };
   useEffect(() => {
-    calculateRoutes(transportation);
-    calculateDirectionsTable(transportation);
-  }, [allPoints.red, allPoints.blue]);
+    if (mode !== 'EDIT') {
+      calculateRoutes(transportation);
+      calculateDirectionsTable(transportation);
+    }
+    
+  }, [allPoints.red, allPoints.blue,mode]);
 
   return <Stack sx={{
     height: '100%',
