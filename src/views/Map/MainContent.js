@@ -311,43 +311,62 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
     setText(t('point'));
   };
  
-  const onMove = ()=>{
-    setCursor('grabbing');
-  };
+ 
+  useEffect(() => {
+    if (mapRef.current && mode === 'EDIT') {
+      const handleMouseDown = (e) => {
+        
+        if (!e.point) return;
+        const indexPointRef = e.features[0].id;
+        
+        setCursor('grab');
+        e.preventDefault();
+        console.log(indexPointRef);
+        const onMove = () => setCursor('grabbing');
 
-  if (mapRef.current) {
+        const onUp = (event) => {
+          console.log('entre');
+          const coords = event.lngLat;
 
-    mapRef.current.on('mousedown', 'bluePoints', (e) => {
-      if (!e.point) return;
-      setCursor('grab');
-      e.preventDefault();
-      const indexPoint = e.features[0].id;
-      const onUp = (event) =>{
-        const coords = event.lngLat;
-        console.log('1',allPoints);
-
-        onChangePoints({
-          ...allPoints , blue: allPoints.blue.map((point,idx)=>{
-            if(idx === indexPoint){
+          if (allPoints.blue[indexPointRef].lat !== coords.lat || allPoints.blue[indexPointRef].lng !== coords.lng) {
+            onChangePoints(prevPoints => {
               return {
-                ...point, lat: coords.lat, lng: coords.lng
+                ...prevPoints,
+                blue: prevPoints.blue.map((point, idx) => {
+                  if (idx === indexPointRef) {
+                    return {
+                      ...point,
+                      lat: coords.lat,
+                      lng: coords.lng
+                    };
+                  }
+                  return point;
+                })
               };
-            }
-            return point;
-          })
-        });
-        console.log(allPoints);
-        setCursor('auto');
-        mapRef.current.off('mousemove',onMove);
-        mapRef.current.off('touchmove',onMove);
+            });
+          }
+
+          mapRef.current.off('mousemove', onMove);
+          mapRef.current.off('mouseup', onUp);
+          mapRef.current.off('touchmove', onMove);
+          setCursor('auto');
+        };
+
+        mapRef.current.on('mousemove', onMove);
+        mapRef.current.once('mouseup', onUp);
       };
-      mapRef.current.on('mousemove',onMove);
-      mapRef.current.once('mouseup', onUp);
-    });
-  } else {
-    console.log('mapRef.current is undefined');
-  }
-  
+
+      mapRef.current.off('mousedown', 'bluePoints', handleMouseDown);
+      mapRef.current.on('mousedown', 'bluePoints', handleMouseDown);
+
+      return () => {
+        mapRef.current.off('mousedown', 'bluePoints', handleMouseDown);
+        mapRef.current.off('mousemove', handleMouseDown);
+        mapRef.current.off('mouseup', handleMouseDown);
+        mapRef.current.off('touchmove', handleMouseDown);
+      };
+    }
+  }, [mapRef, mode, allPoints, onChangePoints, setCursor]);
 
   
 
