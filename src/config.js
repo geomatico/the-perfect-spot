@@ -40,9 +40,5 @@ export const MAPSTYLES = [
 
 export const INITIAL_MAPSTYLE_URL = MAPSTYLES[0].id;
 
-export const ADD_BLUE_MODE = 'ADD_BLUE', REMOVE_BLUE_MODE = 'REMOVE_BLUE', ADD_RED_MODE = 'ADD_RED', REMOVE_RED_MODE = 'REMOVE_RED',EDIT = 'EDIT';
+export const ADD_BLUE_MODE = 'ADD_BLUE',ADD_RED_MODE = 'ADD_RED',EDIT = 'EDIT', REMOVE = 'REMOVE';
 
-
-export const MODES = {
-  EDIT: 'EDIT'
-};

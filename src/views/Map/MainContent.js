@@ -5,7 +5,9 @@ import Map from '@geomatico/geocomponents/Map';
 import {
   ADD_RED_MODE,
   ADD_BLUE_MODE,
+  REMOVE,
   INITIAL_VIEWPORT,
+  EDIT
 } from '../../config';
 import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {useTranslation} from 'react-i18next';
@@ -15,7 +17,7 @@ import ModalInfo from '../../components/ModalInfo';
 import ModalAddPoint from '../../components/ModalAddPoint';
 import { primaryColor, secondaryColor } from '../../theme';
 import { v4 as uuid } from 'uuid';
-const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint }) => {
+const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
   const [nearestRedPoint,setNearestRedPoint] = useState(null);
@@ -226,7 +228,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       
       handleOpen();
 
-    } else if (mode === 'REMOVE') {
+    } else if (mode === REMOVE) {
       const {point} = e;
       const features = mapRef.current.queryRenderedFeatures(point, {
         layers: ['redPoints', 'bluePoints']
@@ -251,7 +253,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
   useEffect(() => {
     setCursor(mode === ADD_BLUE_MODE ? 'pointer' : 'auto');
 
-    if (mode === 'REMOVE') {
+    if (mode === REMOVE) {
       setCursor('crosshair');
     }else if(mode === ADD_BLUE_MODE || ADD_RED_MODE){
       setCursor('pointer');
@@ -313,19 +315,18 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
  
  
   useEffect(() => {
-    if (mapRef.current && mode === 'EDIT') {
-      const handleMouseDown = (e) => {
+    if (mapRef.current && editMode && mode === EDIT) {
+      setCursor('');
+      const handleBlueMouseDown = (e) => {
         
         if (!e.point) return;
         const indexPointRef = e.features[0].id;
         
         setCursor('grab');
         e.preventDefault();
-        console.log(indexPointRef);
         const onMove = () => setCursor('grabbing');
 
         const onUp = (event) => {
-          console.log('entre');
           const coords = event.lngLat;
 
           if (allPoints.blue[indexPointRef].lat !== coords.lat || allPoints.blue[indexPointRef].lng !== coords.lng) {
@@ -355,15 +356,57 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         mapRef.current.on('mousemove', onMove);
         mapRef.current.once('mouseup', onUp);
       };
+      const handleRedMouseDown = (e) => {
+        
+        if (!e.point) return;
+        const indexPointRef = e.features[0].id;
+        
+        setCursor('grab');
+        e.preventDefault();
+        const onMove = () => setCursor('grabbing');
 
-      mapRef.current.off('mousedown', 'bluePoints', handleMouseDown);
-      mapRef.current.on('mousedown', 'bluePoints', handleMouseDown);
+        const onUp = (event) => {
+          const coords = event.lngLat;
+
+          if (allPoints.blue[indexPointRef].lat !== coords.lat || allPoints.blue[indexPointRef].lng !== coords.lng) {
+            onChangePoints(prevPoints => {
+              return {
+                ...prevPoints,
+                red: prevPoints.red.map((point, idx) => {
+                  if (idx === indexPointRef) {
+                    return {
+                      ...point,
+                      lat: coords.lat,
+                      lng: coords.lng
+                    };
+                  }
+                  return point;
+                })
+              };
+            });
+          }
+
+          mapRef.current.off('mousemove', onMove);
+          mapRef.current.off('mouseup', onUp);
+          mapRef.current.off('touchmove', onMove);
+          setCursor('auto');
+        };
+
+        mapRef.current.on('mousemove', onMove);
+        mapRef.current.once('mouseup', onUp);
+      };
+
+      mapRef.current.off('mousedown', 'bluePoints', handleBlueMouseDown);
+      mapRef.current.off('mousedown', 'redPoints', handleRedMouseDown);
+      
+      mapRef.current.on('mousedown', 'bluePoints', handleBlueMouseDown);
+      mapRef.current.on('mousedown', 'redPoints', handleRedMouseDown);
+
 
       return () => {
-        mapRef.current.off('mousedown', 'bluePoints', handleMouseDown);
-        mapRef.current.off('mousemove', handleMouseDown);
-        mapRef.current.off('mouseup', handleMouseDown);
-        mapRef.current.off('touchmove', handleMouseDown);
+        mapRef.current.off('mousedown', 'bluePoints', handleBlueMouseDown);
+        mapRef.current.off('mousedown', 'redPoints', handleRedMouseDown);
+        
       };
     }
   }, [mapRef, mode, allPoints, onChangePoints, setCursor]);
@@ -413,7 +456,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints}
         onChangeNearestRedPoint={setNearestRedPoint} onChangeHover={onChangeHover} 
         onChangeIdHoverPoint={onChangeIdHoverPoint} onChangePoints={onChangePoints}
-        mode={mode}/>
+        mode={mode} editMode={editMode} />
     </div>
   </>;
 };
@@ -445,7 +488,8 @@ MainContent.propTypes = {
     PropTypes.string,
     PropTypes.oneOf([null])
   ]),
-  onChangeIdHoverPoint: PropTypes.func.isRequired
+  onChangeIdHoverPoint: PropTypes.func.isRequired,
+  editMode: PropTypes.bool.isRequired
 };
 
 export default MainContent;

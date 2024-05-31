@@ -15,7 +15,7 @@ import {lighten} from '@mui/material';
 
 import {useTranslation} from 'react-i18next';
 
-const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, onChangePoints, mode}) => {
+const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, onChangePoints, editMode}) => {
   
   const{t} = useTranslation();
   const [editedPointNames, setEditedPointNames] = useState(allPoints);
@@ -69,8 +69,11 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
   };
 
   useEffect(()=>{
-    onChangePoints(editedPointNames);
-  },[mode]);
+    if (!editMode) {
+      onChangePoints(editedPointNames);
+      
+    }
+  },[editMode,onChangePoints,editedPointNames]);
 
   useEffect(()=>{
     setEditedPointNames(allPoints);
@@ -87,7 +90,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
               bluePoints.map((bluePoint, index) => <TableCell key={index} align="right">
                 <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                
-                  { mode === 'EDIT'? <TextField  size='small' value={editedPointNames.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>: <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
+                  { editMode ? <TextField  size='small' value={editedPointNames.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>: <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
                     {bluePoint.name?.toUpperCase()}
                   </Typography>}
                 </Box>
@@ -105,7 +108,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
               <TableCell component="th" scope="row">
                 <Stack>
                   <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                    { mode === 'EDIT'? <TextField color='secondary' size='small' value={editedPointNames.red[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'red')}/>: <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark': 'secondary.main'}}>
+                    { editMode ? <TextField color='secondary' size='small' value={editedPointNames.red[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'red')}/>: <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark': 'secondary.main'}}>
                       {rowNames[index]?.toUpperCase()}
                     </Typography>}
                   </Box>
@@ -152,7 +155,7 @@ DirectionsTable.propTypes = {
   onChangeHover: PropTypes.func.isRequired,
   onChangeIdHoverPoint: PropTypes.func.isRequired,
   onChangePoints: PropTypes.func.isRequired,
-  mode: PropTypes.string.isRequired
+  editMode: PropTypes.bool.isRequired
 };
 
 export default DirectionsTable;

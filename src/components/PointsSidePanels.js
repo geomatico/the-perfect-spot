@@ -4,15 +4,21 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
 import DeletePointsModal from './DeletePointsModal';
+import {
+  REMOVE,
+  EDIT
+} from '../config';
 //GEOCOMPONENTS
 import ButtonGroupList from '@geomatico/geocomponents/ButtonGroupList';
 // UTILS
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/AddLocationAlt';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Box from '@mui/material/Box';
 
-function PointsSidePanels({onChangePoints, onChangeModePoints, mode}) {
+
+function PointsSidePanels({onChangePoints, onChangeModePoints, editMode, onChangeEditMode}) {
   const { t } = useTranslation();
  
   const [selectedMode, setSelectedMode] = useState('Points-ADD_BLUE');
@@ -24,14 +30,16 @@ function PointsSidePanels({onChangePoints, onChangeModePoints, mode}) {
     }
   };
 
-  const handlePointClickEdit = (newMode) =>{
-    if (newMode) {
-      setSelectedMode(newMode);
-      newMode === 'Edit-REMOVE' ?
-        onChangeModePoints('REMOVE'): onChangeModePoints('EDIT');
-      
-    }
+  const handleEditIConClick = () => {
+    onChangeEditMode(true);
+    onChangeModePoints('');
   };
+  const handleCancelEditIconClick = () => {
+    onChangeEditMode(false);
+  };
+
+  const handleRemoveIconClick = () => onChangeModePoints(REMOVE);
+  const handleEditLocationCLick = () => onChangeModePoints(EDIT);
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -55,30 +63,7 @@ function PointsSidePanels({onChangePoints, onChangeModePoints, mode}) {
     },
   ];
 
-  const buttonGroupEdit = [
-    {
-      id: 'EDIT',
-      content:
-       <Tooltip title={'editar'} >
-         <EditIcon />
-       </Tooltip>
 
-    },
-    {
-      id:'REMOVE',
-      content: 
-        <Tooltip title={'ELimina'}>
-          <DeleteIcon />
-        </Tooltip>
-    }
-  ];
-
-  const categoriesGroupEdit =[
-    {
-      id: 'Edit',
-      description: <Typography> </Typography>,
-    }
-  ];
 
 
   const categories = [
@@ -91,20 +76,25 @@ function PointsSidePanels({onChangePoints, onChangeModePoints, mode}) {
   const handleButtonColor = (pointMode) => {
     if (pointMode.includes('RED')) {
       return {
-        '& .ButtonGroup-button': {
+        '& .ButtonGroup-button':editMode ? '' : {
           '&.Mui-selected': {
             border: theme => `2px solid ${theme.palette.secondary.main}`,
             backgroundColor: theme => `${theme.palette.common.white}`,
             '&:hover': {
               border: theme =>  `2px solid ${theme.palette.secondary.main}`,
               backgroundColor: theme => `${theme.palette.common.white}`,
-            }
+            },
+          },
+          '&.Mui-disabled': {
+            border: theme => `2px solid ${theme.palette.success.main}`,
+            backgroundColor:'red',
           }
         },
-        '& .ButtonGroup-buttonContent': {
+        '& .ButtonGroup-buttonContent': editMode ? '' : {
           color: theme => `${theme.palette.secondary.main}`
         }
       };
+      
     }else{
       return {
         '& .ButtonGroup-button': {
@@ -127,7 +117,7 @@ function PointsSidePanels({onChangePoints, onChangeModePoints, mode}) {
   return (
     <>
       <ButtonGroupList
-        disabled = {mode === 'EDIT' ? true : false}
+        disabled = {editMode ? true : false}
         buttonGroupVariant='outlined'
         categories={categories}
         buttonGroupItems={buttonGroupItems}
@@ -135,15 +125,12 @@ function PointsSidePanels({onChangePoints, onChangeModePoints, mode}) {
         onItemClick={handlePointClick}
         sx={customSx}
       />
+      <Box sx={{display:'flex', flexDirection:'column' ,alignItems:'end',gap:1}}> 
+        {editMode ? <Button onClick={handleCancelEditIconClick} size='small' sx={{margin:0}}><CancelIcon /></Button>  : <Button onClick={handleEditIConClick} size='small'><EditIcon/></Button> } 
+        {editMode && <Button onClick={handleRemoveIconClick} variant='outlined'>borra un punto</Button>}
+        {editMode && <Button onClick={handleEditLocationCLick} variant='outlined'>Mueve un punto</Button>}
 
-      <ButtonGroupList 
-        buttonGroupVariant = 'outlined'
-        categories ={categoriesGroupEdit}
-        buttonGroupItems={buttonGroupEdit}
-        selectedItemId = {selectedMode}
-        onItemClick= {handlePointClickEdit}
-      />
-     
+      </Box>
       <Button
         variant='contained'
         color='secondary'
@@ -168,7 +155,8 @@ function PointsSidePanels({onChangePoints, onChangeModePoints, mode}) {
 PointsSidePanels.propTypes = {
   onChangePoints: PropTypes.func.isRequired,
   onChangeModePoints: PropTypes.func.isRequired,
-  mode: PropTypes.string.isRequired
+  editMode: PropTypes.bool.isRequired,
+  onChangeEditMode: PropTypes.func.isRequired
 };
 
 export default PointsSidePanels;

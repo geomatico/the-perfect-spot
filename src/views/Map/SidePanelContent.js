@@ -17,7 +17,7 @@ const ScrollableContent = styled(Box)({
   padding: '8px',
 });
 
-const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculatedRoutes, allPoints, onChangePoints, mode}) => {
+const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculatedRoutes, allPoints, onChangePoints, mode, onChangeEditMode, editMode}) => {
   const requestError = http.getError();
   const {t} = useTranslation();
   const transportOptions = [
@@ -106,12 +106,12 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
 
   };
   useEffect(() => {
-    if (mode !== 'EDIT') {
-      calculateRoutes(transportation);
-      calculateDirectionsTable(transportation);
-    }
     
-  }, [allPoints.red, allPoints.blue,mode]);
+    calculateRoutes(transportation);
+    calculateDirectionsTable(transportation);
+    
+    
+  }, [allPoints.red, allPoints.blue]);
 
   return <Stack sx={{
     height: '100%',
@@ -133,6 +133,8 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
           onChangeModePoints={onChangeModePoints}
           onChangePoints={onChangePoints}
           mode={mode}
+          editMode={editMode}
+          onChangeEditMode={onChangeEditMode}
         />          
       </Box>
     </ScrollableContent>
@@ -161,7 +163,9 @@ SidePanelContent.propTypes = {
     })).isRequired,
   }).isRequired,
   onChangePoints: PropTypes.func.isRequired,
-  mode: PropTypes.string.isRequired
+  mode: PropTypes.string.isRequired,
+  onChangeEditMode: PropTypes.func.isRequired,
+  editMode: PropTypes.bool.isRequired
 };
 
 export default SidePanelContent;
