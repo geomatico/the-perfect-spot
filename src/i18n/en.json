@@ -13,6 +13,7 @@
   "done": "Done",
   "driving-car": "Driving car",
   "driving-hgv": "Public transport",
+  "edit": "Edit points",
   "editNameBluePoint": "Edit the name of the blue point",
   "editNameRedPoint": "Edit the name of the red point",
   "editor": "Site editor",
@@ -39,6 +40,5 @@
   "saveNamePoint": "Save",
   "search": "Search...",
   "seconds": "seconds to continue",
-  "transportType": "How do you travel?",
-  "edit": "Edit points"
+  "transportType": "How do you travel?"
 }
