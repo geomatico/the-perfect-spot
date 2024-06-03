@@ -16,6 +16,7 @@
   "editNameBluePoint": "Edit the name of the blue point",
   "editNameRedPoint": "Edit the name of the red point",
   "editor": "Site editor",
+  "exitEdit": "exit edit mode",
   "finalPoints": "Posibles spots",
   "find_the": "Find the ",
   "foot-walking": "Foot walking",
@@ -27,6 +28,7 @@
   "insertRedName": "Name of a possible spot:",
   "mandatoryField": "Mandatory field",
   "map": "Map",
+  "move": "move",
   "originPoints": "My places",
   "point": "Point",
   "remove": "Remove",
@@ -37,5 +39,6 @@
   "saveNamePoint": "Save",
   "search": "Search...",
   "seconds": "seconds to continue",
-  "transportType": "How do you travel?"
+  "transportType": "How do you travel?",
+  "edit": "Edit points"
 }

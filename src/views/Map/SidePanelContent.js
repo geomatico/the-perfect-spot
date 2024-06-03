@@ -135,6 +135,7 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
           mode={mode}
           editMode={editMode}
           onChangeEditMode={onChangeEditMode}
+          allPoints={allPoints}
         />          
       </Box>
     </ScrollableContent>

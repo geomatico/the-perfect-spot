@@ -328,24 +328,22 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
 
         const onUp = (event) => {
           const coords = event.lngLat;
-
-          if (allPoints.blue[indexPointRef].lat !== coords.lat || allPoints.blue[indexPointRef].lng !== coords.lng) {
-            onChangePoints(prevPoints => {
-              return {
-                ...prevPoints,
-                blue: prevPoints.blue.map((point, idx) => {
-                  if (idx === indexPointRef) {
-                    return {
-                      ...point,
-                      lat: coords.lat,
-                      lng: coords.lng
-                    };
-                  }
-                  return point;
-                })
-              };
-            });
-          }
+          onChangePoints(prevPoints => {
+            return {
+              ...prevPoints,
+              blue: prevPoints.blue.map((point, idx) => {
+                if (idx === indexPointRef) {
+                  return {
+                    ...point,
+                    lat: coords.lat,
+                    lng: coords.lng
+                  };
+                }
+                return point;
+              })
+            };
+          });
+          
 
           mapRef.current.off('mousemove', onMove);
           mapRef.current.off('mouseup', onUp);
@@ -367,24 +365,23 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
 
         const onUp = (event) => {
           const coords = event.lngLat;
-
-          if (allPoints.blue[indexPointRef].lat !== coords.lat || allPoints.blue[indexPointRef].lng !== coords.lng) {
-            onChangePoints(prevPoints => {
-              return {
-                ...prevPoints,
-                red: prevPoints.red.map((point, idx) => {
-                  if (idx === indexPointRef) {
-                    return {
-                      ...point,
-                      lat: coords.lat,
-                      lng: coords.lng
-                    };
-                  }
-                  return point;
-                })
-              };
-            });
-          }
+          console.log(coords);
+          onChangePoints(prevPoints => {
+            return {
+              ...prevPoints,
+              red: prevPoints.red.map((point, idx) => {
+                if (idx === indexPointRef) {
+                  return {
+                    ...point,
+                    lat: coords.lat,
+                    lng: coords.lng
+                  };
+                }
+                return point;
+              })
+            };
+          });
+          
 
           mapRef.current.off('mousemove', onMove);
           mapRef.current.off('mouseup', onUp);
