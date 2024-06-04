@@ -21,9 +21,14 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
   const [nearestRedPoint,setNearestRedPoint] = useState(null);
+  const getCookie = document.cookie.split('; ').some(cookie => cookie.startsWith('modalInfo'));
+  const [openModalInfo, setOpenModalInfo] = useState(getCookie ? false : true );
   const handleOpen = () => setOpenModal(true);
+  const handleCloseModalInfo = () => {
+    document.cookie = 'modalInfo=accept; expires=' + new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString(); // the modal opens once a day
+    setOpenModalInfo(false); 
+  };
 
-  
   const handleClose = (event, reason) => {
     // para que no se cierre con click fuera de la modal si esc
     if (reason && (reason === 'backdropClick' || reason === 'escapeKeyDown')){
@@ -314,7 +319,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
 
 
   return <>
-    <ModalInfo/>
+    {openModalInfo && <ModalInfo onHandleCloseModalInfo={handleCloseModalInfo} />}
     {openModal && <ModalAddPoint 
       pointType={mode}
       pointName={text}
