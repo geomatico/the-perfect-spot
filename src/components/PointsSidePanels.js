@@ -9,7 +9,7 @@ import {
 } from '../config';
 //GEOCOMPONENTS
 import ButtonGroup from '@geomatico/geocomponents/ButtonGroup';
-import grey  from '@mui/material/colors/grey';
+import grey from '@mui/material/colors/grey';
 // UTILS
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/AddLocationAlt';
@@ -20,10 +20,10 @@ import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import Box from '@mui/material/Box';
 
 
-function PointsSidePanels({onChangePoints, onChangeModePoints, editMode, onChangeEditMode, allPoints, mode}) {
+function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChangeEditMode, allPoints, mode }) {
   const { t } = useTranslation();
   const [lastModePoint, setLastModePoint] = useState(null);
- 
+
   const [selectedMode, setSelectedMode] = useState('ADD_BLUE');
   const handlePointClick = (newMode) => {
     if (newMode) {
@@ -51,19 +51,19 @@ function PointsSidePanels({onChangePoints, onChangeModePoints, editMode, onChang
   const buttonGroupItems = [
     {
       id: 'ADD_BLUE',
-      content: 
-        <Box sx={{display:'flex', alignItems:'center'}}>
-          <AddIcon /><Typography fontSize={14} noWrap={false} >{t('originPoints')}</Typography>
+      content:
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <AddIcon /><Typography fontSize={14}  >{t('originPoints')}</Typography>
         </Box>
-      
+
     },
     {
       id: 'ADD_RED',
-      content: 
-      <Box sx={{display:'flex', alignItems:'center'}}>
-        <AddIcon /><Typography fontSize={14} noWrap={false}>{t('finalPoints')}</Typography>
-      </Box>
-      
+      content:
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <AddIcon /><Typography fontSize={14} >{t('finalPoints')}</Typography>
+        </Box>
+
     },
   ];
 
@@ -71,12 +71,12 @@ function PointsSidePanels({onChangePoints, onChangeModePoints, editMode, onChang
   const handleButtonColor = (pointMode) => {
     if (pointMode.includes('RED')) {
       return {
-        '& .ButtonGroup-button':editMode ? '' : {
+        '& .ButtonGroup-button': editMode ? '' : {
           '&.Mui-selected': {
             border: theme => `2px solid ${theme.palette.secondary.main}`,
             backgroundColor: theme => `${theme.palette.common.white}`,
             '&:hover': {
-              border: theme =>  `2px solid ${theme.palette.secondary.main}`,
+              border: theme => `2px solid ${theme.palette.secondary.main}`,
               backgroundColor: theme => `${theme.palette.common.white}`,
             },
           },
@@ -88,8 +88,8 @@ function PointsSidePanels({onChangePoints, onChangeModePoints, editMode, onChang
           color: theme => `${theme.palette.secondary.main}`
         }
       };
-      
-    }else{
+
+    } else {
       return {
         '& .ButtonGroup-button': editMode ? '' : {
           '&.Mui-selected': {
@@ -102,60 +102,58 @@ function PointsSidePanels({onChangePoints, onChangeModePoints, editMode, onChang
       };
     }
   };
-  
+
 
   const customSx = {
     ...handleButtonColor(selectedMode),
   };
-  
+
+  const customSxButtonIcons = {
+    color: grey[900], border: `1px solid ${grey[900]}`,
+    '&:hover': {
+      border: `1px solid ${grey[900]}`
+    }
+  }; 
+
   return (
     <>
       <ButtonGroup
-        disabled = {editMode ? true : false}
+        disabled={editMode ? true : false}
         variant='outlined'
         items={buttonGroupItems}
         selectedItemId={selectedMode}
         onItemClick={handlePointClick}
         sx={customSx}
-        
+
       />
-      <Box sx={{display:'flex', flexDirection:'column' ,alignItems:'start',gap:1, marginTop:2}}>
-        {editMode ? 
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'start', gap: 1, marginTop: 2 }}>
+        {editMode ?
           <Button onClick={handleCancelEditIconClick}
-            startIcon={<CloseOutlinedIcon />} size='small' sx={{color:grey[900],border:`1px solid ${grey[900]}`,
-              '&:hover':{
-                border: `1px solid ${grey[900]}`,
-                '&:hover':{
-                  border: `1px solid ${grey[900]}`}}}} variant='outlined'>
-            {t('exitEdit')}</Button>  
-          : <Button onClick={handleEditIConClick} startIcon={<EditOutlinedIcon/> } sx={{color:grey[900],border:`1px solid ${grey[900]}`,
-            '&:hover':{
-              border: `1px solid ${grey[900]}`}}}
-          disabled={(allPoints.blue.length || allPoints.red.length)? false : true} variant='outlined' size='small'>{t('edit')}</Button> }
-      </Box>
-      <Box sx={{display:'flex', gap:1, marginTop:1}}>     
-        {editMode && 
-        <Button sx={{color:grey[900],border:`1px solid ${grey[900]}`,
-          '&:hover':{
-            border: `1px solid ${grey[900]}`
-          }}}
-        startIcon={<DeleteOutlineOutlinedIcon fontSize='medium' />} onClick={handleRemoveIconClick} variant='outlined'>{t('remove')}</Button>}
-        {editMode && 
-        <Button sx={{color:grey[900],border:`1px solid ${grey[900]}`,
-          '&:hover':{
-            border: `1px solid ${grey[900]}`
-          }}}
-        startIcon={<EditLocationOutlinedIcon fontSize='medium'/> }
-        onClick={handleEditLocationCLick} variant='outlined'>{t('move')}</Button>}
+            startIcon={<CloseOutlinedIcon />} size='small' sx={customSxButtonIcons} variant='outlined'>
+            {t('exitEdit')}</Button>
+          : <Button onClick={handleEditIConClick} startIcon={<EditOutlinedIcon />} sx={customSxButtonIcons}
+            disabled={(allPoints.blue.length || allPoints.red.length) ? false : true} variant='outlined' size='small'>{t('edit')}</Button>}
       </Box>
 
-  
+      <Box sx={{ display: 'flex', gap: 1, marginTop: 1 }}>
+
+        {editMode &&
+          <Button size='medium' sx={customSxButtonIcons}
+            startIcon={<DeleteOutlineOutlinedIcon fontSize='medium' />} onClick={handleRemoveIconClick} variant='outlined'>{t('remove')}</Button>}
+
+        {editMode &&
+          <Button sx={customSxButtonIcons}
+            startIcon={<EditLocationOutlinedIcon fontSize='medium' />}
+            onClick={handleEditLocationCLick} variant='outlined' size='medium'>{t('move')}</Button>}
+      </Box>
+
+
       <Button
         variant='contained'
         color='secondary'
         sx={{ mt: 2 }}
         onClick={handleOpenModal}
-        disabled={(allPoints.blue.length  || allPoints.red.length )? false : true}
+        disabled={(allPoints.blue.length || allPoints.red.length) ? false : true}
       >
         {t('removeButton')}
       </Button>
@@ -165,11 +163,11 @@ function PointsSidePanels({onChangePoints, onChangeModePoints, editMode, onChang
           onChangePoints={onChangePoints}
         />
       )}
-      
+
     </>
-    
+
   );
-  
+
 }
 
 PointsSidePanels.propTypes = {
@@ -179,13 +177,13 @@ PointsSidePanels.propTypes = {
   onChangeEditMode: PropTypes.func.isRequired,
   allPoints: PropTypes.shape({
     red: PropTypes.arrayOf(PropTypes.shape({
-      id:  PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string
     })).isRequired,
     blue: PropTypes.arrayOf(PropTypes.shape({
-      id:  PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
       lng: PropTypes.number.isRequired,
       lat: PropTypes.number.isRequired,
       name: PropTypes.string

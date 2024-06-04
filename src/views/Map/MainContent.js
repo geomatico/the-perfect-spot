@@ -365,7 +365,6 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
 
         const onUp = (event) => {
           const coords = event.lngLat;
-          console.log(coords);
           onChangePoints(prevPoints => {
             return {
               ...prevPoints,
