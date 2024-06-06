@@ -1,16 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Dialog,DialogContent} from '@mui/material';
+import PropTypes from 'prop-types';
 
 const paperProps = {sx: {height: 'auto', pb: 1}};
 
 const dialogContentSx = {mt: 2, textAlign: 'center'};
 
-const ModalInfo = () => {
-  const [isOpen, setOpen] = useState(true);
-
-  const handleClose = () => setOpen(false); //onClose();
-
-  return <Dialog open={isOpen} onClose={handleClose} fullWidth PaperProps={paperProps}>
+const ModalInfo = ({onHandleCloseModalInfo}) => { 
+  return <Dialog open={true} onClose={onHandleCloseModalInfo} fullWidth PaperProps={paperProps}>
     <DialogContent sx={dialogContentSx}>
       <b>¡Encuentra el lugar mejor comunicado de entre varios!</b><br/>El <b>perfect spot</b> en base a tus sitios importantes.
       <ul>
@@ -20,6 +17,10 @@ const ModalInfo = () => {
       </ul>
     </DialogContent>
   </Dialog>;
+};
+
+ModalInfo.propTypes = {
+  onHandleCloseModalInfo : PropTypes.func.isRequired
 };
 
 export default ModalInfo;
