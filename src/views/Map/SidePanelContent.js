@@ -17,7 +17,7 @@ const ScrollableContent = styled(Box)({
   padding: '8px',
 });
 
-const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculatedRoutes, allPoints, onChangePoints}) => {
+const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculatedRoutes, allPoints, onChangePoints, mode, onChangeEditMode, editMode}) => {
   const requestError = http.getError();
   const {t} = useTranslation();
   const transportOptions = [
@@ -106,8 +106,11 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
 
   };
   useEffect(() => {
+    
     calculateRoutes(transportation);
     calculateDirectionsTable(transportation);
+    
+    
   }, [allPoints.red, allPoints.blue]);
 
   return <Stack sx={{
@@ -120,14 +123,19 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
         <Typography variant='overline'>{t('transportType')}</Typography>
         <SelectInput
           options={transportOptions}
+          disabled={true}
           selectedOptionId={transportation}
           onOptionChange={handleTransportationType} minWidth='100%'/>
       </Box>
       <Box my={2}>
-       
+        <Typography variant='overline'>{t('addLocations')}</Typography>
         <PointsSidePanels 
           onChangeModePoints={onChangeModePoints}
           onChangePoints={onChangePoints}
+          mode={mode}
+          editMode={editMode}
+          onChangeEditMode={onChangeEditMode}
+          allPoints={allPoints}
         />          
       </Box>
     </ScrollableContent>
@@ -155,7 +163,10 @@ SidePanelContent.propTypes = {
       name: PropTypes.string
     })).isRequired,
   }).isRequired,
-  onChangePoints: PropTypes.func.isRequired
+  onChangePoints: PropTypes.func.isRequired,
+  mode: PropTypes.string.isRequired,
+  onChangeEditMode: PropTypes.func.isRequired,
+  editMode: PropTypes.bool.isRequired
 };
 
 export default SidePanelContent;
