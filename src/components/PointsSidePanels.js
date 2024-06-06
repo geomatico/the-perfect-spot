@@ -27,6 +27,7 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   const [selectedMode, setSelectedMode] = useState('ADD_BLUE');
   const handlePointClick = (newMode) => {
     if (newMode) {
+      console.log(newMode);
       setSelectedMode(newMode);
       onChangeModePoints(newMode);
     }
@@ -45,9 +46,11 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   const handleRemoveIconClick = () => onChangeModePoints(REMOVE);
   const handleEditLocationCLick = () => onChangeModePoints(EDIT);
   const [openModal, setOpenModal] = useState(false);
+  
   const handleOpenModal = () => {
     setOpenModal(true);
   };
+
 
   const buttonGroupTypePoints = [
     {
@@ -67,6 +70,7 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
 
     },
   ];
+
 
   const handleButtonColor = (pointMode) => {
     if (pointMode.includes('RED')) {
@@ -109,9 +113,7 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   };
 
   const customSxButtonIcons = {
-    color: grey[900],
-    border: `1px solid ${grey[900]}`,
-    flexGrow: 1,
+    color: grey[900], border: `1px solid ${grey[900]}`,
     '&:hover': {
       border: `1px solid ${grey[900]}`
     }
@@ -126,6 +128,7 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
         selectedItemId={selectedMode}
         onItemClick={handlePointClick}
         sx={customSx}
+
       />
 
       <Button

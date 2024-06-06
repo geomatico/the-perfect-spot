@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import {grey, red} from '@mui/material/colors';
-import {lighten} from '@mui/material';
+import {lighten, useMediaQuery, useTheme} from '@mui/material';
 
 import {useTranslation} from 'react-i18next';
 
@@ -79,9 +79,11 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     setEditedPointNames(allPoints);
   },[allPoints]);
   const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
+  const theme = useTheme();
+  const widescreen = useMediaQuery(theme.breakpoints.up('lg'), { noSsr: true });
   return <>
     {
-      calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length &&
+      calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length && widescreen &&
       <Table sx={{minWidth: 300}} aria-label="simple table">
         <TableHead>
           <TableRow>

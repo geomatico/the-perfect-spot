@@ -19,7 +19,7 @@ import { primaryColor, secondaryColor } from '../../theme';
 import { v4 as uuid } from 'uuid';
 
 const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode }) => {
-  
+
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
   const [nearestRedPoint,setNearestRedPoint] = useState(null);
@@ -407,10 +407,15 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
           mapRef.current.off('mousemove', onMove);
           mapRef.current.off('mouseup', onUp);
           mapRef.current.off('touchmove', onMove);
+          mapRef.current.off('touchend', onUp);
+
           setCursor('auto');
         };
 
         mapRef.current.on('mousemove', onMove);
+        mapRef.current.on('touchmove', onMove);
+        mapRef.current.once('touchend', onUp);
+
         mapRef.current.once('mouseup', onUp);
       };
 
