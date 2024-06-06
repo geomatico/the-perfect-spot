@@ -67,7 +67,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
     });
   };
   const handleSearchResult = ({lat,lon}) => flyTo(lat,lon);
-  const [text, setText] = useState(t('point'));
+  const [placeholderText, setPlaceholderText] = useState(t('point'));
 
   const COLOR = mode === ADD_BLUE_MODE ? primaryColor : secondaryColor;
   const sources = useMemo(() => {
