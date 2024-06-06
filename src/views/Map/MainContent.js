@@ -405,7 +405,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         
       };
     }
-  }, [mapRef, mode, allPoints, onChangePoints, setCursor]);
+  }, [mapRef.current, mode, allPoints, onChangePoints, setCursor]);
 
   
 
