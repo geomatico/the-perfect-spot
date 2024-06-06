@@ -17,16 +17,23 @@ import ModalInfo from '../../components/ModalInfo';
 import ModalAddPoint from '../../components/ModalAddPoint';
 import { primaryColor, secondaryColor } from '../../theme';
 import { v4 as uuid } from 'uuid';
+
 const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
   const [nearestRedPoint,setNearestRedPoint] = useState(null);
+
   const getCookie = document.cookie.split('; ').some(cookie => cookie.startsWith('modalInfo'));
-  const [openModalInfo, setOpenModalInfo] = useState(getCookie ? false : true );
+
+  const [openModalInfo, setOpenModalInfo] = useState(!getCookie );
+
   const handleOpen = () => setOpenModal(true);
+
+  const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString();
+
   const handleCloseModalInfo = () => {
-    document.cookie = 'modalInfo=accept; expires=' + new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString(); // the modal opens once a day
-    setOpenModalInfo(false); 
+    document.cookie = 'modalInfo=accept; expires=' + tomorrow; // the modal opens once a day
+    setOpenModalInfo(false);
   };
 
   const handleClose = (event, reason) => {
@@ -38,7 +45,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         onChangePoints({
           ...allPoints, blue: bluePoints
         });
-     
+
       }else if(mode === ADD_RED_MODE){
         const redPoints = [...allPoints.red];
         redPoints.pop();
@@ -55,7 +62,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
   const mapRef = useRef();
   const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
   const handleSearchResult = ({bbox}) => flyTo(bbox);
-  const [text, setText] = useState(t('point'));
+  const [placeholderText, setPlaceholderText] = useState(t('point'));
 
   const COLOR = mode === ADD_BLUE_MODE ? primaryColor : secondaryColor;
   const sources = useMemo(() => {
@@ -64,7 +71,9 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       type: 'FeatureCollection',
       features:[]
     };
+
     const filterRedPoint = hover ? allPoints.red.find(({id})=> id === idHoverPoint) : null;
+
     const redPoints = {
       type: 'FeatureCollection',
       features: hover ? [{
@@ -98,6 +107,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         }
       }))
     };
+
     const nearestPoint = {
       type: 'FeatureCollection',
       features:[
@@ -111,11 +121,12 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
           }
         }
       ]
-    };      
+    };
+
     return {
       redPoints: {
         type: 'geojson',
-        data:   redPoints
+        data: redPoints
       },
       bluePoints: {
         type: 'geojson',
@@ -134,6 +145,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       }
     };
   }, [allPoints,routes,hover,idHoverPoint,nearestRedPoint]);
+
   const layers = useMemo(() => {
     return [
       {
@@ -273,21 +285,20 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
   };
 
   const handleChangeText = (x) => {
-    setText(x);
+    setPlaceholderText(x);
   };
 
   const handleSaveName = () => {
-    if(text === '')  return;
+    if(placeholderText === '')  return;
     if (mode === 'ADD_BLUE') {
-    
-    
+
       const lastBluePoint = allPoints.blue[allPoints.blue.length - 1];
      
       const updateBluePoints = allPoints.blue.map(point =>{
         if (point === lastBluePoint) {
           return {
             ...point,
-            name:text
+            name:placeholderText
           };
         }
         return point;
@@ -303,7 +314,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         if (point === lastRedPoint) {
           return {
             ...point,
-            name:text
+            name:placeholderText
           };
         }
         return point;
@@ -314,15 +325,14 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
 
     }
     handleClose();
-    setText(t('point'));
+    setPlaceholderText(t('point'));
   };
-
 
   return <>
     {openModalInfo && <ModalInfo onHandleCloseModalInfo={handleCloseModalInfo} />}
     {openModal && <ModalAddPoint 
       pointType={mode}
-      pointName={text}
+      pointName={placeholderText}
       onChangePointName={handleChangeText}
       onSavePointName={handleSaveName}
       onClose={handleClose}
