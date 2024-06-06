@@ -39,7 +39,12 @@ const  ModalAddPoint = ({pointType, pointName, onChangePointName, onSavePointNam
         error={!pointName}
         helperText={!pointName ? t('mandatoryField') : ''}
         size='small'
-        value={pointName}
+        color={buttonColor}
+        autoFocus={true}
+        onKeyDown={(e)=>{
+          if (e.key === 'Enter') onSavePointName();
+        }}
+        placeholder={t('point')}
         onChange={(e) => handleChangePoiName(e.target.value)}
         variant="outlined"
       />

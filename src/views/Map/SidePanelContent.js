@@ -128,7 +128,7 @@ const SidePanelContent = ({ onChangeModePoints, onRoutesChange, onChangeCalculat
           onOptionChange={handleTransportationType} minWidth='100%'/>
       </Box>
       <Box my={2}>
-       
+        <Typography variant='overline'>{t('addLocations')}</Typography>
         <PointsSidePanels 
           onChangeModePoints={onChangeModePoints}
           onChangePoints={onChangePoints}
