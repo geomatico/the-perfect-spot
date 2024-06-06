@@ -27,6 +27,7 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   const [selectedMode, setSelectedMode] = useState('ADD_BLUE');
   const handlePointClick = (newMode) => {
     if (newMode) {
+      console.log(newMode);
       setSelectedMode(newMode);
       onChangeModePoints(newMode);
     }
@@ -45,6 +46,7 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   const handleRemoveIconClick = () => onChangeModePoints(REMOVE);
   const handleEditLocationCLick = () => onChangeModePoints(EDIT);
   const [openModal, setOpenModal] = useState(false);
+  
   const handleOpenModal = () => {
     setOpenModal(true);
   };

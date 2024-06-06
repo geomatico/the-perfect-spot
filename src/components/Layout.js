@@ -48,18 +48,17 @@ const Layout = ({mainContent, sidePanelContent}) => {
       sx={{'&.MuiAppBar-root': {zIndex: 1500}}}
     >
     </ResponsiveHeader>
-    {
-      sidePanelContent && isSidePanelOpen && <SidePanel
-        drawerWidth={DRAWER_WIDTH + 'px'}
-        anchor="left"
-        isOpen={isSidePanelOpen}
-        onClose={handleClose}
-        widescreen={widescreen}
-        sx={{'& .MuiPaper-root': {left: widescreen ? MINI_SIDE_PANEL_WIDTH : MINI_SIDE_PANEL_DENSE_WIDTH}}}
-      >
-        {sidePanelContent}
-      </SidePanel>
-    }
+    <SidePanel
+      drawerWidth={DRAWER_WIDTH + 'px'}
+      anchor="left"
+      isOpen={isSidePanelOpen}
+      onClose={handleClose}
+      widescreen={widescreen}
+      sx={{'& .MuiPaper-root': {left: widescreen ? MINI_SIDE_PANEL_WIDTH : MINI_SIDE_PANEL_DENSE_WIDTH}, display: isSidePanelOpen ? 'block' : 'none'}}
+    >
+      {sidePanelContent}
+    </SidePanel>
+    
     <Main widescreen={widescreen} isLeftDrawerOpen={sidePanelContent && isSidePanelOpen}>
       {mainContent}
     </Main>

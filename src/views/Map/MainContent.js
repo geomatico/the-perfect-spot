@@ -364,6 +364,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         const onMove = () => setCursor('grabbing');
 
         const onUp = (event) => {
+          console.log('entre');
           const coords = event.lngLat;
           onChangePoints(prevPoints => {
             return {
@@ -385,10 +386,14 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
           mapRef.current.off('mousemove', onMove);
           mapRef.current.off('mouseup', onUp);
           mapRef.current.off('touchmove', onMove);
+          mapRef.current.off('touchend', onUp);
+
           setCursor('auto');
         };
 
         mapRef.current.on('mousemove', onMove);
+        mapRef.current.on('touchmove', onMove);
+        mapRef.current.once('touchend', onUp);
         mapRef.current.once('mouseup', onUp);
       };
 
@@ -406,8 +411,6 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       };
     }
   }, [mapRef.current, mode, allPoints, onChangePoints, setCursor]);
-
-  
 
   return <>
     <ModalInfo/>
