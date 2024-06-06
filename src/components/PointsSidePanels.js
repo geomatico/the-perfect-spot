@@ -48,7 +48,8 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   const handleOpenModal = () => {
     setOpenModal(true);
   };
-  const buttonGroupItems = [
+
+  const buttonGroupTypePoints = [
     {
       id: 'ADD_BLUE',
       content:
@@ -66,7 +67,6 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
 
     },
   ];
-
 
   const handleButtonColor = (pointMode) => {
     if (pointMode.includes('RED')) {
@@ -109,7 +109,9 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   };
 
   const customSxButtonIcons = {
-    color: grey[900], border: `1px solid ${grey[900]}`,
+    color: grey[900],
+    border: `1px solid ${grey[900]}`,
+    flexGrow: 1,
     '&:hover': {
       border: `1px solid ${grey[900]}`
     }
@@ -118,56 +120,58 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   return (
     <>
       <ButtonGroup
-        disabled={editMode ? true : false}
+        disabled={editMode}
         variant='outlined'
-        items={buttonGroupItems}
+        items={buttonGroupTypePoints}
         selectedItemId={selectedMode}
         onItemClick={handlePointClick}
         sx={customSx}
-
       />
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'start', gap: 1, marginTop: 2 }}>
-        {editMode ?
-          <Button onClick={handleCancelEditIconClick}
-            startIcon={<CloseOutlinedIcon />} size='small' sx={customSxButtonIcons} variant='outlined'>
-            {t('exitEdit')}</Button>
-          : <Button onClick={handleEditIConClick} startIcon={<EditOutlinedIcon />} sx={customSxButtonIcons}
-            disabled={(allPoints.blue.length || allPoints.red.length) ? false : true} variant='outlined' size='small'>{t('edit')}</Button>}
-      </Box>
-
-      <Box sx={{ display: 'flex', gap: 1, marginTop: 1 }}>
-
-        {editMode &&
-          <Button size='medium' sx={customSxButtonIcons}
-            startIcon={<DeleteOutlineOutlinedIcon fontSize='medium' />} onClick={handleRemoveIconClick} variant='outlined'>{t('remove')}</Button>}
-
-        {editMode &&
-          <Button sx={customSxButtonIcons}
-            startIcon={<EditLocationOutlinedIcon fontSize='medium' />}
-            onClick={handleEditLocationCLick} variant='outlined' size='medium'>{t('move')}</Button>}
-      </Box>
-
 
       <Button
         variant='contained'
         color='secondary'
-        sx={{ mt: 2 }}
+        fullWidth
+        sx={{ mt: 8}}
         onClick={handleOpenModal}
-        disabled={(allPoints.blue.length || allPoints.red.length) ? false : true}
+        disabled={(!(allPoints.blue.length || allPoints.red.length))}
       >
         {t('removeButton')}
       </Button>
-      {openModal && (
-        <DeletePointsModal
+
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'start', gap: 1, mt: 4 }}>
+        <Typography variant='body2' sx={{color: 'grey.600', fontStyle: 'italic'}}>{t('editDescription')}</Typography>
+        <Button
+          onClick={editMode ? handleCancelEditIconClick : handleEditIConClick}
+          startIcon={editMode ? <CloseOutlinedIcon /> : <EditOutlinedIcon />}
+          size='medium'
+          sx={customSxButtonIcons}
+          variant='outlined'
+          fullWidth
+          disabled={!(allPoints.blue.length || allPoints.red.length)}
+        >
+          {editMode ? t('exitEdit') : t('edit')}
+        </Button>
+        {
+          editMode && <Box sx={{display: 'flex', gap: 1, marginTop: 1, width: '100%'}}>
+            <Button size='medium' sx={customSxButtonIcons}
+              startIcon={<DeleteOutlineOutlinedIcon fontSize='medium'/>} onClick={handleRemoveIconClick} fullWidth
+              variant='outlined'>{t('remove')}</Button>
+            <Button size='medium' sx={customSxButtonIcons}
+              startIcon={<EditLocationOutlinedIcon fontSize='medium'/>} onClick={handleEditLocationCLick} fullWidth
+              variant='outlined'>{t('move')}</Button>
+          </Box>
+        }
+      </Box>
+
+      {
+        openModal && <DeletePointsModal
           onChangeStateModal={setOpenModal}
           onChangePoints={onChangePoints}
         />
-      )}
-
+      }
     </>
-
   );
-
 }
 
 PointsSidePanels.propTypes = {
