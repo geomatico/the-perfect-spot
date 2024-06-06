@@ -60,9 +60,14 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
   const {t, i18n} = useTranslation();
 
   const mapRef = useRef();
-  const flyTo = bbox => mapRef.current?.fitBounds(bbox, {duration: 1000});
-  const handleSearchResult = ({bbox}) => flyTo(bbox);
-  const [placeholderText, setPlaceholderText] = useState(t('point'));
+
+  const flyTo = (lat,lon) => {
+    mapRef.current?.flyTo({
+      center: [lon,lat]
+    });
+  };
+  const handleSearchResult = ({lat,lon}) => flyTo(lat,lon);
+  const [text, setText] = useState(t('point'));
 
   const COLOR = mode === ADD_BLUE_MODE ? primaryColor : secondaryColor;
   const sources = useMemo(() => {
