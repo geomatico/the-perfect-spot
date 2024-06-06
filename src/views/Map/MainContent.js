@@ -17,7 +17,7 @@ import ModalInfo from '../../components/ModalInfo';
 import ModalAddPoint from '../../components/ModalAddPoint';
 import { primaryColor, secondaryColor } from '../../theme';
 import { v4 as uuid } from 'uuid';
-const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint }) => {
+const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, typeTransport }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
   const [nearestRedPoint,setNearestRedPoint] = useState(null);
@@ -358,7 +358,8 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       right: 18,
       background: 'white'
     }}>
-      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints} onChangeNearestRedPoint={setNearestRedPoint} onChangeHover={onChangeHover} onChangeIdHoverPoint={onChangeIdHoverPoint} onChangePoints={onChangePoints}/>
+      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints} onChangeNearestRedPoint={setNearestRedPoint}
+        onChangeHover={onChangeHover} onChangeIdHoverPoint={onChangeIdHoverPoint} onChangePoints={onChangePoints}typeTransport={typeTransport} />
     </div>
   </>;
 };
@@ -390,7 +391,8 @@ MainContent.propTypes = {
     PropTypes.string,
     PropTypes.oneOf([null])
   ]),
-  onChangeIdHoverPoint: PropTypes.func.isRequired
+  onChangeIdHoverPoint: PropTypes.func.isRequired,
+  typeTransport: PropTypes.string.isRequired
 };
 
 export default MainContent;
