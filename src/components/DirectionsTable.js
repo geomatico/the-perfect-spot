@@ -10,8 +10,8 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import {grey, red} from '@mui/material/colors';
-import {lighten, useMediaQuery, useTheme} from '@mui/material';
+import {red} from '@mui/material/colors';
+import { lighten, useMediaQuery, useTheme} from '@mui/material';
 
 import {useTranslation} from 'react-i18next';
 
@@ -19,7 +19,6 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
   
   const{t} = useTranslation();
   const [editedPointNames, setEditedPointNames] = useState(allPoints);
-  const bluePoints = allPoints.blue ? allPoints.blue.map(point =>point): [] ;
   calculatedRoutes.forEach(function (element) {
     let sum = 0;
     for( var i = 0; i < element.data.length; i++ ){
@@ -74,13 +73,17 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
       
     }
   },[editMode,onChangePoints,editedPointNames]);
-
   useEffect(()=>{
     setEditedPointNames(allPoints);
   },[allPoints]);
-  const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
   const theme = useTheme();
   const widescreen = useMediaQuery(theme.breakpoints.up('lg'), { noSsr: true });
+  const customBorderSx = (index) =>{
+    return{
+      borderRight: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined,
+      borderLeft: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined
+    };
+  };
   return <>
     {
       calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length && widescreen &&
@@ -89,48 +92,52 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
           <TableRow>
             <TableCell key={'empty'} align="right"></TableCell>
             {
-              bluePoints.map((bluePoint, index) => <TableCell key={index} align="right">
+              calculatedRoutes.map((row, index) => <TableCell  onMouseEnter={()=>handleCellHover(allPoints.red[index].id)} onMouseLeave={()=> handleCellLeave()} key={index} align="center" sx={{...customBorderSx(index),'&:hover': index === shortestRouteIndex ? {bgcolor: lighten(red[50],0.75)} : {bgcolor: 'grey.200'}, borderTop : index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined }} >
                 <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                
-                  { editMode ? <TextField  size='small' value={editedPointNames.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>: <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
-                    {bluePoint.name?.toUpperCase()}
+                  { editMode ? <TextField  size='small' value={editedPointNames?.red[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'red')}/>: <Typography sx={{fontWeight: 'bold', color: 'secondary.main'}}>
+                    {allPoints.red[index]?.name?.toUpperCase()}
                   </Typography>}
                 </Box>
+                <Typography>{row.name}</Typography>
+
               </TableCell>)
             }
-            <TableCell key={'average'} align="right">{t('averageTime')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {calculatedRoutes.map((row, index) => (
-            <TableRow onMouseEnter={()=>handleCellHover(allPoints.red[index].id)} onMouseLeave={()=> handleCellLeave()}
+          {allPoints.blue.map((bluePoint, index) => (
+            <TableRow
               key={index}
-              sx={{'&:hover': index === shortestRouteIndex ? {bgcolor: lighten(red[50],0.75)} : {bgcolor: 'grey.200'}  , border: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined}}
+              sx={{}}
             >
               <TableCell component="th" scope="row">
                 <Stack>
                   <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                    { editMode ? <TextField color='secondary' size='small' value={editedPointNames.red[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'red')}/>: <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.dark': 'secondary.main'}}>
-                      {rowNames[index]?.toUpperCase()}
+                    { editMode ? <TextField color='primary' size='small' value={editedPointNames.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>: <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
+                      {bluePoint.name?.toUpperCase()}
                     </Typography>}
-                  </Box>
-                  <Typography variant='body2' sx={{color: index === shortestRouteIndex ? 'secondary.dark': grey[500], fontStyle: 'italic'}}>{row.name}</Typography>
+                  </Box>         
                 </Stack>
               </TableCell>
-              {
-                row.data.map((data) => (
-                  <TableCell  key={data} align="right">{
-                    data.map((value, index ) => (
-                      <span key={value}>{value + (index === 0 ? 'km' : 'min')}<br/></span>
-                    ))
-                  }</TableCell>
-                ))
-              }
-              <TableCell component="th" scope="row" align="center">
-                {row.data.avg} min
-              </TableCell>
+              
+              {allPoints.red.map((redPoint, redIndex) => (
+                <TableCell align='center' key={redIndex} sx={customBorderSx(redIndex)}>
+                  {calculatedRoutes[redIndex]?.data[index]?.map((value, index) => (
+                    <span key={value}>{value + (index === 0 ? 'km' : 'min')}<br /></span>
+                  ))}
+                </TableCell>
+              ))}
+             
             </TableRow>
           ))}
+          <TableRow align='center'>
+            <TableCell align="center">{t('averageTime')}</TableCell>
+            {allPoints.red.map((redPoint, index) => ( 
+              <TableCell key={index} align='center' sx={{...customBorderSx(index),borderBottom:index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined}}> {calculatedRoutes[index]?.data.avg + 'min'}  </TableCell>
+            ))}
+          </TableRow>
+         
         </TableBody>
       </Table>
     }
