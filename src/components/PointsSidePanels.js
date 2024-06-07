@@ -35,9 +35,8 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   };
   const handleCancelEditIconClick = () => {
     onChangeModePoints(lastModePoint);
-    setSelectedMode(lastModePoint);
     onChangeEditMode(false);
-
+    setSelectedMode(lastModePoint);
   };
 
   const [openModal, setOpenModal] = useState(false);

@@ -10,16 +10,15 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import {grey, red} from '@mui/material/colors';
-import {lighten, useMediaQuery, useTheme} from '@mui/material';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-
+import {red} from '@mui/material/colors';
+import { lighten, useMediaQuery, useTheme} from '@mui/material';
 
 import {useTranslation} from 'react-i18next';
 
 const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, onChangePoints, editMode, openButtonSheet, editedPointsName, onChangeEditedPointsName}) => {
   
   const{t} = useTranslation();
+  const [editedPointNames, setEditedPointNames] = useState(allPoints);
   calculatedRoutes.forEach(function (element) {
     let sum = 0;
     for( var i = 0; i < element.data.length; i++ ){
@@ -75,7 +74,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
       onChangePoints(editedPointsName);
       
     }
-  },[editMode,onChangePoints,editedPointsName]);
+  },[editMode,onChangePoints,editedPointNames]);
   useEffect(()=>{
     onChangeEditedPointsName(allPoints);
   },[allPoints]);
@@ -98,16 +97,14 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
             <TableCell key={'empty'} align="right"></TableCell>
             {
               calculatedRoutes.map((row, index) => <TableCell  onMouseEnter={()=>handleCellHover(allPoints.red[index].id)} onMouseLeave={()=> handleCellLeave()} key={index} align="center" sx={{...customBorderSx(index),'&:hover': index === shortestRouteIndex ? {bgcolor: lighten(red[50],0.75)} : {bgcolor: 'grey.200'}, borderTop : index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined }} >
-                <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>           
-                  { 
-                    editMode ? 
-                      <TextField  size='small' value={editedPointNames.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>
-                      : <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
-                        {bluePoint.name?.toUpperCase()}
-                      </Typography>
-                  }
+                <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+               
+                  { editMode ? <TextField  size='small' value={editedPointNames?.red[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'red')}/>: <Typography sx={{fontWeight: 'bold', color: 'secondary.main'}}>
+                    {allPoints.red[index]?.name?.toUpperCase()}
+                  </Typography>}
                 </Box>
                 <Typography>{row.name}</Typography>
+
               </TableCell>)
             }
           </TableRow>
@@ -121,7 +118,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
               <TableCell component="th" scope="row">
                 <Stack>
                   <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                    { editMode ? <TextField color='primary' size='small' value={editedPointsName.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>: <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
+                    { editMode ? <TextField color='primary' size='small' value={editedPointNames.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>: <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
                       {bluePoint.name?.toUpperCase()}
                     </Typography>}
                   </Box>         
@@ -185,11 +182,10 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
                 <TableCell component="th" scope="row">
                   <Stack>
                     <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-  <<<<<<< 65-improve-ui
                       { 
                         editMode ? 
                           <TextField color='primary' size='small' value={editedPointsName.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>
-                           : <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>{bluePoint.name?.toUpperCase()}</Typography>
+                          : <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>{bluePoint.name?.toUpperCase()}</Typography>
                       }
                     </Box>         
                   </Stack>
@@ -202,7 +198,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
                   ))}
                 </TableCell>
               </TableRow>
-          ))}
+            ))}
           <TableRow align='center'>
             <TableCell align="center">{t('averageTime')}</TableCell>
             <TableCell key={shortestRouteIndex} align='center' sx={{...customBorderSx(shortestRouteIndex),borderBottom:shortestRouteIndex === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined}}> {calculatedRoutes[shortestRouteIndex]?.data.avg + 'min'}</TableCell>
