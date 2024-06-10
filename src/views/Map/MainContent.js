@@ -17,13 +17,16 @@ import ModalInfo from '../../components/ModalInfo';
 import ModalAddPoint from '../../components/ModalAddPoint';
 import { primaryColor, secondaryColor } from '../../theme';
 import { v4 as uuid } from 'uuid';
+import { Popup } from 'react-map-gl';
+import Container from '@mui/material/Container';
+import  Typography  from '@mui/material/Typography';
 
 const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode }) => {
 
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
   const [nearestRedPoint,setNearestRedPoint] = useState(null);
-
+  const [featureHovered, setFeatureHovered] = useState(null);
   const getCookie = document.cookie.split('; ').some(cookie => cookie.startsWith('modalInfo'));
 
   const [openModalInfo, setOpenModalInfo] = useState(!getCookie );
@@ -431,8 +434,50 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         mapRef.current.off('mousedown', 'redPoints', handleRedMouseDown);
         
       };
+    }else{
+      if (mapRef.current && mode !== REMOVE) {
+        const handleHoverPoint = (event) =>{
+          
+          if (!event.point) return;
+          
+          const id = event.features[0].id;
+          const pointType = event.features[0].layer.id;
+          setFeatureHovered({
+            lngLat: event.lngLat,
+            pointType: event.features[0].layer.id,
+            name: pointType === 'bluePoints' ? allPoints.blue[id].name : allPoints.red[id].name
+          });
+        };
+
+        const handleMouseLeave = (event) =>{
+          if (!event.point) return;
+          setFeatureHovered(null); 
+        };
+        mapRef.current.off('mousemove','bluePoints',handleHoverPoint);
+        mapRef.current.off('mouseleave','bluePoints',handleMouseLeave);
+        mapRef.current.off('mousemove','redPoints',handleHoverPoint);
+        mapRef.current.off('mouseleave','redPoints',handleMouseLeave);
+
+
+        mapRef.current.on('mousemove','bluePoints',handleHoverPoint);
+        mapRef.current.on('mouseleave','bluePoints',handleMouseLeave);
+
+        mapRef.current.on('mousemove','redPoints',handleHoverPoint);
+        mapRef.current.on('mouseleave','redPoints',handleMouseLeave);
+
+        return () =>{
+          mapRef.current.off('mousemove','bluePoints',handleHoverPoint);
+          mapRef.current.off('mouseleave','bluePoints',handleMouseLeave);
+          mapRef.current.off('mousemove','redPoints',handleHoverPoint);
+          mapRef.current.off('mouseleave','redPoints',handleMouseLeave);
+
+
+        };
+      }
+
+     
     }
-  }, [mapRef.current, mode, allPoints, onChangePoints, setCursor]);
+  }, [mapRef.current, mode, allPoints, onChangePoints, setCursor,setFeatureHovered, editMode]);
 
   return <>
     {openModalInfo && <ModalInfo onHandleCloseModalInfo={handleCloseModalInfo} />}
@@ -455,7 +500,21 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={handleClick}
-    />
+    >
+      { featureHovered && 
+        <Popup
+          longitude={featureHovered.lngLat.lng}
+          latitude={featureHovered.lngLat.lat}
+          closeButton={false}
+          closeOnClick={false}
+          offsetTop={-10}
+        >
+          <Container>
+            <Typography>{featureHovered.name}</Typography>
+          </Container>
+        </Popup>
+      }
+    </Map>
     <Box sx={{
       position: 'absolute',
       top: 18,
