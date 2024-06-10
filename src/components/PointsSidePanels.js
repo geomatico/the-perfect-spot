@@ -17,9 +17,8 @@ import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import Box from '@mui/material/Box';
 
 
-function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChangeEditMode, allPoints, mode }) {
+function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChangeEditMode, allPoints, mode, lastModePoint, onChangeLastModePoint }) {
   const { t } = useTranslation();
-  const [lastModePoint, setLastModePoint] = useState(null);
 
   const [selectedMode, setSelectedMode] = useState('ADD_BLUE');
   const handlePointClick = (newMode) => {
@@ -30,14 +29,15 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   };
 
   const handleEditIConClick = () => {
-    setLastModePoint(mode);
+    onChangeLastModePoint(mode);
     onChangeEditMode(true);
     onChangeModePoints('');
   };
   const handleCancelEditIconClick = () => {
     onChangeModePoints(lastModePoint);
-    onChangeEditMode(false);
     setSelectedMode(lastModePoint);
+    onChangeEditMode(false);
+
   };
 
   const [openModal, setOpenModal] = useState(false);
@@ -208,7 +208,9 @@ PointsSidePanels.propTypes = {
       name: PropTypes.string
     })).isRequired,
   }).isRequired,
-  mode: PropTypes.string.isRequired
+  mode: PropTypes.string.isRequired,
+  lastModePoint: PropTypes.string.isRequired,
+  onChangeLastModePoint: PropTypes.func.isRequired
 };
 
 export default PointsSidePanels;

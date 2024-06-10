@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Map from '@geomatico/geocomponents/Map';
 
@@ -10,23 +10,34 @@ import {
   EDIT
 } from '../../config';
 import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
-import {useTranslation} from 'react-i18next';
+import {  useTranslation } from 'react-i18next';
 import DirectionsTable from '../../components/DirectionsTable';
 import Box from '@mui/material/Box';
 import ModalInfo from '../../components/ModalInfo';
 import ModalAddPoint from '../../components/ModalAddPoint';
 import { primaryColor, secondaryColor } from '../../theme';
 import { v4 as uuid } from 'uuid';
+import BottomSheet from '@geomatico/geocomponents/BottomSheet';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@emotion/react';
+import SidePanelContent from './SidePanelContent';
 
-const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode }) => {
+const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode, onChangeModePoints, onChangeEditMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint }) => {
 
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
-  const [nearestRedPoint,setNearestRedPoint] = useState(null);
-
+  const [nearestRedPoint, setNearestRedPoint] = useState(null);
+  const [getOpen, setOpen] = useState(!widescreen);
+  const [value, setValue] = useState(0);
+  const [editedPointsName, setEditedPointsName] = useState(allPoints);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   const getCookie = document.cookie.split('; ').some(cookie => cookie.startsWith('modalInfo'));
 
-  const [openModalInfo, setOpenModalInfo] = useState(!getCookie );
+  const [openModalInfo, setOpenModalInfo] = useState(!getCookie);
 
   const handleOpen = () => setOpenModal(true);
 
@@ -58,16 +69,16 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
     setOpenModal(false);
   };
 
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const mapRef = useRef();
 
-  const flyTo = (lat,lon) => {
+  const flyTo = (lat, lon) => {
     mapRef.current?.flyTo({
-      center: [lon,lat]
+      center: [lon, lat]
     });
   };
-  const handleSearchResult = ({lat,lon}) => flyTo(lat,lon);
+  const handleSearchResult = ({ lat, lon }) => flyTo(lat, lon);
   const [placeholderText, setPlaceholderText] = useState(t('point'));
 
   const COLOR = mode === ADD_BLUE_MODE ? primaryColor : secondaryColor;
@@ -150,7 +161,7 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         data: nearestPoint || empty
       }
     };
-  }, [allPoints,routes,hover,idHoverPoint,nearestRedPoint]);
+  }, [allPoints, routes, hover, idHoverPoint, nearestRedPoint]);
 
   const layers = useMemo(() => {
     return [
@@ -433,6 +444,9 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
       };
     }
   }, [mapRef.current, mode, allPoints, onChangePoints, setCursor]);
+  const theme = useTheme();
+
+  const widescreen = useMediaQuery(theme.breakpoints.up('lg'), { noSsr: true });
 
   return <>
     {openModalInfo && <ModalInfo onHandleCloseModalInfo={handleCloseModalInfo} />}
@@ -468,17 +482,76 @@ const MainContent = ({mapStyle, mode, routes, calculatedRoutes, onChangePoints, 
         lang={i18n.language}
         onResultClick={handleSearchResult}/>
     </Box>
-    <div style={{
-      position: 'absolute',
-      bottom: 18,
-      right: 18,
-      background: 'white'
-    }}>
-      <DirectionsTable calculatedRoutes={calculatedRoutes} allPoints={allPoints}
-        onChangeNearestRedPoint={setNearestRedPoint} onChangeHover={onChangeHover} 
-        onChangeIdHoverPoint={onChangeIdHoverPoint} onChangePoints={onChangePoints}
-        mode={mode} editMode={editMode} />
-    </div>
+    {widescreen ? (
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 18,
+          right: 18,
+          background: 'white',
+        }}
+      >
+        <DirectionsTable
+          calculatedRoutes={calculatedRoutes}
+          allPoints={allPoints}
+          onChangeNearestRedPoint={setNearestRedPoint}
+          onChangeHover={onChangeHover}
+          onChangeIdHoverPoint={onChangeIdHoverPoint}
+          onChangePoints={onChangePoints}
+          mode={mode}
+          editMode={editMode}
+          editedPointsName={editedPointsName}
+          onChangeEditedPointsName={setEditedPointsName}
+        />
+      </div>
+    ) :  (
+      <BottomSheet
+        isOpen={getOpen}
+        onToggle={setOpen}
+        isCloseable={true}
+        closeHeight={50}
+        openHeight="60vh"
+      >
+        <Box sx={{ width: '100%' }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              <Tab label={t('pointsTab')} />
+              <Tab label={t('tableTab')} />
+            </Tabs>
+          </Box>
+          {value === 0 && (
+            <SidePanelContent
+              onChangePoints={onChangePoints}
+              onChangeModePoints={onChangeModePoints}
+              editMode={editMode}
+              onChangeEditMode={onChangeEditMode}
+              allPoints={allPoints}
+              mode={mode}
+              onHandleTransportationType={onHandleTransportationType}
+              transportOptions={transportOptions}
+              transportType={transportType}
+              lastModePoint={lastModePoint}
+              onChangeLastModePoint={onChangeLastModePoint}
+            />
+          )}
+          {value === 1 && (
+            <DirectionsTable
+              calculatedRoutes={calculatedRoutes}
+              allPoints={allPoints}
+              onChangeNearestRedPoint={setNearestRedPoint}
+              onChangeHover={onChangeHover}
+              onChangeIdHoverPoint={onChangeIdHoverPoint}
+              onChangePoints={onChangePoints}
+              mode={mode}
+              editMode={editMode}
+              openButtonSheet={true}
+              editedPointsName={editedPointsName}
+              onChangeEditedPointsName={setEditedPointsName}
+            />
+          )}
+        </Box>
+      </BottomSheet>
+    )}
   </>;
 };
 
@@ -510,7 +583,15 @@ MainContent.propTypes = {
     PropTypes.oneOf([null])
   ]),
   onChangeIdHoverPoint: PropTypes.func.isRequired,
-  editMode: PropTypes.bool.isRequired
+  editMode: PropTypes.bool.isRequired,
+  onChangeModePoints: PropTypes.func.isRequired,
+  onChangeEditMode: PropTypes.func.isRequired,
+  onHandleTransportationType: PropTypes.func.isRequired,
+  transportOptions: PropTypes.array.isRequired,
+  transportType: PropTypes.string.isRequired,
+  lastModePoint: PropTypes.string.isRequired,
+  onChangeLastModePoint: PropTypes.func.isRequired
+
 };
 
 export default MainContent;

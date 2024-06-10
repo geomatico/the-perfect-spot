@@ -1,9 +1,9 @@
 {
   "add": "Añade",
+  "addLocations": "Añade tus localizaciones",
   "addPoint": "Añadir punto",
   "add_origin": "Añade un posible spot",
   "add_poi": "Añade un punto",
-  "addLocations": "Añade tus localizaciones",
   "averageTime": "Tiempo medio",
   "baseMap": "Cartografía base",
   "cancel": "Cancelar",
@@ -34,6 +34,7 @@
   "move": "Mover",
   "originPoints": "sitios importantes",
   "point": "Punto",
+  "pointsTab": "Puntos",
   "remove": "Borrar",
   "removeButton": "Borrar todos los puntos",
   "remove_origin": "Elimina un posible spot",
@@ -42,5 +43,6 @@
   "saveNamePoint": "Guardar",
   "search": "Busca...",
   "seconds": "segundos para continuar",
+  "tableTab": "Tabla",
   "transportType": "¿Cómo te desplazas?"
 }
