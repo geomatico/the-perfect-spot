@@ -588,10 +588,7 @@ MainContent.propTypes = {
   onHandleTransportationType: PropTypes.func.isRequired,
   transportOptions: PropTypes.array.isRequired,
   transportType: PropTypes.string.isRequired,
-  lastModePoint: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.oneOf([null])
-  ]),
+  lastModePoint: PropTypes.string.isRequired,
   onChangeLastModePoint: PropTypes.func.isRequired
 
 };

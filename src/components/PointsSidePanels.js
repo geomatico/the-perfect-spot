@@ -35,8 +35,9 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   };
   const handleCancelEditIconClick = () => {
     onChangeModePoints(lastModePoint);
-    onChangeEditMode(false);
     setSelectedMode(lastModePoint);
+    onChangeEditMode(false);
+
   };
 
   const [openModal, setOpenModal] = useState(false);
@@ -213,10 +214,7 @@ PointsSidePanels.propTypes = {
     })).isRequired,
   }).isRequired,
   mode: PropTypes.string.isRequired,
-  lastModePoint: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.oneOf([null])
-  ]),
+  lastModePoint: PropTypes.string.isRequired,
   onChangeLastModePoint: PropTypes.func.isRequired
 };
 
