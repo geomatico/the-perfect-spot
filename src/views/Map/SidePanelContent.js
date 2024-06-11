@@ -78,7 +78,10 @@ SidePanelContent.propTypes = {
   onHandleTransportationType: PropTypes.func.isRequired,
   transportOptions: PropTypes.array.isRequired,
   transportType: PropTypes.string.isRequired,
-  lastModePoint: PropTypes.string.isRequired,
+  lastModePoint: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.oneOf([null])
+  ]),
   onChangeLastModePoint: PropTypes.func.isRequired
 };
 

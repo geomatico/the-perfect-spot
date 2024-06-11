@@ -93,6 +93,11 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
         '& .ButtonGroup-button': editMode ? '' : {
           '&.Mui-selected': {
             backgroundColor: theme => `${theme.palette.common.white} !important`,
+            border: theme => `2px solid ${theme.palette.primary.main}`,
+            '&:hover': {
+              border: theme => `2px solid ${theme.palette.primary.main}`,
+              backgroundColor: theme => `${theme.palette.common.white}`,
+            },
           }
         },
         '& .ButtonGroup-buttonContent': editMode ? '' : {
@@ -209,7 +214,10 @@ PointsSidePanels.propTypes = {
     })).isRequired,
   }).isRequired,
   mode: PropTypes.string.isRequired,
-  lastModePoint: PropTypes.string.isRequired,
+  lastModePoint: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.oneOf([null])
+  ]),
   onChangeLastModePoint: PropTypes.func.isRequired
 };
 

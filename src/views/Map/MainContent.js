@@ -445,7 +445,6 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
     }
   }, [mapRef.current, mode, allPoints, onChangePoints, setCursor]);
   const theme = useTheme();
-
   const widescreen = useMediaQuery(theme.breakpoints.up('lg'), { noSsr: true });
 
   return <>
@@ -589,7 +588,10 @@ MainContent.propTypes = {
   onHandleTransportationType: PropTypes.func.isRequired,
   transportOptions: PropTypes.array.isRequired,
   transportType: PropTypes.string.isRequired,
-  lastModePoint: PropTypes.string.isRequired,
+  lastModePoint: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.oneOf([null])
+  ]),
   onChangeLastModePoint: PropTypes.func.isRequired
 
 };

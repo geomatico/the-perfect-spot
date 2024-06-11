@@ -117,8 +117,6 @@ const Map = () => {
   
   const sidePanelContent = <SidePanelContent
     onChangeModePoints={setMode}
-    onRoutesChange={setRoutes}
-    onChangeCalculatedRoutes={setCalculatedRoutes}
     allPoints={allPoints}
     onChangePoints={setAllPoints}
     onChangeEditMode={setEditMode}
