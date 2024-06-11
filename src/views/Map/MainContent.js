@@ -24,17 +24,18 @@ import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import SidePanelContent from './SidePanelContent';
 
-const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode, onChangeModePoints, onChangeEditMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint }) => {
+const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode, onChangeModePoints, onChangeEditMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint, nearestRedPoint }) => {
 
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
-  const [nearestRedPoint, setNearestRedPoint] = useState(null);
   const [getOpen, setOpen] = useState(!widescreen);
   const [value, setValue] = useState(0);
   const [editedPointsName, setEditedPointsName] = useState(allPoints);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  
   const getCookie = document.cookie.split('; ').some(cookie => cookie.startsWith('modalInfo'));
 
   const [openModalInfo, setOpenModalInfo] = useState(!getCookie);
@@ -447,6 +448,15 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
   const theme = useTheme();
   const widescreen = useMediaQuery(theme.breakpoints.up('lg'), { noSsr: true });
 
+  
+
+  useEffect(()=>{
+    if (!editMode) {
+      onChangePoints(editedPointsName);
+      
+    }
+  },[editMode,onChangePoints,editedPointsName]);
+
   return <>
     {openModalInfo && <ModalInfo onHandleCloseModalInfo={handleCloseModalInfo} />}
     {openModal && <ModalAddPoint 
@@ -493,7 +503,6 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
         <DirectionsTable
           calculatedRoutes={calculatedRoutes}
           allPoints={allPoints}
-          onChangeNearestRedPoint={setNearestRedPoint}
           onChangeHover={onChangeHover}
           onChangeIdHoverPoint={onChangeIdHoverPoint}
           onChangePoints={onChangePoints}
@@ -501,6 +510,8 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
           editMode={editMode}
           editedPointsName={editedPointsName}
           onChangeEditedPointsName={setEditedPointsName}
+          shortestRouteIndex={nearestRedPoint}
+          openButtonSheet={false}
         />
       </div>
     ) :  (
@@ -537,7 +548,6 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
             <DirectionsTable
               calculatedRoutes={calculatedRoutes}
               allPoints={allPoints}
-              onChangeNearestRedPoint={setNearestRedPoint}
               onChangeHover={onChangeHover}
               onChangeIdHoverPoint={onChangeIdHoverPoint}
               onChangePoints={onChangePoints}
@@ -546,6 +556,7 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
               openButtonSheet={true}
               editedPointsName={editedPointsName}
               onChangeEditedPointsName={setEditedPointsName}
+              shortestRouteIndex={nearestRedPoint}
             />
           )}
         </Box>
@@ -592,7 +603,8 @@ MainContent.propTypes = {
     PropTypes.string,
     PropTypes.oneOf([null])
   ]),
-  onChangeLastModePoint: PropTypes.func.isRequired
+  onChangeLastModePoint: PropTypes.func.isRequired,
+  nearestRedPoint: PropTypes.number.isRequired
 
 };
 

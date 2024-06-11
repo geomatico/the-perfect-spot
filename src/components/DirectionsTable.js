@@ -10,14 +10,12 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import {grey, red} from '@mui/material/colors';
-import {lighten, useMediaQuery, useTheme} from '@mui/material';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-
+import {red} from '@mui/material/colors';
+import { lighten, useMediaQuery, useTheme} from '@mui/material';
 
 import {useTranslation} from 'react-i18next';
 
-const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, onChangePoints, editMode, openButtonSheet, editedPointsName, onChangeEditedPointsName}) => {
+const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint, shortestRouteIndex, editMode, openButtonSheet, editedPointsName, onChangeEditedPointsName}) => {
   
   const{t} = useTranslation();
   calculatedRoutes.forEach(function (element) {
@@ -29,12 +27,6 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     element.data.avg = Math.round( avg * 10)/10;
   });
   
-
-  let dir = calculatedRoutes.map(d => (d.data.avg));
-  let shortestRouteIndex = dir.indexOf(Math.min(...dir));
-  useEffect(()=>{
-    onChangeNearestRedPoint(shortestRouteIndex >= 0 ? shortestRouteIndex : null);
-  },[shortestRouteIndex]);
   const handleCellHover = (redId) =>{
     onChangeHover(true);
     onChangeIdHoverPoint(redId);
@@ -70,12 +62,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     });
   };
 
-  useEffect(()=>{
-    if (!editMode) {
-      onChangePoints(editedPointsName);
-      
-    }
-  },[editMode,onChangePoints,editedPointsName]);
+ 
   useEffect(()=>{
     onChangeEditedPointsName(allPoints);
   },[allPoints]);
@@ -87,8 +74,6 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
       borderLeft: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined
     };
   };
-  const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
-
   return <>
     {
       calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length && widescreen &&
@@ -98,16 +83,14 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
             <TableCell key={'empty'} align="right"></TableCell>
             {
               calculatedRoutes.map((row, index) => <TableCell  onMouseEnter={()=>handleCellHover(allPoints.red[index].id)} onMouseLeave={()=> handleCellLeave()} key={index} align="center" sx={{...customBorderSx(index),'&:hover': index === shortestRouteIndex ? {bgcolor: lighten(red[50],0.75)} : {bgcolor: 'grey.200'}, borderTop : index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined }} >
-                <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>           
-                  { 
-                    editMode ? 
-                      <TextField  size='small' value={editedPointNames.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>
-                      : <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
-                        {bluePoint.name?.toUpperCase()}
-                      </Typography>
-                  }
+                <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+               
+                  { editMode ? <TextField  size='small' value={editedPointsName?.red[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'red')}/>: <Typography sx={{fontWeight: 'bold', color: 'secondary.main'}}>
+                    {allPoints.red[index]?.name?.toUpperCase()}
+                  </Typography>}
                 </Box>
                 <Typography>{row.name}</Typography>
+
               </TableCell>)
             }
           </TableRow>
@@ -150,7 +133,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     }
 
     {
-      calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length && !widescreen && openButtonSheet && <Table sx={{minWidth: 200}} aria-label="simple table">
+      calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length && !widescreen && openButtonSheet && <Table size='small' sx={{minWidth: 200}} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell key={'empty'} align="center"></TableCell>
@@ -169,44 +152,38 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
           </TableRow>
         </TableHead>
         <TableBody>
-          {
-            allPoints.blue.map((bluePoint, index) => (
-              <TableRow
-                key={index}
-                sx={{
-                  bgcolor: index === shortestRouteIndex ? lighten(red[50], 0.55) : undefined,
-                  outline: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.main}` : undefined,
-                  '&:hover': {
-                    bgcolor: index === shortestRouteIndex ? lighten(red[50], 0.55) : 'grey.200',
-                    outline: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.main}` : undefined
-                  }
-                }}
-              >
-                <TableCell component="th" scope="row">
-                  <Stack>
-                    <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-  <<<<<<< 65-improve-ui
-                      { 
-                        editMode ? 
-                          <TextField color='primary' size='small' value={editedPointsName.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>
-                           : <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>{bluePoint.name?.toUpperCase()}</Typography>
-                      }
-                    </Box>         
-                  </Stack>
-                </TableCell>
-
-
-                <TableCell align='center' key={shortestRouteIndex} sx={customBorderSx(shortestRouteIndex)}>
-                  {calculatedRoutes[shortestRouteIndex]?.data[index]?.map((value, index) => (
-                    <span key={value}>{value + (index === 0 ? 'km' : 'min')}<br /></span>
-                  ))}
-                </TableCell>
-              </TableRow>
+          {allPoints.blue.map((bluePoint, index) => (
+            <TableRow
+              key={index}
+              sx={{}}
+            >
+              <TableCell component="th" scope="row">
+                <Stack>
+                  <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+                    { editMode ? <TextField color='primary' size='small' value={editedPointsName.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>: <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
+                      {bluePoint.name?.toUpperCase()}
+                    </Typography>}
+                  </Box>         
+                </Stack>
+              </TableCell>
+              
+              
+              <TableCell align='center' key={shortestRouteIndex} sx={customBorderSx(shortestRouteIndex)}>
+                {calculatedRoutes[shortestRouteIndex]?.data[index]?.map((value, index) => (
+                  <span key={value}>{value + (index === 0 ? 'km' : 'min')}<br /></span>
+                ))}
+              </TableCell>
+            
+             
+            </TableRow>
           ))}
           <TableRow align='center'>
             <TableCell align="center">{t('averageTime')}</TableCell>
-            <TableCell key={shortestRouteIndex} align='center' sx={{...customBorderSx(shortestRouteIndex),borderBottom:shortestRouteIndex === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined}}> {calculatedRoutes[shortestRouteIndex]?.data.avg + 'min'}</TableCell>
+            
+            <TableCell key={shortestRouteIndex} align='center' sx={{...customBorderSx(shortestRouteIndex),borderBottom:shortestRouteIndex === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined}}> {calculatedRoutes[shortestRouteIndex]?.data.avg + 'min'}  </TableCell>
+         
           </TableRow>
+         
         </TableBody>
       </Table>
     }
@@ -229,7 +206,6 @@ DirectionsTable.propTypes = {
       name: PropTypes.string
     })).isRequired,
   }).isRequired,
-  onChangeNearestRedPoint: PropTypes.func.isRequired,
   onChangeHover: PropTypes.func.isRequired,
   onChangeIdHoverPoint: PropTypes.func.isRequired,
   onChangePoints: PropTypes.func.isRequired,
@@ -250,6 +226,10 @@ DirectionsTable.propTypes = {
     })).isRequired,
   }).isRequired,
   onChangeEditedPointsName: PropTypes.func.isRequired,
+  shortestRouteIndex: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.oneOf([null])
+  ]),
 };
 
 export default DirectionsTable;
