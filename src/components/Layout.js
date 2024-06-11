@@ -54,7 +54,7 @@ const Layout = ({mainContent, sidePanelContent}) => {
       isOpen={isSidePanelOpen}
       onClose={handleClose}
       widescreen={widescreen}
-      sx={{'& .MuiPaper-root': {left: widescreen ? MINI_SIDE_PANEL_WIDTH : MINI_SIDE_PANEL_DENSE_WIDTH}, display: isSidePanelOpen ? 'block' : 'none'}}
+      sx={{'& .MuiPaper-root': {left: widescreen ? MINI_SIDE_PANEL_WIDTH : MINI_SIDE_PANEL_DENSE_WIDTH}, display: widescreen ? 'block' : 'none'}}
     >
       {sidePanelContent}
     </SidePanel>

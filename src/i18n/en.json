@@ -34,6 +34,7 @@
   "move": "move",
   "originPoints": "My places",
   "point": "Point",
+  "pointsTab": "Points",
   "remove": "Remove",
   "removeButton": "Delete all points",
   "remove_origin": "Remove a possible spot",
@@ -42,5 +43,6 @@
   "saveNamePoint": "Save",
   "search": "Search...",
   "seconds": "seconds to continue",
+  "tableTab": "Table",
   "transportType": "How do you travel?"
 }

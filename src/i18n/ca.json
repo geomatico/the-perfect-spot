@@ -34,6 +34,7 @@
   "move": "Moure",
   "originPoints": "My places",
   "point": "Punt",
+  "pointsTab": "Punts",
   "remove": "Esborra",
   "removeButton": "Esborrar tots els punts",
   "remove_origin": "Elimina un possible spot",
@@ -42,5 +43,6 @@
   "saveNamePoint": "Guardar",
   "search": "Cerca...",
   "seconds": "segons per continuar",
+  "tableTab": "Taula",
   "transportType": "Com et desplaces?"
 }
