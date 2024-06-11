@@ -28,13 +28,29 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
 
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
-  const [nearestRedPoint, setNearestRedPoint] = useState(null);
+  const [nearestRedPoint, setNearestRedPoint] = useState(0);
   const [getOpen, setOpen] = useState(!widescreen);
   const [value, setValue] = useState(0);
   const [editedPointsName, setEditedPointsName] = useState(allPoints);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    calculatedRoutes.forEach(function (element) {
+      let sum = 0;
+      for (var i = 0; i < element.data.length; i++) {
+        sum += parseInt(element.data[i][1], 10);
+      }
+      let avg = sum / element.data.length;
+      
+      element.data.avg = Math.round(avg * 10) / 10;
+    });
+
+    let dir = calculatedRoutes.map(d => d.data.avg);
+    let shortestRouteIndex = dir.indexOf(Math.min(...dir));
+    setNearestRedPoint(shortestRouteIndex);
+  }, [calculatedRoutes]);
   const getCookie = document.cookie.split('; ').some(cookie => cookie.startsWith('modalInfo'));
 
   const [openModalInfo, setOpenModalInfo] = useState(!getCookie);
@@ -447,6 +463,15 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
   const theme = useTheme();
   const widescreen = useMediaQuery(theme.breakpoints.up('lg'), { noSsr: true });
 
+  
+
+  useEffect(()=>{
+    if (!editMode) {
+      onChangePoints(editedPointsName);
+      
+    }
+  },[editMode,onChangePoints,editedPointsName]);
+
   return <>
     {openModalInfo && <ModalInfo onHandleCloseModalInfo={handleCloseModalInfo} />}
     {openModal && <ModalAddPoint 
@@ -501,6 +526,8 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
           editMode={editMode}
           editedPointsName={editedPointsName}
           onChangeEditedPointsName={setEditedPointsName}
+          shortestRouteIndex={nearestRedPoint}
+          openButtonSheet={false}
         />
       </div>
     ) :  (
@@ -546,6 +573,7 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
               openButtonSheet={true}
               editedPointsName={editedPointsName}
               onChangeEditedPointsName={setEditedPointsName}
+              shortestRouteIndex={nearestRedPoint}
             />
           )}
         </Box>

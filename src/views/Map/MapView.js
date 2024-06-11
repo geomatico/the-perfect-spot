@@ -149,6 +149,7 @@ const Map = () => {
     transportOptions={transportOptions}
     lastModePoint={lastModePoint}
     onChangeLastModePoint={setLastModePoint}
+    onChangeRoutes={setCalculatedRoutes}
   />;
 
   return <Layout
