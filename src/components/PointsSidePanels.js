@@ -214,7 +214,10 @@ PointsSidePanels.propTypes = {
     })).isRequired,
   }).isRequired,
   mode: PropTypes.string.isRequired,
-  lastModePoint: PropTypes.string.isRequired,
+  lastModePoint: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.oneOf([null])
+  ]),
   onChangeLastModePoint: PropTypes.func.isRequired
 };
 
