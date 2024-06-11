@@ -15,7 +15,7 @@ import { lighten, useMediaQuery, useTheme} from '@mui/material';
 
 import {useTranslation} from 'react-i18next';
 
-const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint,onChangeNearestRedPoint, shortestRouteIndex, editMode, openButtonSheet, editedPointsName, onChangeEditedPointsName}) => {
+const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint, shortestRouteIndex, editMode, openButtonSheet, editedPointsName, onChangeEditedPointsName}) => {
   
   const{t} = useTranslation();
   calculatedRoutes.forEach(function (element) {
@@ -27,9 +27,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     element.data.avg = Math.round( avg * 10)/10;
   });
   
-  useEffect(()=>{
-    onChangeNearestRedPoint(shortestRouteIndex >= 0 ? shortestRouteIndex : null);
-  },[shortestRouteIndex]);
+ 
   const handleCellHover = (redId) =>{
     onChangeHover(true);
     onChangeIdHoverPoint(redId);
@@ -211,7 +209,6 @@ DirectionsTable.propTypes = {
       name: PropTypes.string
     })).isRequired,
   }).isRequired,
-  onChangeNearestRedPoint: PropTypes.func.isRequired,
   onChangeHover: PropTypes.func.isRequired,
   onChangeIdHoverPoint: PropTypes.func.isRequired,
   onChangePoints: PropTypes.func.isRequired,

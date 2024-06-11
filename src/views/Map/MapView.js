@@ -18,8 +18,24 @@ const Map = () => {
   const [allPoints,setAllPoints] = useState(localStorage.getItem('ThePerfectSpot') ? JSON.parse(localStorage.getItem('ThePerfectSpot')):{red: [], blue: []});
   const [editMode, setEditMode] = useState(false);
   const [lastModePoint, setLastModePoint] = useState(null);
+  const [nearestRedPoint, setNearestRedPoint] = useState(0);
 
 
+  useEffect(() => {
+    calculatedRoutes.forEach(function (element) {
+      let sum = 0;
+      for (var i = 0; i < element.data.length; i++) {
+        sum += parseInt(element.data[i][1], 10);
+      }
+      let avg = sum / element.data.length;
+      
+      element.data.avg = Math.round(avg * 10) / 10;
+    });
+
+    let dir = calculatedRoutes.map(d => d.data.avg);
+    let shortestRouteIndex = dir.indexOf(Math.min(...dir));
+    setNearestRedPoint(shortestRouteIndex);
+  }, [calculatedRoutes]);
   const {t} = useTranslation();
   const transportOptions = [
     {
@@ -150,6 +166,7 @@ const Map = () => {
     lastModePoint={lastModePoint}
     onChangeLastModePoint={setLastModePoint}
     onChangeRoutes={setCalculatedRoutes}
+    nearestRedPoint={nearestRedPoint}
   />;
 
   return <Layout
