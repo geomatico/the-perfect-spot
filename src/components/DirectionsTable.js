@@ -27,7 +27,6 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     element.data.avg = Math.round( avg * 10)/10;
   });
   
- 
   const handleCellHover = (redId) =>{
     onChangeHover(true);
     onChangeIdHoverPoint(redId);
@@ -75,7 +74,6 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
       borderLeft: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined
     };
   };
-
   return <>
     {
       calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length && widescreen &&
