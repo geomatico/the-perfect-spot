@@ -75,7 +75,6 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
       borderLeft: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined
     };
   };
-  const rowNames = allPoints.red ? allPoints.red.map(point => point.name) : [];
 
   return <>
     {
@@ -136,7 +135,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     }
 
     {
-      calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length && !widescreen && openButtonSheet && <Table sx={{minWidth: 200}} aria-label="simple table">
+      calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length && !widescreen && openButtonSheet && <Table size='small' sx={{minWidth: 200}} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell key={'empty'} align="center"></TableCell>
