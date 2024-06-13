@@ -26,6 +26,9 @@ import SidePanelContent from './SidePanelContent';
 import { Popup } from 'react-map-gl';
 import Container from '@mui/material/Container';
 import  Typography  from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
+
 
 const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode, onChangeModePoints, onChangeEditMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint, nearestRedPoint }) => {
 
@@ -34,6 +37,7 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
   const [getOpen, setOpen] = useState(!widescreen);
   const [value, setValue] = useState(0);
   const [editedPointsName, setEditedPointsName] = useState(allPoints);
+  const [openDirectionsTable,setOpenDirectionsTable] = useState(true);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -552,35 +556,46 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
         onResultClick={handleSearchResult}/>
     </Box>
     {widescreen ? (
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 18,
-          right: 18,
-          background: 'white',
-        }}
-      >
-        <DirectionsTable
-          calculatedRoutes={calculatedRoutes}
-          allPoints={allPoints}
-          onChangeHover={onChangeHover}
-          onChangeIdHoverPoint={onChangeIdHoverPoint}
-          onChangePoints={onChangePoints}
-          mode={mode}
-          editMode={editMode}
-          editedPointsName={editedPointsName}
-          onChangeEditedPointsName={setEditedPointsName}
-          shortestRouteIndex={nearestRedPoint}
-          openButtonSheet={false}
-        />
-      </div>
+      <>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 18,
+            right: 18,
+            background: 'white',
+          }}
+        >
+          {openDirectionsTable && (
+            <DirectionsTable
+              calculatedRoutes={calculatedRoutes}
+              allPoints={allPoints}
+              onChangeHover={onChangeHover}
+              onChangeIdHoverPoint={onChangeIdHoverPoint}
+              onChangePoints={onChangePoints}
+              mode={mode}
+              editMode={editMode}
+              editedPointsName={editedPointsName}
+              onChangeEditedPointsName={setEditedPointsName}
+              shortestRouteIndex={nearestRedPoint}
+              openButtonSheet={false}
+            /> 
+          )}
+        </div>
+        <Button
+          onClick={() => setOpenDirectionsTable(!openDirectionsTable)}
+          sx={{position:'absolute', bottom:18 ,right:15 }}
+        >
+          <RouteOutlinedIcon />
+        </Button>
+      </>
+      
     ) :  (
       <BottomSheet
         isOpen={getOpen}
         onToggle={setOpen}
         isCloseable={true}
         closeHeight={50}
-        openHeight="60vh"
+        openHeight="50vh"
       >
         <Box sx={{ width: '100%' }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

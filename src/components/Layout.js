@@ -43,8 +43,6 @@ const Layout = ({mainContent, sidePanelContent}) => {
     <ResponsiveHeader
       logo={<RouteIcon fontSize='large' sx={{mt: 1}}/>}
       title='The perfect Spot'
-      onStartIconClick={widescreen ? undefined : handleClose}
-      isStartIconCloseable={isSidePanelOpen}
       sx={{'&.MuiAppBar-root': {zIndex: 1500}}}
     >
     </ResponsiveHeader>

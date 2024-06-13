@@ -15,6 +15,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import Box from '@mui/material/Box';
+import { useTheme } from '@emotion/react';
 
 
 function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChangeEditMode, allPoints, mode, lastModePoint, onChangeLastModePoint }) {
@@ -46,13 +47,26 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
     setOpenModal(true);
   };
 
-
+  const theme = useTheme();
+  const customMarginSx = (theme) => ({
+    marginTop: 4,
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 1,
+    },
+  });
+  
+  const customFontSizeSx = (theme)=>({
+    fontSize: 14,
+    [theme.breakpoints.down('sm')]:{
+      fontSize: 13
+    }
+  });
   const buttonGroupTypePoints = [
     {
       id: 'ADD_BLUE',
       content:
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <AddIcon /><Typography fontSize={14}  >{t('originPoints')}</Typography>
+          <AddIcon /><Typography sx={customFontSizeSx(theme)}  >{t('originPoints')}</Typography>
         </Box>
 
     },
@@ -60,7 +74,7 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
       id: 'ADD_RED',
       content:
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <AddIcon /><Typography fontSize={14} >{t('finalPoints')}</Typography>
+          <AddIcon /><Typography sx={customFontSizeSx(theme)} >{t('finalPoints')}</Typography>
         </Box>
 
     },
@@ -146,20 +160,19 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
         selectedItemId={selectedMode}
         onItemClick={handlePointClick}
         sx={customSx}
-
       />
 
       <Button
         variant='contained'
         color='secondary'
         fullWidth
-        sx={{ mt: 8}}
+        sx={customMarginSx(theme)}
         onClick={handleOpenModal}
         disabled={(!(allPoints.blue.length || allPoints.red.length))}>
         {t('removeButton')}
       </Button>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, mt: 4 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, ...customMarginSx }}>
         <Typography variant='body2' sx={{color: 'grey.600', fontStyle: 'italic'}}>{t('editDescription')}</Typography>
         <Button
           onClick={editMode ? handleCancelEditIconClick : handleEditIConClick}
