@@ -19,6 +19,7 @@ const Map = () => {
   const [editMode, setEditMode] = useState(false);
   const [lastModePoint, setLastModePoint] = useState(null);
   const [nearestRedPoint, setNearestRedPoint] = useState(0);
+  const [selectedMode, setSelectedMode] = useState(lastModePoint ? lastModePoint : 'ADD_BLUE');
 
 
   useEffect(() => {
@@ -143,6 +144,8 @@ const Map = () => {
     transportType={transportation}
     lastModePoint={lastModePoint}
     onChangeLastModePoint={setLastModePoint}
+    selectedMode={selectedMode}
+    onChangeSelectedMode={setSelectedMode}
   />;
 
   const mainContent = <MainContent
@@ -167,6 +170,8 @@ const Map = () => {
     onChangeLastModePoint={setLastModePoint}
     onChangeRoutes={setCalculatedRoutes}
     nearestRedPoint={nearestRedPoint}
+    selectedMode={selectedMode}
+    onChangeSelectedMode={setSelectedMode}
   />;
 
   return <Layout

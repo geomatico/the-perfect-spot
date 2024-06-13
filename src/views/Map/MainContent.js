@@ -28,9 +28,9 @@ import Container from '@mui/material/Container';
 import  Typography  from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
+import Grow from '@mui/material/Grow';
 
-
-const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode, onChangeModePoints, onChangeEditMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint, nearestRedPoint }) => {
+const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode, onChangeModePoints, onChangeEditMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint, nearestRedPoint, selectedMode, onChangeSelectedMode }) => {
 
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [openModal, setOpenModal] = useState(false);
@@ -41,8 +41,10 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  useEffect(()=>{
+    setEditedPointsName(allPoints);
+  },[allPoints]);
 
-  
   const [featureHovered, setFeatureHovered] = useState(null);
   const getCookie = document.cookie.split('; ').some(cookie => cookie.startsWith('modalInfo'));
 
@@ -566,19 +568,21 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
           }}
         >
           {openDirectionsTable && (
-            <DirectionsTable
-              calculatedRoutes={calculatedRoutes}
-              allPoints={allPoints}
-              onChangeHover={onChangeHover}
-              onChangeIdHoverPoint={onChangeIdHoverPoint}
-              onChangePoints={onChangePoints}
-              mode={mode}
-              editMode={editMode}
-              editedPointsName={editedPointsName}
-              onChangeEditedPointsName={setEditedPointsName}
-              shortestRouteIndex={nearestRedPoint}
-              openButtonSheet={false}
-            /> 
+            <Grow in={openDirectionsTable}  style={{ transformOrigin: '0 0 0' }}
+              {...(openDirectionsTable ? { timeout: 500 } : {})}>
+              <div> <DirectionsTable
+                calculatedRoutes={calculatedRoutes}
+                allPoints={allPoints}
+                onChangeHover={onChangeHover}
+                onChangeIdHoverPoint={onChangeIdHoverPoint}
+                onChangePoints={onChangePoints}
+                mode={mode}
+                editMode={editMode}
+                editedPointsName={editedPointsName}
+                onChangeEditedPointsName={setEditedPointsName}
+                shortestRouteIndex={nearestRedPoint}
+                openButtonSheet={false}
+              /> </div></Grow>
           )}
         </div>
         <Button
@@ -617,6 +621,8 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
               transportType={transportType}
               lastModePoint={lastModePoint}
               onChangeLastModePoint={onChangeLastModePoint}
+              selectedMode={selectedMode}
+              onChangeSelectedMode={onChangeSelectedMode}
             />
           )}
           {value === 1 && (
@@ -679,7 +685,9 @@ MainContent.propTypes = {
     PropTypes.oneOf([null])
   ]),
   onChangeLastModePoint: PropTypes.func.isRequired,
-  nearestRedPoint: PropTypes.number.isRequired
+  nearestRedPoint: PropTypes.number.isRequired,
+  selectedMode: PropTypes.string.isRequired,
+  onChangeSelectedMode: PropTypes.func.isRequired
 
 };
 

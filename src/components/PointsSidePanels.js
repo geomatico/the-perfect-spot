@@ -16,15 +16,15 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import Box from '@mui/material/Box';
 import { useTheme } from '@emotion/react';
+import { useMediaQuery } from '@mui/material';
 
 
-function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChangeEditMode, allPoints, mode, lastModePoint, onChangeLastModePoint }) {
+function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChangeEditMode, allPoints, mode, lastModePoint, onChangeLastModePoint,selectedMode, onChangeSelectedMode }) {
   const { t } = useTranslation();
 
-  const [selectedMode, setSelectedMode] = useState('ADD_BLUE');
   const handlePointClick = (newMode) => {
     if (newMode) {
-      setSelectedMode(newMode);
+      onChangeSelectedMode(newMode);
       onChangeModePoints(newMode);
     }
   };
@@ -36,7 +36,7 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   };
   const handleCancelEditIconClick = () => {
     onChangeModePoints(lastModePoint);
-    setSelectedMode(lastModePoint);
+    onChangeSelectedMode(lastModePoint);
     onChangeEditMode(false);
 
   };
@@ -48,10 +48,12 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   };
 
   const theme = useTheme();
+  const widescreen = useMediaQuery(theme.breakpoints.up('lg'), { noSsr: true });
+
   const customMarginSx = (theme) => ({
     marginTop: 4,
     [theme.breakpoints.down('sm')]: {
-      marginTop: 1,
+      marginTop: 2,
     },
   });
   
@@ -150,6 +152,8 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
     }
     
   ];
+
+  console.log(selectedMode);
   return (
     <>
       <ButtonGroup
@@ -173,12 +177,12 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
       </Button>
 
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, ...customMarginSx }}>
-        <Typography variant='body2' sx={{color: 'grey.600', fontStyle: 'italic'}}>{t('editDescription')}</Typography>
+        {widescreen && <Typography variant='body2' sx={{color: 'grey.600', fontStyle: 'italic'}}>{t('editDescription')}</Typography>}
         <Button
           onClick={editMode ? handleCancelEditIconClick : handleEditIConClick}
           startIcon={editMode ? <CloseOutlinedIcon /> : <EditOutlinedIcon />}
           size='medium'
-          sx={customSxButtonIcons}
+          sx={{...customSxButtonIcons, ...customMarginSx(theme)}}
           variant='outlined'
           fullWidth
           disabled={!(allPoints.blue.length || allPoints.red.length ||editMode)}
@@ -231,7 +235,9 @@ PointsSidePanels.propTypes = {
     PropTypes.string,
     PropTypes.oneOf([null])
   ]),
-  onChangeLastModePoint: PropTypes.func.isRequired
+  onChangeLastModePoint: PropTypes.func.isRequired,
+  selectedMode: PropTypes.string.isRequired,
+  onChangeSelectedMode: PropTypes.func.isRequired
 };
 
 export default PointsSidePanels;

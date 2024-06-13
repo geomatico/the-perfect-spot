@@ -17,7 +17,7 @@ const ScrollableContent = styled(Box)({
   padding: '8px',
 });
 
-const SidePanelContent = ({ onChangeModePoints, allPoints, onChangePoints, mode, onChangeEditMode, editMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint}) => {
+const SidePanelContent = ({ onChangeModePoints, allPoints, onChangePoints, mode, onChangeEditMode, editMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint, selectedMode, onChangeSelectedMode}) => {
   const requestError = http.getError();
   const {t} = useTranslation();
   const theme = useTheme();
@@ -55,6 +55,8 @@ const SidePanelContent = ({ onChangeModePoints, allPoints, onChangePoints, mode,
           allPoints={allPoints}
           lastModePoint={lastModePoint}
           onChangeLastModePoint={onChangeLastModePoint}
+          selectedMode={selectedMode}
+          onChangeSelectedMode={onChangeSelectedMode}
         />          
       </Box>
     </ScrollableContent>
@@ -91,7 +93,9 @@ SidePanelContent.propTypes = {
     PropTypes.string,
     PropTypes.oneOf([null])
   ]),
-  onChangeLastModePoint: PropTypes.func.isRequired
+  onChangeLastModePoint: PropTypes.func.isRequired,
+  selectedMode: PropTypes.string.isRequired,
+  onChangeSelectedMode: PropTypes.func.isRequired
 };
 
 export default SidePanelContent;
