@@ -20,15 +20,15 @@ import { v4 as uuid } from 'uuid';
 import BottomSheet from '@geomatico/geocomponents/BottomSheet';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { useMediaQuery } from '@mui/material';
+import { Tooltip, useMediaQuery } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import SidePanelContent from './SidePanelContent';
 import { Popup } from 'react-map-gl';
 import Container from '@mui/material/Container';
 import  Typography  from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import Grow from '@mui/material/Grow';
+import Button from '@mui/material/Button';
 
 const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode, onChangeModePoints, onChangeEditMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint, nearestRedPoint, selectedMode, onChangeSelectedMode }) => {
 
@@ -38,6 +38,7 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
   const [value, setValue] = useState(0);
   const [editedPointsName, setEditedPointsName] = useState(allPoints);
   const [openDirectionsTable,setOpenDirectionsTable] = useState(true);
+  const [coords, setCoords]= useState('');
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -59,26 +60,8 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
     setOpenModalInfo(false);
   };
 
-  const handleClose = (event, reason) => {
-    // para que no se cierre con click fuera de la modal si esc
-    if (reason && (reason === 'backdropClick' || reason === 'escapeKeyDown')){
-      if (mode === ADD_BLUE_MODE) {
-        const bluePoints = [...allPoints.blue];
-        bluePoints.pop();
-        onChangePoints({
-          ...allPoints, blue: bluePoints
-        });
+  const handleClose = () => setOpenModal(false);
 
-      }else if(mode === ADD_RED_MODE){
-        const redPoints = [...allPoints.red];
-        redPoints.pop();
-        onChangePoints({
-          ...allPoints, red: redPoints
-        });
-      }
-    }
-    setOpenModal(false);
-  };
 
   const { t, i18n } = useTranslation();
 
@@ -242,38 +225,11 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
   }, [mapStyle]);
 
   const handleClick = e => {
-    const coords = e.lngLat;
-    if (mode === ADD_BLUE_MODE) {
-     
-      onChangePoints({
-        ...allPoints,
-        blue: [
-          ...allPoints.blue,
-          {
-            id : uuid(),
-            lng: +coords.lng.toFixed(5),
-            lat: +coords.lat.toFixed(5),
-          }]
-      });
-      
+    
+    if (mode === ADD_BLUE_MODE || mode === ADD_RED_MODE) {
+      setCoords(e.lngLat);
       handleOpen();
-    }  else if (mode === ADD_RED_MODE) {
-      
-      onChangePoints({
-        ...allPoints,
-        red: [
-          ...allPoints.red,
-          {
-            id: uuid(),
-            lng: +coords.lng.toFixed(5),
-            lat: +coords.lat.toFixed(5),
-            
-          }]
-      });
-      
-      handleOpen();
-
-    } else if (mode === REMOVE) {
+    }else if (mode === REMOVE) {
       const {point} = e;
       const features = mapRef.current.queryRenderedFeatures(point, {
         layers: ['redPoints', 'bluePoints']
@@ -321,35 +277,30 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
     if(placeholderText === '')  return;
     if (mode === 'ADD_BLUE') {
 
-      const lastBluePoint = allPoints.blue[allPoints.blue.length - 1];
-     
-      const updateBluePoints = allPoints.blue.map(point =>{
-        if (point === lastBluePoint) {
-          return {
-            ...point,
-            name:placeholderText
-          };
-        }
-        return point;
-      });
       onChangePoints({
-        ...allPoints,blue:updateBluePoints
+        ...allPoints,
+        blue: [
+          ...allPoints.blue,
+          {
+            id : uuid(),
+            lng: +coords.lng.toFixed(5),
+            lat: +coords.lat.toFixed(5),
+            name: placeholderText
+          }]
       });
 
     } else if (mode === 'ADD_RED') {
       
-      const lastRedPoint = allPoints.red[allPoints.red.length -1];
-      const updateRedPoint = allPoints.red.map(point=>{
-        if (point === lastRedPoint) {
-          return {
-            ...point,
-            name:placeholderText
-          };
-        }
-        return point;
-      });
       onChangePoints({
-        ...allPoints,red:updateRedPoint
+        ...allPoints,
+        red: [
+          ...allPoints.red,
+          {
+            id : uuid(),
+            lng: +coords.lng.toFixed(5),
+            lat: +coords.lat.toFixed(5),
+            name: placeholderText
+          }]
       });
 
     }
@@ -509,9 +460,14 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
     }
   },[editMode,onChangePoints,editedPointsName]);
 
+  const customBorderButton = ()=>({
+    '&.MuiButton-outlined':{
+      border: 'none',
+    }
+  });
   return <>
     {openModalInfo && <ModalInfo onHandleCloseModalInfo={handleCloseModalInfo} />}
-    {openModal && <ModalAddPoint 
+    {openModal && <ModalAddPoint
       pointType={mode}
       pointName={placeholderText}
       onChangePointName={handleChangeText}
@@ -531,7 +487,7 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
       onMouseLeave={onMouseLeave}
       onClick={handleClick}
     >
-      { featureHovered && 
+      {featureHovered &&
         <Popup
           longitude={featureHovered.lngLat.lng}
           latitude={featureHovered.lngLat.lat}
@@ -555,7 +511,7 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
         placeholder={t('search')}
         country='ES'
         lang={i18n.language}
-        onResultClick={handleSearchResult}/>
+        onResultClick={handleSearchResult} />
     </Box>
     {widescreen ? (
       <>
@@ -568,7 +524,7 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
           }}
         >
           {openDirectionsTable && (
-            <Grow in={openDirectionsTable}  style={{ transformOrigin: '0 0 0' }}
+            <Grow in={openDirectionsTable} style={{ transformOrigin: '0 0 0' }}
               {...(openDirectionsTable ? { timeout: 500 } : {})}>
               <div> <DirectionsTable
                 calculatedRoutes={calculatedRoutes}
@@ -585,15 +541,15 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
               /> </div></Grow>
           )}
         </div>
-        <Button
+        {allPoints.blue.length && allPoints.red.length && <Tooltip title={openDirectionsTable ? t('hiddenTable') : t('showTable')}><Button variant= {openDirectionsTable ? 'outlined' : 'contained'}
           onClick={() => setOpenDirectionsTable(!openDirectionsTable)}
-          sx={{position:'absolute', bottom:18 ,right:15 }}
+          sx={{ position: 'absolute', bottom: 20, right: 8 , ...customBorderButton()}}
         >
           <RouteOutlinedIcon />
-        </Button>
+        </Button></Tooltip>}
       </>
-      
-    ) :  (
+
+    ) : (
       <BottomSheet
         isOpen={getOpen}
         onToggle={setOpen}

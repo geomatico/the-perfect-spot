@@ -2,6 +2,12 @@
 
 El objetivo de “The perfect spot” es calcular a qué distancia queda un piso de una serie de puntos de interés (trabajo, casa de padres, hobbys). Así la aplicación permite evaluar diferentes opciones donde vivir, comparar la ubicación de diferentes viviendas.  
 
+requiere node.js y npm
+
+ * Instalar dependencias :`npm install`.
+ * ejecutar servidor local : `npm start`.
+ 
+
 La aplicación permite:
 
 - ubicar puntos de interés en el mapa

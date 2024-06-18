@@ -24,6 +24,7 @@
   "find_the": "Encuentra el ",
   "foot-walking": "Caminando",
   "goBack": "Ir atrás",
+  "hiddenTable": "Ocultar tabla",
   "image": "Imagen",
   "insertBlueExample": "(Ej: Casa de mis padres)",
   "insertBlueName": "Elige un nombre de mi sitio importante:",
@@ -43,6 +44,10 @@
   "saveNamePoint": "Guardar",
   "search": "Busca...",
   "seconds": "segundos para continuar",
+  "shortMove": "Mover",
+  "shortRemove": "Borrar",
+  "shortRemoveButton": "Borrar puntos",
+  "showTable": "Mostrar tabla",
   "tableTab": "Tabla",
   "transportType": "¿Cómo te desplazas?"
 }

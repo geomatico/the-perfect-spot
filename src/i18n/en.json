@@ -24,6 +24,7 @@
   "find_the": "Find the ",
   "foot-walking": "Foot walking",
   "goBack": "Go back",
+  "hiddenTable": "Hidden table",
   "image": "Image",
   "insertBlueExample": "(Ex: My parent's home)",
   "insertBlueName": "Name of one of my places:",
@@ -43,6 +44,10 @@
   "saveNamePoint": "Save",
   "search": "Search...",
   "seconds": "seconds to continue",
+  "shortMove": "Move",
+  "shortRemove": "Remove",
+  "shortRemoveButton": "Delete points",
+  "showTable": "Show table",
   "tableTab": "Table",
   "transportType": "How do you travel?"
 }

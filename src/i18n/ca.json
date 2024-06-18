@@ -24,6 +24,7 @@
   "find_the": "Troba el ",
   "foot-walking": "Caminant",
   "goBack": "Tornar enrere",
+  "hiddenTable": "Oculta taula",
   "image": "Imatge",
   "insertBlueExample": "(Ej: Casa de mons pares)",
   "insertBlueName": "Nom del meu lloc important:",
@@ -43,6 +44,10 @@
   "saveNamePoint": "Guardar",
   "search": "Cerca...",
   "seconds": "segons per continuar",
+  "shortMove": "Moure",
+  "shortRemove": "Esborrar",
+  "shortRemoveButton": "Esborrar punts",
+  "showTable": "Mostra taula",
   "tableTab": "Taula",
   "transportType": "Com et desplaces?"
 }
