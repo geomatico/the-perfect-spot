@@ -30,7 +30,7 @@ npm install
 
 Para inicar el storybook
 ```sh
-npm start storybook
+npm run storybook
 ```
 La aplicación permite:
 
