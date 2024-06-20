@@ -1,14 +1,23 @@
 import React from 'react';
-import PointsSidePanels from './PointsSidePanels';
+import DirectionsTable from './DirectionsTable';
 
 export default {
-  title: 'PointsSidePanels',
+  title: 'DirectionsTable',
   decorators: [(Story) => <div style={{ width: '40%' }}><Story /></div>],
-  component: PointsSidePanels,
-
+  component: DirectionsTable,
 };
 
-const Template = (args) => <PointsSidePanels {...args} />;
+const Template = (args) => <DirectionsTable {...args} />;
+const calculatedRoutes = [{
+  name: 'Camp nou',
+  data: [['2.7', '32.4']]
+},
+{
+
+  name: 'el Gornal',
+  data: [['3.4', '40.1']]
+}
+];
 const allPoints = {
   'red': [
     { 'id': 'c6027857-1780-408c-ba16-d36e8561cd44', 'lng': 2.1658, 'lat': 41.38376, 'name': 'Rojo' },
@@ -20,15 +29,28 @@ const allPoints = {
   ]
 };
 
+const editedPointsName = allPoints;
 export const Default = Template.bind({});
 Default.args = {
+
+  calculatedRoutes: calculatedRoutes,
   allPoints: allPoints,
-  mode: 'ADD_BLUE',
-  lastModePoint: 'ADD_BLUE'
+  editMode: false,
+  openButtonSheet: false,
+  shortestRouteIndex: 0,
+  editedPointsName: editedPointsName,
+};
+
+export const mobileMode = Template.bind({});
+mobileMode.args = {
+  ...Default.args,
+  openButtonSheet: true,
+  widescreen: false
 };
 
 export const editMode = Template.bind({});
 editMode.args = {
   ...Default.args,
-  editMode: true
+  editMode: true,
 };
+
