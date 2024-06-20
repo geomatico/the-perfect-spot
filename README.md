@@ -2,6 +2,29 @@
 
 El objetivo de “The perfect spot” es calcular a qué distancia queda un piso de una serie de puntos de interés (trabajo, casa de padres, hobbys). Así la aplicación permite evaluar diferentes opciones donde vivir, comparar la ubicación de diferentes viviendas.  
 
+## caracteristicas
+
+- Ubicación de puntos de interés en el mapa
+
+- Ubicación de viviendas en el mapa
+
+- Selección del modo de transporte.
+
+- Cálculo de distancias y visualización en tabla y mapa
+
+- Identificación y resaltado del punto de inteŕes mas cercano
+
+- Adición y eliminación de puntos de interés y viviendas
+  
+- Movimiento de puntos de inteŕes y vivivendas mediante el arrastre en el mapa
+
+- Edición de nombres de puntos de interés y viviendas en la tabla
+
+## Tecnologicas
+
+La plataforma utiliza:
+- Open Route Service (ORS) https://openrouteservice.org/ para servicios de routing externos.
+
 ## Instalación
 
 ### Requisitos previos
@@ -21,6 +44,7 @@ El objetivo de “The perfect spot” es calcular a qué distancia queda un piso
     ```sh
     npm install
     ```
+4. Crea un archivo `.env` en el directorio raíz del proyecto y añade tu `API_KEY` de Open Route Service
 
 ## USO
 Para iniciar la apliación, usa el siguiente comando:
@@ -32,22 +56,3 @@ Para inicar el storybook
 ```sh
 npm run storybook
 ```
-La aplicación permite:
-
-- Ubicar puntos de interés en el mapa
-
-- Ubicar viviendas en el mapa
-
-- Seleccionar el modo de transporte que vas a usar
-
-- Calcular las diferentes distancias y mostrarlas en tabla y en mapa
-
-- Calcular el punto de interés mas cercano y resaltarlo tanto en el mapa como en la tabla
-
-- Añadir y borrar puntos de interés y viviendas
-  
-- Mover los puntos de interés y viviendas en el mapa arrastrándolas
-
-- Editar los nombres de cada punto de interes y viviendas en la tabla
-
-Tecnológicamente, la plataforma utiliza Open Route Service (ORS)  https://openrouteservice.org/ como servicio externo de routing. Precisa de una API_KEY en el archivo .env.
