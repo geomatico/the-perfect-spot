@@ -12,7 +12,7 @@ El objetivo de “The perfect spot” es calcular a qué distancia queda un piso
 
 - Cálculo de distancias y visualización en tabla y mapa
 
-- Identificación y resaltado del punto de inteŕes mas cercano
+- Identificación y resaltado del punto de interés mas cercano
 
 - Adición y eliminación de puntos de interés y viviendas
   
@@ -49,7 +49,7 @@ La plataforma utiliza:
 ## USO
 Para iniciar la apliación, usa el siguiente comando:
 ```sh
-npm install
+npm start
 ```
 
 Para inicar el storybook
