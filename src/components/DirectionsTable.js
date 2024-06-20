@@ -85,7 +85,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
               calculatedRoutes.map((row, index) => <TableCell  onMouseEnter={()=>handleCellHover(allPoints.red[index].id)} onMouseLeave={()=> handleCellLeave()} key={index} align="center" sx={{...customBorderSx(index),'&:hover': index === shortestRouteIndex ? {bgcolor: lighten(red[100],0.75)} : {bgcolor: 'grey.100'}, borderTop : index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined }} >
                 <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                
-                  { editMode ? <TextField  size='small' value={editedPointsName?.red[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'red')}/>: <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.main' : grey[600], wordBreak: 'break-word',whiteSpace: 'normal',overflowWrap: 'break-word',
+                  { editMode ? <TextField  color='secondary' size='small' value={editedPointsName?.red[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'red')}/>: <Typography sx={{fontWeight: 'bold', color: index === shortestRouteIndex ? 'secondary.main' : grey[600], wordBreak: 'break-word',whiteSpace: 'normal',overflowWrap: 'break-word',
                     maxWidth: 200}}>
                     {allPoints.red[index]?.name?.toUpperCase()}
                   </Typography>}
@@ -142,7 +142,8 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
               <TableCell key={1} align="center" sx={{...customBorderSx(shortestRouteIndex), borderTop: `2px solid ${theme.palette.secondary.main}`}} >
                 <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                 
-                  { editMode ? <TextField size='small' value={editedPointsName?.red[shortestRouteIndex]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,shortestRouteIndex,'red')}/>: <Typography sx={{fontWeight: 'bold', color: 'secondary.main'}}>
+                  { editMode ? <TextField color='secondary' size='small' value={editedPointsName?.red[shortestRouteIndex]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,shortestRouteIndex,'red')}/>: <Typography sx={{fontWeight: 'bold', color: 'secondary.main', wordBreak: 'break-word',whiteSpace: 'normal',overflowWrap: 'break-word',
+                    maxWidth: 200}}>
                     {allPoints.red[shortestRouteIndex]?.name?.toUpperCase()}
                   </Typography>}
                 </Box>
@@ -160,8 +161,9 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
             >
               <TableCell component="th" scope="row">
                 <Stack>
-                  <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                    { editMode ? <TextField color='primary' size='small' value={editedPointsName.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>: <Typography sx={{fontWeight: 'bold', color: 'primary.main'}}>
+                  <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                    { editMode ? <TextField color='primary'  size='small' value={editedPointsName.blue[index]?.name.toUpperCase()} variant='outlined' onChange={(e)=>handleEditPoint(e.target.value,index,'blue')}/>: <Typography sx={{fontWeight: 'bold', color: 'primary.main', wordBreak: 'break-word',whiteSpace: 'normal',overflowWrap: 'break-word',
+                      maxWidth: 200}}>
                       {bluePoint.name?.toUpperCase()}
                     </Typography>}
                   </Box>         
