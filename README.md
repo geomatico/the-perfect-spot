@@ -20,7 +20,7 @@ El objetivo de “The perfect spot” es calcular a qué distancia queda un piso
 
 - Edición de nombres de puntos de interés y viviendas en la tabla
 
-## Tecnologicas
+## Tecnológicas
 
 La plataforma utiliza:
 - Open Route Service (ORS) https://openrouteservice.org/ para servicios de routing externos.
