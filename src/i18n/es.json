@@ -24,6 +24,7 @@
   "find_the": "Encuentra el ",
   "foot-walking": "Caminando",
   "goBack": "Ir atrás",
+  "hash": "Hash",
   "hiddenTable": "Ocultar tabla",
   "image": "Imagen",
   "insertBlueExample": "(Ej: Casa de mis padres)",
@@ -50,6 +51,5 @@
   "showTable": "Mostrar tabla",
   "tableTab": "Tabla",
   "transportType": "¿Cómo te desplazas?",
-  "version": "Versión",
-  "hash": "Hash"
+  "version": "Versión"
 }

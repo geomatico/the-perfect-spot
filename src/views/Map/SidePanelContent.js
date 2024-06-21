@@ -66,12 +66,14 @@ const SidePanelContent = ({ onChangeModePoints, allPoints, onChangePoints, mode,
       <Typography variant='caption' sx={{fontWeight: 'bolder'}}>{t('version')}: </Typography>
       <Typography variant='caption' sx={{mr: 1}}>
         {
+          // eslint-disable-next-line
           VERSION
         }
       </Typography>
       <Typography variant='caption' sx={{fontWeight: 'bolder'}}>{t('hash')}: </Typography>
       <Typography variant='caption'>
         {
+          // eslint-disable-next-line
           HASH
         }
       </Typography>
