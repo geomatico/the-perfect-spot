@@ -541,7 +541,7 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
               /> </div></Grow>
           )}
         </div>
-        {allPoints.blue.length && allPoints.red.length && <Tooltip title={openDirectionsTable ? t('hiddenTable') : t('showTable')}><Button variant= {openDirectionsTable ? 'outlined' : 'contained'}
+        {allPoints.blue.length > 0 && allPoints.red.length > 0 && <Tooltip title={openDirectionsTable ? t('hiddenTable') : t('showTable')}><Button variant= {openDirectionsTable ? 'outlined' : 'contained'}
           onClick={() => setOpenDirectionsTable(!openDirectionsTable)}
           sx={{ position: 'absolute', bottom: 20, right: 8 , ...customBorderButton()}}
         >

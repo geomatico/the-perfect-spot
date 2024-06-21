@@ -12,6 +12,7 @@ import http from '../../utils/http';
 import LoadingError from '../../components/LoadingError';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@emotion/react';
+import {Chip} from '@mui/material';
 const ScrollableContent = styled(Box)({
   overflow: 'auto',
   padding: '8px',
@@ -61,7 +62,29 @@ const SidePanelContent = ({ onChangeModePoints, allPoints, onChangePoints, mode,
       </Box>
     </ScrollableContent>
     { requestError && <LoadingError />}
-    <Geomatico/>
+
+    <Box sx={{display:'flex',justifyContent:'flex-end', alignItems:'flex-end',flexGrow: 2, minHeight: 25}}>
+      <Chip label={
+        <>
+          <Typography variant='caption' sx={{fontWeight: 'bolder'}}>{t('version')}: </Typography>
+          <Typography variant='caption' sx={{mr: 1}}>
+            {
+              // eslint-disable-next-line
+          VERSION
+            }
+          </Typography>
+          <Typography variant='caption' sx={{fontWeight: 'bolder'}}>{t('hash')}: </Typography>
+          <Typography variant='caption'>
+            {
+              // eslint-disable-next-line
+          HASH
+            }
+          </Typography>
+        </>
+      }/>
+      <Geomatico/>
+
+    </Box>
   </Stack>;
 };
 

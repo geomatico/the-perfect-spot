@@ -24,6 +24,7 @@
   "find_the": "Troba el ",
   "foot-walking": "Caminant",
   "goBack": "Tornar enrere",
+  "hash": "Hash",
   "hiddenTable": "Oculta taula",
   "image": "Imatge",
   "insertBlueExample": "(Ej: Casa de mons pares)",
@@ -49,5 +50,6 @@
   "shortRemoveButton": "Esborrar punts",
   "showTable": "Mostra taula",
   "tableTab": "Taula",
-  "transportType": "Com et desplaces?"
+  "transportType": "Com et desplaces?",
+  "version": "Versió"
 }

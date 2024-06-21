@@ -24,6 +24,7 @@
   "find_the": "Find the ",
   "foot-walking": "Foot walking",
   "goBack": "Go back",
+  "hash": "Hash",
   "hiddenTable": "Hidden table",
   "image": "Image",
   "insertBlueExample": "(Ex: My parent's home)",
@@ -49,5 +50,6 @@
   "shortRemoveButton": "Delete points",
   "showTable": "Show table",
   "tableTab": "Table",
-  "transportType": "How do you travel?"
+  "transportType": "How do you travel?",
+  "version": "Version"
 }
