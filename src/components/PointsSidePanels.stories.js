@@ -24,6 +24,7 @@ export const Default = Template.bind({});
 Default.args = {
   allPoints: allPoints,
   mode: 'ADD_BLUE',
+  selectedMode : 'ADD_BLUE',
   lastModePoint: 'ADD_BLUE'
 };
 
