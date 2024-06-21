@@ -15,15 +15,16 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import Box from '@mui/material/Box';
+import { useTheme } from '@emotion/react';
+import { useMediaQuery } from '@mui/material';
 
 
-function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChangeEditMode, allPoints, mode, lastModePoint, onChangeLastModePoint }) {
+function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChangeEditMode, allPoints, mode, lastModePoint, onChangeLastModePoint, selectedMode, onChangeSelectedMode }) {
   const { t } = useTranslation();
 
-  const [selectedMode, setSelectedMode] = useState('ADD_BLUE');
   const handlePointClick = (newMode) => {
     if (newMode) {
-      setSelectedMode(newMode);
+      onChangeSelectedMode(newMode);
       onChangeModePoints(newMode);
     }
   };
@@ -31,28 +32,43 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   const handleEditIConClick = () => {
     onChangeLastModePoint(mode);
     onChangeEditMode(true);
-    onChangeModePoints('');
+    onChangeModePoints('EDIT');
   };
   const handleCancelEditIconClick = () => {
     onChangeModePoints(lastModePoint);
-    setSelectedMode(lastModePoint);
+    onChangeSelectedMode(lastModePoint);
     onChangeEditMode(false);
 
   };
 
   const [openModal, setOpenModal] = useState(false);
-  
+
   const handleOpenModal = () => {
     setOpenModal(true);
   };
 
+  const theme = useTheme();
+  const widescreen = useMediaQuery(theme.breakpoints.up('lg'), { noSsr: true });
 
+  const customMarginSx = (theme) => ({
+    marginTop: 4,
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 2,
+    },
+  });
+
+  const customFontSizeSx = (theme) => ({
+    fontSize: 14,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 13
+    }
+  });
   const buttonGroupTypePoints = [
     {
       id: 'ADD_BLUE',
       content:
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <AddIcon /><Typography fontSize={14}  >{t('originPoints')}</Typography>
+          <AddIcon /><Typography sx={customFontSizeSx(theme)}  >{t('originPoints')}</Typography>
         </Box>
 
     },
@@ -60,7 +76,7 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
       id: 'ADD_RED',
       content:
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <AddIcon /><Typography fontSize={14} >{t('finalPoints')}</Typography>
+          <AddIcon /><Typography sx={customFontSizeSx(theme)} >{t('finalPoints')}</Typography>
         </Box>
 
     },
@@ -107,7 +123,7 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
     }
   };
 
-  
+
   const customSx = {
     ...handleButtonColor(selectedMode),
   };
@@ -117,72 +133,73 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
     '&:hover': {
       border: `1px solid ${grey[900]}`
     }
-  }; 
-  const itemsEditMode =[
+  };
+  const itemsEditMode = [
     {
       id: 'EDIT',
       content:
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <EditLocationOutlinedIcon fontSize='medium' /><Typography fontSize={14}  >{t('move')}</Typography>
-      </Box>,
+        <Box sx={{ display: 'flex', alignItems: 'center', gap:1 }}>
+          <EditLocationOutlinedIcon fontSize='medium' /><Typography fontSize={14}  >{widescreen ? t('move') : t('shortMove')}</Typography>
+        </Box>,
     },
     {
       id: 'REMOVE',
-      content: 
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <DeleteOutlineOutlinedIcon fontSize='medium' /><Typography fontSize={14}  >{t('remove')}</Typography>
-      </Box>
+      content:
+        <Box sx={{ display: 'flex', alignItems: 'center',gap:1 }}>
+          <DeleteOutlineOutlinedIcon fontSize='medium' /><Typography fontSize={14}  >{widescreen ? t('remove'): t('shortRemove')}</Typography>
+        </Box>
 
     }
-    
+
   ];
+
   return (
     <>
       <ButtonGroup
         disabled={editMode}
         variant='outlined'
-        color = {grey[900]}
+        color={grey[900]}
         items={buttonGroupTypePoints}
         selectedItemId={selectedMode}
         onItemClick={handlePointClick}
         sx={customSx}
-
       />
-
-      <Button
-        variant='contained'
-        color='secondary'
-        fullWidth
-        sx={{ mt: 8}}
-        onClick={handleOpenModal}
-        disabled={(!(allPoints.blue.length || allPoints.red.length))}>
-        {t('removeButton')}
-      </Button>
-
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, mt: 4 }}>
-        <Typography variant='body2' sx={{color: 'grey.600', fontStyle: 'italic'}}>{t('editDescription')}</Typography>
+      <div style={{display:'flex', flexWrap:widescreen ? 'wrap': 'no-wrap', gap:1}}>
         <Button
-          onClick={editMode ? handleCancelEditIconClick : handleEditIConClick}
-          startIcon={editMode ? <CloseOutlinedIcon /> : <EditOutlinedIcon />}
-          size='medium'
-          sx={customSxButtonIcons}
-          variant='outlined'
-          fullWidth
-          disabled={!(allPoints.blue.length || allPoints.red.length ||editMode)}
-        >
-          {editMode ? t('exitEdit') : t('edit')}
+          variant='contained'
+          color='secondary'
+          fullWidth={widescreen}
+          sx={{ ...customMarginSx(theme), width: widescreen ? '100%' : '50%' }}
+          onClick={handleOpenModal}
+          disabled={(!(allPoints.blue.length || allPoints.red.length))}>
+          {widescreen ? t('removeButton') : t('shortRemoveButton') }
         </Button>
-        {
-          editMode &&  <ButtonGroup 
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, ...customMarginSx, marginTop : widescreen ? 5 : 0}}>
+          {widescreen && <Typography variant='body2' sx={{ color: 'grey.600', fontStyle: 'italic' }}>{t('editDescription')}</Typography>}
+          <Button
+            onClick={editMode ? handleCancelEditIconClick : handleEditIConClick}
+            startIcon={editMode ? <CloseOutlinedIcon /> : <EditOutlinedIcon />}
+            size='medium'
+            sx={{ ...customSxButtonIcons, ...customMarginSx(theme),marginTop:0 }}
             variant='outlined'
-            items={itemsEditMode}
-            selectedItemId={mode}
-            onItemClick={handlePointClick}
-            color = {grey[900]}
-            fullWidth= 'true'
-          />
-        }
-      </Box>
+            fullWidth={widescreen}
+            disabled={!(allPoints.blue.length || allPoints.red.length || editMode)}
+          >
+            {editMode ? t('exitEdit') : t('edit')}
+          </Button>
+          {
+            editMode && <ButtonGroup
+              variant='outlined'
+              items={itemsEditMode}
+              selectedItemId={mode}
+              onItemClick={handlePointClick}
+              color={grey[900]}
+              fullWidth='true'
+            />
+          }
+        </Box>
+      </div>
 
       {
         openModal && <DeletePointsModal
@@ -218,7 +235,9 @@ PointsSidePanels.propTypes = {
     PropTypes.string,
     PropTypes.oneOf([null])
   ]),
-  onChangeLastModePoint: PropTypes.func.isRequired
+  onChangeLastModePoint: PropTypes.func.isRequired,
+  selectedMode: PropTypes.string.isRequired,
+  onChangeSelectedMode: PropTypes.func.isRequired
 };
 
 export default PointsSidePanels;

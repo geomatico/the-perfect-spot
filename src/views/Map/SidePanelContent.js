@@ -11,31 +11,40 @@ import Typography from '@mui/material/Typography';
 import http from '../../utils/http';
 import LoadingError from '../../components/LoadingError';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@emotion/react';
 const ScrollableContent = styled(Box)({
   overflow: 'auto',
   padding: '8px',
 });
 
-const SidePanelContent = ({ onChangeModePoints, allPoints, onChangePoints, mode, onChangeEditMode, editMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint}) => {
+const SidePanelContent = ({ onChangeModePoints, allPoints, onChangePoints, mode, onChangeEditMode, editMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint, selectedMode, onChangeSelectedMode}) => {
   const requestError = http.getError();
   const {t} = useTranslation();
- 
-
+  const theme = useTheme();
+  const customSx= (theme)=>({
+    root: {
+      margin: 4 ,
+      [theme.breakpoints.down('sm')]:{
+        margin :0
+      }
+    }
+  });
   return <Stack sx={{
     height: '100%',
     overflow: 'hidden'
   }}>
 
     <ScrollableContent>
-      <Box my={2} flexDirection='row'>
-        <Typography variant='overline'>{t('transportType')}</Typography>
+      <Box sx={customSx(theme)} flexDirection='row'>
+        <Typography sx={customSx(theme)} variant='overline'>{t('transportType')}</Typography>
         <SelectInput
           options={transportOptions}
           disabled={true}
           selectedOptionId={transportType}
-          onOptionChange={onHandleTransportationType} minWidth='100%'/>
+          onOptionChange={onHandleTransportationType} minWidth='100%'
+        />
       </Box>
-      <Box my={2}>
+      <Box sx={{...customSx(theme)}}>
         <Typography variant='overline'>{t('addLocations')}</Typography>
         <PointsSidePanels 
           onChangeModePoints={onChangeModePoints}
@@ -46,6 +55,8 @@ const SidePanelContent = ({ onChangeModePoints, allPoints, onChangePoints, mode,
           allPoints={allPoints}
           lastModePoint={lastModePoint}
           onChangeLastModePoint={onChangeLastModePoint}
+          selectedMode={selectedMode}
+          onChangeSelectedMode={onChangeSelectedMode}
         />          
       </Box>
     </ScrollableContent>
@@ -82,7 +93,9 @@ SidePanelContent.propTypes = {
     PropTypes.string,
     PropTypes.oneOf([null])
   ]),
-  onChangeLastModePoint: PropTypes.func.isRequired
+  onChangeLastModePoint: PropTypes.func.isRequired,
+  selectedMode: PropTypes.string.isRequired,
+  onChangeSelectedMode: PropTypes.func.isRequired
 };
 
 export default SidePanelContent;
