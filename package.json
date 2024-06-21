@@ -14,7 +14,8 @@
     "lint:js": "eslint src",
     "lint:i18n": "eslint --fix --format node_modules/eslint-plugin-i18n-json/formatter.js src/i18n/*.json",
     "prepare": "cd .. && husky install .husky",
-    "version": "auto-changelog -p && git add CHANGELOG.md"
+    "version": "auto-changelog -p && git add CHANGELOG.md",
+    "release": "git push --follow-tags"
   },
   "repository": {
     "type": "git",
