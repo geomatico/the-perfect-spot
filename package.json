@@ -13,7 +13,8 @@
     "lint": "npm run lint:js && npm run lint:i18n",
     "lint:js": "eslint src",
     "lint:i18n": "eslint --fix --format node_modules/eslint-plugin-i18n-json/formatter.js src/i18n/*.json",
-    "prepare": "cd .. && husky install .husky"
+    "prepare": "cd .. && husky install .husky",
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {
     "type": "git",
@@ -45,6 +46,7 @@
     "@turf/circle": "^6.5.0",
     "@turf/dissolve": "^6.5.0",
     "@turf/flatten": "^6.5.0",
+    "auto-changelog": "^2.4.0",
     "babel-loader": "^8.2.2",
     "chai": "^4.3.4",
     "copy-webpack-plugin": "^9.1.0",
