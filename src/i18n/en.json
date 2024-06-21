@@ -49,5 +49,7 @@
   "shortRemoveButton": "Delete points",
   "showTable": "Show table",
   "tableTab": "Table",
-  "transportType": "How do you travel?"
+  "transportType": "How do you travel?",
+  "version" : "Version",
+  "Hash": "Hash"
 }

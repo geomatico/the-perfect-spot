@@ -49,5 +49,7 @@
   "shortRemoveButton": "Borrar puntos",
   "showTable": "Mostrar tabla",
   "tableTab": "Tabla",
-  "transportType": "¿Cómo te desplazas?"
+  "transportType": "¿Cómo te desplazas?",
+  "version": "Versión",
+  "hash": "Hash"
 }

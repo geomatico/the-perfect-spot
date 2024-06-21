@@ -61,7 +61,23 @@ const SidePanelContent = ({ onChangeModePoints, allPoints, onChangePoints, mode,
       </Box>
     </ScrollableContent>
     { requestError && <LoadingError />}
-    <Geomatico/>
+
+    <Box sx={{display:'flex',justifyContent:'flex-end', alignItems:'flex-end',flexGrow: 2, minHeight: 25}}>
+      <Typography variant='caption' sx={{fontWeight: 'bolder'}}>{t('version')}: </Typography>
+      <Typography variant='caption' sx={{mr: 1}}>
+        {
+          VERSION
+        }
+      </Typography>
+      <Typography variant='caption' sx={{fontWeight: 'bolder'}}>{t('hash')}: </Typography>
+      <Typography variant='caption'>
+        {
+          HASH
+        }
+      </Typography>
+      <Geomatico/>
+
+    </Box>
   </Stack>;
 };
 

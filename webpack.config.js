@@ -2,6 +2,10 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const DotenvWebpackPlugin = require('dotenv-webpack');
 const path = require('path');
+const webpack = require('webpack');
+const commitHash = process.env.HASH || require('child_process')
+  .execSync('git rev-parse --short HEAD')
+  .toString();
 
 module.exports = (env) => ({
   mode: env.prod ? 'production' : 'development',
@@ -52,6 +56,11 @@ module.exports = (env) => ({
       safe: true // load '.env.example' to verify the '.env' variables are all set
     })
   ] : [
+    new webpack.DefinePlugin({
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      VERSION: JSON.stringify(require('./package.json').version),
+      HASH: JSON.stringify(commitHash)
+    }),
     new HtmlWebPackPlugin({
       favicon: './static/images/favicon.ico',
       template: './src/template.html',

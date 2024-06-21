@@ -49,5 +49,7 @@
   "shortRemoveButton": "Esborrar punts",
   "showTable": "Mostra taula",
   "tableTab": "Taula",
-  "transportType": "Com et desplaces?"
+  "transportType": "Com et desplaces?",
+  "version": "Versió",
+  "hash": "Hash"
 }
