@@ -18,6 +18,9 @@ import {useTranslation} from 'react-i18next';
 const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeIdHoverPoint, shortestRouteIndex, editMode, openButtonSheet, editedPointsName, onChangeEditedPointsName}) => {
   
   const{t} = useTranslation();
+  const theme = useTheme();
+  const widescreen = useMediaQuery(theme.breakpoints.up('lg'), { noSsr: true });
+
   calculatedRoutes.forEach(function (element) {
     let sum = 0;
     for( var i = 0; i < element.data.length; i++ ){
@@ -62,22 +65,21 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     });
   };
 
- 
   useEffect(()=>{
     onChangeEditedPointsName(allPoints);
   },[allPoints]);
-  const theme = useTheme();
-  const widescreen = useMediaQuery(theme.breakpoints.up('lg'), { noSsr: true });
+
   const customBorderSx = (index) =>{
     return{
       borderRight: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined,
       borderLeft: index === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined
     };
   };
+
   return <>
     {
       calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length && widescreen &&
-      <Table sx={{minWidth: 300}} size='small'>
+      <Table sx={{minWidth: 300, marginTop: '50px'}} size='small'>
         <TableHead>
           <TableRow>
             <TableCell key={'empty'} align="center"></TableCell>
@@ -134,7 +136,8 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
     }
 
     {
-      calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length && !widescreen && openButtonSheet && <Table size='small' sx={{minWidth: 200}} aria-label="simple table">
+      calculatedRoutes && calculatedRoutes.length > 0 && allPoints.blue.length  && allPoints.red.length && !widescreen && openButtonSheet &&
+      <Table size='small' sx={{minWidth: 200, mt: 2}} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell key={'empty'} align="center"></TableCell>
@@ -173,7 +176,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
               
               <TableCell align='center' key={shortestRouteIndex} sx={customBorderSx(shortestRouteIndex)}>
                 {calculatedRoutes[shortestRouteIndex]?.data[index]?.map((value, index) => (
-                  <span key={value}>{value + (index === 0 ? 'km' : 'min')}<br /></span>
+                  <span key={value}>{value + (index === 0 ? ' km' : ' min')}<br /></span>
                 ))}
               </TableCell>
             
@@ -182,9 +185,7 @@ const DirectionsTable = ({calculatedRoutes, allPoints, onChangeHover, onChangeId
           ))}
           <TableRow align='center'>
             <TableCell align="center">{t('averageTime')}</TableCell>
-            
-            <TableCell key={shortestRouteIndex} align='center' sx={{...customBorderSx(shortestRouteIndex),borderBottom:shortestRouteIndex === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined}}> {calculatedRoutes[shortestRouteIndex]?.data.avg + 'min'}  </TableCell>
-         
+            <TableCell key={shortestRouteIndex} align='center' sx={{...customBorderSx(shortestRouteIndex), borderBottom:shortestRouteIndex === shortestRouteIndex ? theme => `2px solid ${theme.palette.secondary.dark}`: undefined}}> {calculatedRoutes[shortestRouteIndex]?.data.avg + ' min'}  </TableCell>
           </TableRow>
          
         </TableBody>

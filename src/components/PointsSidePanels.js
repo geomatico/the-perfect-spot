@@ -38,7 +38,6 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
     onChangeModePoints(lastModePoint);
     onChangeSelectedMode(lastModePoint);
     onChangeEditMode(false);
-
   };
 
   const [openModal, setOpenModal] = useState(false);
@@ -50,38 +49,29 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
   const theme = useTheme();
   const widescreen = useMediaQuery(theme.breakpoints.up('lg'), { noSsr: true });
 
-  const customMarginSx = (theme) => ({
-    marginTop: 4,
-    [theme.breakpoints.down('sm')]: {
-      marginTop: 2,
-    },
-  });
-
   const customFontSizeSx = (theme) => ({
     fontSize: 14,
     [theme.breakpoints.down('sm')]: {
       fontSize: 13
     }
   });
+
   const buttonGroupTypePoints = [
     {
       id: 'ADD_BLUE',
       content:
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1}}>
           <AddIcon /><Typography sx={customFontSizeSx(theme)}  >{t('originPoints')}</Typography>
         </Box>
-
     },
     {
       id: 'ADD_RED',
       content:
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
           <AddIcon /><Typography sx={customFontSizeSx(theme)} >{t('finalPoints')}</Typography>
         </Box>
-
     },
   ];
-
 
   const handleButtonColor = (pointMode) => {
     if (pointMode.includes('RED')) {
@@ -89,18 +79,18 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
         '& .ButtonGroup-button': editMode ? '' : {
           '&.Mui-selected': {
             border: theme => `2px solid ${theme.palette.secondary.main}`,
-            backgroundColor: theme => `${theme.palette.common.white}`,
+            backgroundColor: 'common.white',
             '&:hover': {
               border: theme => `2px solid ${theme.palette.secondary.main}`,
-              backgroundColor: theme => `${theme.palette.common.white}`,
+              backgroundColor: 'common.white',
             },
           },
           '&.Mui-disabled': {
-            border: theme => `2px solid ${theme.palette.success.main}`,
+            border: 'success.main'
           }
         },
         '& .ButtonGroup-buttonContent': editMode ? '' : {
-          color: theme => `${theme.palette.secondary.main}`
+          color: 'secondary.main'
         }
       };
 
@@ -128,29 +118,21 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
     ...handleButtonColor(selectedMode),
   };
 
-  const customSxButtonIcons = {
-    color: grey[900], border: `1px solid ${grey[900]}`,
-    '&:hover': {
-      border: `1px solid ${grey[900]}`
-    }
-  };
   const itemsEditMode = [
     {
       id: 'EDIT',
-      content:
-        <Box sx={{ display: 'flex', alignItems: 'center', gap:1 }}>
-          <EditLocationOutlinedIcon fontSize='medium' /><Typography fontSize={14}  >{widescreen ? t('move') : t('shortMove')}</Typography>
-        </Box>,
+      content: <Box sx={{ display: 'flex', alignItems: 'center', gap:1 }}>
+        <EditLocationOutlinedIcon fontSize='small' />
+        {widescreen && <Typography fontSize={14}>{t('move')}</Typography>}
+      </Box>
     },
     {
       id: 'REMOVE',
-      content:
-        <Box sx={{ display: 'flex', alignItems: 'center',gap:1 }}>
-          <DeleteOutlineOutlinedIcon fontSize='medium' /><Typography fontSize={14}  >{widescreen ? t('remove'): t('shortRemove')}</Typography>
-        </Box>
-
+      content: <Box sx={{ display: 'flex', alignItems: 'center',gap:1 }}>
+        <DeleteOutlineOutlinedIcon fontSize='small'/>
+        {widescreen && <Typography fontSize={14}>{t('remove')}</Typography>}
+      </Box>
     }
-
   ];
 
   return (
@@ -164,25 +146,16 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
         onItemClick={handlePointClick}
         sx={customSx}
       />
-      <div style={{display:'flex', flexWrap:widescreen ? 'wrap': 'no-wrap', gap:1}}>
-        <Button
-          variant='contained'
-          color='secondary'
-          fullWidth={widescreen}
-          sx={{ ...customMarginSx(theme), width: widescreen ? '100%' : '50%' }}
-          onClick={handleOpenModal}
-          disabled={(!(allPoints.blue.length || allPoints.red.length))}>
-          {widescreen ? t('removeButton') : t('shortRemoveButton') }
-        </Button>
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, ...customMarginSx, marginTop : widescreen ? 5 : 0}}>
+      <Box sx={{display:'flex', flexDirection: 'column', gap: 1, mt: 2}}>
+        <Box sx={{ display: 'flex', flexDirection: widescreen ? 'column' : 'row', alignItems: 'space-between', gap: widescreen ? 1 : 4, marginTop : widescreen ? 5 : 0}}>
           {widescreen && <Typography variant='body2' sx={{ color: 'grey.600', fontStyle: 'italic' }}>{t('editDescription')}</Typography>}
           <Button
             onClick={editMode ? handleCancelEditIconClick : handleEditIConClick}
             startIcon={editMode ? <CloseOutlinedIcon /> : <EditOutlinedIcon />}
             size='medium'
-            sx={{ ...customSxButtonIcons, ...customMarginSx(theme),marginTop:0 }}
-            variant='outlined'
+            color='primary'
+            sx={{ color: 'common.white', width: widescreen ? '100%' : '70%', mt:0 }}
+            variant='contained'
             fullWidth={widescreen}
             disabled={!(allPoints.blue.length || allPoints.red.length || editMode)}
           >
@@ -199,7 +172,17 @@ function PointsSidePanels({ onChangePoints, onChangeModePoints, editMode, onChan
             />
           }
         </Box>
-      </div>
+
+        <Button
+          variant='outlined'
+          color='secondary'
+          fullWidth={widescreen}
+          sx={{ mt: widescreen ? 4 : 2, width: '100%'}}
+          onClick={handleOpenModal}
+          disabled={(!(allPoints.blue.length || allPoints.red.length))}>
+          {widescreen ? t('removeButton') : t('shortRemoveButton') }
+        </Button>
+      </Box>
 
       {
         openModal && <DeletePointsModal

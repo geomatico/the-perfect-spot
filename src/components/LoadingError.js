@@ -34,7 +34,7 @@ function LoadingError() {
 
  
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ mx: 1 }}>
       <Alert variant="outlined" severity="warning">
         <Typography marginBottom={2}>{`${t('requestLimit')} ${count} ${t('seconds')}`}</Typography>
         <LinearProgress  sx={{'.MuiLinearProgress-bar1Determinate':{backgroundColor :  theme => theme.palette.grey[500]},'&.MuiLinearProgress-determinate' :{backgroundColor: theme => theme.palette.grey[200]}}} variant='determinate' value={progress}  />

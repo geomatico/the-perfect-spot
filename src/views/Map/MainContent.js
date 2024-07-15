@@ -13,22 +13,27 @@ import NominatimSearchBox from '@geomatico/geocomponents/NominatimSearchBox';
 import {  useTranslation } from 'react-i18next';
 import DirectionsTable from '../../components/DirectionsTable';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import { primaryColor, secondaryColor } from '../../theme';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+
 import ModalInfo from '../../components/ModalInfo';
 import ModalAddPoint from '../../components/ModalAddPoint';
-import { primaryColor, secondaryColor } from '../../theme';
-import { v4 as uuid } from 'uuid';
 import BottomSheet from '@geomatico/geocomponents/BottomSheet';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { Tooltip, useMediaQuery } from '@mui/material';
-import { useTheme } from '@emotion/react';
 import SidePanelContent from './SidePanelContent';
+
+import { v4 as uuid } from 'uuid';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@emotion/react';
 import { Popup } from 'react-map-gl';
-import Container from '@mui/material/Container';
-import  Typography  from '@mui/material/Typography';
-import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
+
 import Grow from '@mui/material/Grow';
-import Button from '@mui/material/Button';
+
+import HighlightAltIcon from '@mui/icons-material/HighlightAlt';
 
 const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints, allPoints, onChangeHover, hover, idHoverPoint, onChangeIdHoverPoint, editMode, onChangeModePoints, onChangeEditMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint, nearestRedPoint, selectedMode, onChangeSelectedMode }) => {
 
@@ -460,11 +465,14 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
     }
   },[editMode,onChangePoints,editedPointsName]);
 
-  const customBorderButton = ()=>({
+  const expandTableSx = {
+    position: 'absolute',
+    bottom: 20,
+    right: 8,
     '&.MuiButton-outlined':{
       border: 'none',
     }
-  });
+  };
   return <>
     {openModalInfo && <ModalInfo onHandleCloseModalInfo={handleCloseModalInfo} />}
     {openModal && <ModalAddPoint
@@ -503,9 +511,9 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
     </Map>
     <Box sx={{
       position: 'absolute',
-      top: 18,
-      left: 18,
-      width: 250
+      top: widescreen ? 18 : 6,
+      left: widescreen ? 18 : 6,
+      width: widescreen ? 250 : '97%'
     }}>
       <NominatimSearchBox
         placeholder={t('search')}
@@ -541,12 +549,14 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
               /> </div></Grow>
           )}
         </div>
-        {allPoints.blue.length > 0 && allPoints.red.length > 0 && <Tooltip title={openDirectionsTable ? t('hiddenTable') : t('showTable')}><Button variant= {openDirectionsTable ? 'outlined' : 'contained'}
-          onClick={() => setOpenDirectionsTable(!openDirectionsTable)}
-          sx={{ position: 'absolute', bottom: 20, right: 8 , ...customBorderButton()}}
-        >
-          <RouteOutlinedIcon />
-        </Button></Tooltip>}
+        {
+          allPoints.blue.length > 0 && allPoints.red.length > 0 && 
+          <Tooltip title={openDirectionsTable ? t('hiddenTable') : t('showTable')}>
+            <Button size='small' variant= {openDirectionsTable ? 'outlined' : 'contained'} onClick={() => setOpenDirectionsTable(!openDirectionsTable)} sx={expandTableSx}>
+              <HighlightAltIcon/>
+            </Button>
+          </Tooltip>
+        }
       </>
 
     ) : (
@@ -564,23 +574,23 @@ const MainContent = ({ mapStyle, mode, routes, calculatedRoutes, onChangePoints,
               <Tab label={t('tableTab')} />
             </Tabs>
           </Box>
-          {value === 0 && (
-            <SidePanelContent
-              onChangePoints={onChangePoints}
-              onChangeModePoints={onChangeModePoints}
-              editMode={editMode}
-              onChangeEditMode={onChangeEditMode}
+          {
+            value === 0 && <SidePanelContent
               allPoints={allPoints}
-              mode={mode}
-              onHandleTransportationType={onHandleTransportationType}
+              editMode={editMode}
+              lastModePoint={lastModePoint}
+              selectedMode={selectedMode}
               transportOptions={transportOptions}
               transportType={transportType}
-              lastModePoint={lastModePoint}
+              mode={mode}
+              onChangeEditMode={onChangeEditMode}
+              onChangeModePoints={onChangeModePoints}
               onChangeLastModePoint={onChangeLastModePoint}
-              selectedMode={selectedMode}
+              onChangePoints={onChangePoints}
               onChangeSelectedMode={onChangeSelectedMode}
+              onHandleTransportationType={onHandleTransportationType}
             />
-          )}
+          }
           {value === 1 && (
             <DirectionsTable
               calculatedRoutes={calculatedRoutes}

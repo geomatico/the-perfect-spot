@@ -51,10 +51,10 @@ const Map = () => {
       id: 'driving-car',
       label: t('driving-car')
     },
-    {
+    /*{
       id: 'driving-hgv',
       label: t('driving-hgv')
-    },
+    },*/
   ];
 
   const [transportation, setTransportation] = useState(transportOptions[0].id);

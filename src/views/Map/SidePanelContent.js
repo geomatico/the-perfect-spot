@@ -11,42 +11,59 @@ import Typography from '@mui/material/Typography';
 import http from '../../utils/http';
 import LoadingError from '../../components/LoadingError';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '@emotion/react';
-import {Chip} from '@mui/material';
+import {Chip, useMediaQuery} from '@mui/material';
+import theme from '../../theme';
+
 const ScrollableContent = styled(Box)({
   overflow: 'auto',
   padding: '8px',
 });
 
-const SidePanelContent = ({ onChangeModePoints, allPoints, onChangePoints, mode, onChangeEditMode, editMode, onHandleTransportationType, transportOptions,transportType, lastModePoint, onChangeLastModePoint, selectedMode, onChangeSelectedMode}) => {
+const SidePanelContent = ({
+  allPoints,
+  editMode,
+  lastModePoint,
+  selectedMode,
+  transportOptions,
+  transportType,
+  mode,
+  onChangeEditMode,
+  onChangeModePoints,
+  onChangeLastModePoint,
+  onChangePoints,
+  onHandleTransportationType,
+  onChangeSelectedMode
+}) => {
+  
   const requestError = http.getError();
   const {t} = useTranslation();
-  const theme = useTheme();
-  const customSx= (theme)=>({
-    root: {
-      margin: 4 ,
-      [theme.breakpoints.down('sm')]:{
-        margin :0
-      }
-    }
-  });
+  const widescreen = useMediaQuery(theme().breakpoints.up('lg'), { noSsr: true });
+
   return <Stack sx={{
     height: '100%',
     overflow: 'hidden'
   }}>
 
     <ScrollableContent>
-      <Box sx={customSx(theme)} flexDirection='row'>
-        <Typography sx={customSx(theme)} variant='overline'>{t('transportType')}</Typography>
+      <Box sx={{m: { xs: 0, md: 0}}} display='flex' flexDirection={widescreen ? 'column' : 'row'} alignItems={widescreen ? 'flex-start' : 'center'}>
+        {
+          widescreen ? 
+            <Typography component='p' sx={{mt:0}} variant='overline'>{t('transportType')}</Typography>
+            : <Typography component='p' sx={{mt: 1.5, mr: 2}} variant='overline'>MODO</Typography>
+        }
         <SelectInput
           options={transportOptions}
           disabled={true}
           selectedOptionId={transportType}
-          onOptionChange={onHandleTransportationType} minWidth='100%'
+          onOptionChange={onHandleTransportationType}
         />
       </Box>
-      <Box sx={{...customSx(theme)}}>
-        <Typography variant='overline'>{t('addLocations')}</Typography>
+      <Box mt={2}>
+        {
+          widescreen ?
+            <Typography variant='overline'>{t('addLocations')}</Typography>
+            : <Typography component='p' sx={{mt: 1.5, mr: 2}} variant='overline'>LOCALIZACIONES</Typography>
+        }
         <PointsSidePanels 
           onChangeModePoints={onChangeModePoints}
           onChangePoints={onChangePoints}
@@ -83,14 +100,11 @@ const SidePanelContent = ({ onChangeModePoints, allPoints, onChangePoints, mode,
         </>
       }/>
       <Geomatico/>
-
     </Box>
   </Stack>;
 };
 
 SidePanelContent.propTypes = {
-  mapStyle: PropTypes.string.isRequired,
-  onChangeModePoints: PropTypes.func,
   allPoints: PropTypes.shape({
     red: PropTypes.arrayOf(PropTypes.shape({
       id:  PropTypes.string.isRequired,
@@ -105,20 +119,21 @@ SidePanelContent.propTypes = {
       name: PropTypes.string
     })).isRequired,
   }).isRequired,
-  onChangePoints: PropTypes.func.isRequired,
-  mode: PropTypes.string.isRequired,
-  onChangeEditMode: PropTypes.func.isRequired,
   editMode: PropTypes.bool.isRequired,
-  onHandleTransportationType: PropTypes.func.isRequired,
-  transportOptions: PropTypes.array.isRequired,
-  transportType: PropTypes.string.isRequired,
   lastModePoint: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.oneOf([null])
   ]),
-  onChangeLastModePoint: PropTypes.func.isRequired,
   selectedMode: PropTypes.string.isRequired,
-  onChangeSelectedMode: PropTypes.func.isRequired
+  transportOptions: PropTypes.array.isRequired,
+  transportType: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
+  onChangeEditMode: PropTypes.func.isRequired,
+  onChangeModePoints: PropTypes.func,
+  onChangeLastModePoint: PropTypes.func.isRequired,
+  onChangePoints: PropTypes.func.isRequired,
+  onChangeSelectedMode: PropTypes.func.isRequired,
+  onHandleTransportationType: PropTypes.func.isRequired
 };
 
 export default SidePanelContent;
